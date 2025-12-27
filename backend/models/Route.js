@@ -1,11 +1,11 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 const routeSchema = new Schema({
     startStationId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
     },
     endStationId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
     },
     distance: Number,
     durationMinutes: Number,
@@ -14,19 +14,19 @@ const routeSchema = new Schema({
         enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     },
     stops: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: Types.ObjectId, 
         arrivalTime: String,
         departureTime: String,
         order: Number
     }],
     transportOperator: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'TransportOperator',
         required: true
     },
     buses: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: 'Bus'
         }
     ]

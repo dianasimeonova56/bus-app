@@ -1,13 +1,13 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 const ticketSchema = new Schema({
     passenger: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'Passenger',
         required: true
     },
     trip: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'Trip',
         required: true
     },
@@ -23,8 +23,13 @@ const ticketSchema = new Schema({
         default: Date.now
     },
     departureStopId:
-        { type: mongoose.Schema.Types.ObjectId },
-    destinationStopId: { type: mongoose.Schema.Types.ObjectId },
+    {  
+        type: Types.ObjectId 
+    },
+    destinationStopId: 
+    { 
+        type: Types.ObjectId 
+    },
 })
 
 const Ticket = model('Ticket', ticketSchema)

@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 const tripSchema = new Schema({
     route: {
-        type:mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'Route',
         required: true
     },
@@ -13,13 +13,13 @@ const tripSchema = new Schema({
     departureTime: String,
     arrivalTime: String,
     stops: [{
-        type: mongoose.Schema.Types.ObjectId, 
+        type: Types.ObjectId, 
         arrivalTime: String,
         departureTime: String,
         order: Number
     }],
     transportOperator: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'TransportOperator',
         required: true
     },

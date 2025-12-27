@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 const busSchema = new Schema({
     registration_number: {
@@ -11,7 +11,7 @@ const busSchema = new Schema({
         required: [true, "Bus capacity field is required!"],
     },
     transport_operators: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'TransportOperator',
         required: [true, "Please provide a transport opreator reference!"],
     }

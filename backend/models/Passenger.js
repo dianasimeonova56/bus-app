@@ -22,6 +22,7 @@ const passengerSchema = new Schema({
         required: [true, "Phone number field is required!"],
     },
     password: {
+        type: String,
         required: [true, "Password is required!"],
         minLength: [4, 'Password should be at least 4 chars long']
     },
@@ -31,7 +32,7 @@ const passengerSchema = new Schema({
         default: Date.now 
     },
     user_role: {
-         type: String,
+        type: String,
         enum: ['passenger', 'admin'],
     }
 })

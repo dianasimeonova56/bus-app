@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
 const driverSchema = new Schema({
     first_name: {
@@ -16,13 +16,13 @@ const driverSchema = new Schema({
         required: [true, "Phone number field is required!"],
     },
     transportOperator: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'TransportOperator',
         required: true
     },
     buses: [
         {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Types.ObjectId,
             ref: 'Bus'
         }
     ]

@@ -11,10 +11,6 @@ initDatabase();
 async function run() {
     await initDatabase();
 
-    const doc = new User({ name: 'First document' });
-    await doc.save();
-
-    console.log('Document inserted!');
     process.exit(0);
 }
 
