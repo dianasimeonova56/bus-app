@@ -1,10 +1,10 @@
 import { Schema, model, Types } from 'mongoose';
 
 const routeSchema = new Schema({
-    startStationId: {
+    startStopId: {
         type: Types.ObjectId,
     },
-    endStationId: {
+    endStopId: {
         type: Types.ObjectId,
     },
     distance: Number,

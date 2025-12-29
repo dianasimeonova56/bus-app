@@ -1,12 +1,12 @@
-import { Router } from "express";
-import homeController from "./controllers/homeController";
+import { Router } from 'express'
 
-const routes = Router();
+import stopsController from './controllers/stopsController.js'
 
-routes.use(homeController);
+const routes = Router()
 
-routes.all('*url', (req, res) => {
-    res.render('notFound');
+routes.use('/stops', stopsController)
+routes.all('*url', (req, res) => {//in the end, bc if we have gone through the abpve controllers and have not rendered anything, we should display 404
+    res.render('404');
 })
 
 export default routes;

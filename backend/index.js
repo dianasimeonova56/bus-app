@@ -1,21 +1,22 @@
-import express from 'express'
-import expressSession from 'express-session'
-import User from './models/Passenger.js';
-
-import { initDatabase } from './config/dbConfig.js'
+import express from 'express';
+import cors from 'cors';
+import { initDatabase } from './config/dbConfig.js';
+import routes from "./routes.js";
 
 const app = express();
 
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(routes);
+
 initDatabase();
 
-async function run() {
-    await initDatabase();
+app.get('/', (req, res) => {
+  res.send('Server is running...');
+});
 
-    process.exit(0);
-}
-
-run();
-
-app.get('/', (req, res) => res.send('Server is running...'));
-
-app.listen(3000, () => console.log('Server is listening on http://localhost:3000...'));
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is listening on http://localhost:${PORT}`);
+});

@@ -1,18 +1,35 @@
-import { Component, AfterViewInit } from '@angular/core';
-import * as L from 'leaflet';
+import { Component, AfterViewInit, inject } from '@angular/core';
+// import * as L from 'leaflet';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { latLng, LatLng, tileLayer } from 'leaflet';
+import 'leaflet-control-geocoder';
+import { StopsService } from '../../../core/services';
+import { FormControl, FormGroup, ReactiveFormsModule, FormBuilder, AbstractControl } from '@angular/forms';
 
+declare let L: any;
 @Component({
   selector: 'app-map',
   templateUrl: './map.html',
   styleUrls: ['./map.css'],
   standalone: true,
-  imports: [] 
+  imports: [LeafletModule, ReactiveFormsModule]
 
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent {
   private map: L.Map | undefined;
+  private stopService = inject(StopsService);
+  private formBuilder = inject(FormBuilder)
 
-  // List of locations
+  addStopForm: FormGroup;
+
+  constructor() {
+    this.addStopForm = this.formBuilder.group({
+      latitude: [''],
+      longitude: [''],
+      name: ['']
+    });
+  }
+
   locations = [
     { id: 1, name: 'Burgas', latitude: 42.490721, longitude: 27.473981 },
     { id: 2, name: 'Varna', latitude: 43.2160, longitude: 27.8972 }
@@ -23,51 +40,95 @@ export class MapComponent implements AfterViewInit {
     [43.2160, 27.8972]
   ];
 
-  // Initialize the map
-  private initMap(): void {
+  optionsSpec: any = {
+    layers: [{ url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: 'Open Street Map' }],
+    zoom: 5,
+    center: [46.879966, -121.726909]
+  };
 
-    const defaultIcon = L.icon({
-      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-    });
+  zoom = this.optionsSpec.zoom;
+  center = latLng(this.optionsSpec.center);
+  options = {
+    layers: [tileLayer(this.optionsSpec.layers[0].url, { attribution: this.optionsSpec.layers[0].attribution })],
+    zoom: this.optionsSpec.zoom,
+    center: latLng(this.optionsSpec.center)
+  };
 
-    // Set the default marker icon
-    L.Marker.prototype.options.icon = defaultIcon;
+  formZoom = this.zoom;
+  zoomLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+  lat = this.center.lat;
+  lng = this.center.lng;
 
-    const mapContainer = document.getElementById('map');
-    if (!mapContainer) {
-      console.error('Map container not found! Make sure <div id="map"></div> exists in the DOM.');
-      return;
+  onCenterChange(center: LatLng) {
+    this.lat = center.lat;
+    this.lng = center.lng;
+  }
+
+  onZoomChange(zoom: number) {
+    this.formZoom = zoom;
+  }
+
+  doApply() {
+    this.center = latLng(this.lat, this.lng);
+    this.zoom = this.formZoom;
+  }
+
+
+  onMapReady(map: L.Map) {
+    (L.Control as any).geocoder({
+      defaultMarkGeocode: false
+    })
+      .on('markgeocode', (e: any) => {
+        const latlng = e.geocode.center;
+        L.marker(latlng).addTo(map)
+          .bindPopup(e.geocode.name)
+          .openPopup();
+        map.setView(latlng, 13);
+
+        this.addStopForm.patchValue({
+          latitude: latlng.lat,
+          longitude: latlng.lng,
+          name: e.geocode.name
+        })
+        console.log(this.addStopForm.value)
+      })
+      .addTo(map);
+  }
+
+  get name(): AbstractControl<any, any> | null {
+    return this.addStopForm.get('name');
+  }
+
+  get latitude(): AbstractControl<any, any> | null {
+    return this.addStopForm.get('latitude');
+  }
+
+  get longitude(): AbstractControl<any, any> | null {
+    return this.addStopForm.get('longitude');
+  }
+
+  onSubmit(): void {
+    if (this.name != null && this.latitude != null && this.longitude != null) {
+      const newStop = {
+        name: this.name.value,
+        location: {
+          type: 'Point',
+          coordinates: [
+            Number(this.longitude.value) ,
+            Number(this.latitude.value)
+          ] as [number, number]
+        }
+      }
+
+      this.stopService.createStop(newStop).subscribe({
+        next: () => {
+          console.log('Stop created:', stop);
+          this.addStopForm.reset();
+        },
+         error: (err) => {
+          console.log("Login failed", err);
+        }
+      })
     }
-
-    // Create map centered at a default location
-    this.map = L.map('map').setView([this.locations[0].latitude, this.locations[0].longitude], 2);
-    const polyline = L.polyline(this.latlngs, {color: 'red'}).addTo(this.map);
-
-// zoom the map to the polyline
-    this.map.fitBounds(polyline.getBounds());
-
-    // Add OpenStreetMap tiles
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(this.map);
-
-    // Add markers for each location
-   this.locations.forEach((location) => {
-      L.marker([location.latitude, location.longitude])
-        .addTo(this.map!)
-        .bindPopup(`<b>${location.name}</b>`);
-    });
   }
-
-  // Lifecycle hook to initialize the map after the view is loaded
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initMap();
-    });
-  }
-  
 }
