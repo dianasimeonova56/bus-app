@@ -1,1 +1,7 @@
 export * from './stop.model'
+export * from './passenger.model'
+export * from './ticket.model'
+export * from './route.model'
+export * from './trip.model'
+export * from './transportOperator.model'
+export * from './selectedStop.model'

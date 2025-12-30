@@ -14,8 +14,8 @@ const ticketSchema = new Schema({
     seatNumber: {
         type: Number
     },
-    seatNumber: {
-        type: price
+    price: {
+        type: Number
     },
     purchaseDate:
     {

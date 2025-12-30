@@ -22,7 +22,10 @@ const stopSchema = new Schema({
         type: pointSchema,
         required: [true, "Location is required!"]
     },
-    
+    type: {
+      type: String,
+      enum: ['Bus Station', 'Normal Stop']
+    }
 })
 
 const Stop = model('Stop', stopSchema)

@@ -1,0 +1,50 @@
+<div class="container my-5">
+    <div class="row">
+        <div class="col-6">
+            <form [formGroup]="addStopForm" (ngSubmit)="onSubmit()" class="pt-5">
+                <h2>Make routes</h2>
+                <div class="form-group">
+                    <label for="" class="form-label">Add Departure Stop</label>
+                    <input class="form-control" list="busStations" placeholder="Type to search bus station..."
+                        (change)="onStopDepartureSelected($event)">
+                    <label for="" class="form-label">Add Arrival Stop</label>
+                    <input class="form-control" list="busStations" placeholder="Type to search bus station..."
+                        (change)="onStopArrivalSelected($event)">
+
+                    <label for="" class="form-label">Add Intermediate Stops</label>
+                    <input class="form-control" list="normalStops" placeholder="Type to search intermediate stop..."
+                        (change)="onStopIntermediateSelected($event)">
+
+                    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+                        @for (stop of selectedStops; track stop._id) {
+                        <div cdkDrag [attr.data-id]="stop._id">
+                            {{stop.name}}
+                        </div>
+                        }
+                    </div>
+
+                    <label for="" class="form-label">Which sector does it depart from?</label>
+                    
+                    <input type="submit" class="form-control mt-5" value="Add route">
+                </div>
+            </form>
+
+            <datalist id="busStations">
+                @for (stop of busStations$ | async; track stop._id) {
+                    <option [value]="stop.name"></option>
+                }
+            </datalist>
+            <datalist id="normalStops">
+                @for (stop of normalStops$ | async; track stop._id) {
+                    <option [value]="stop.name"></option>
+                }
+            </datalist>
+        </div>
+
+        <div class="col-6">
+            <app-map (stopSelected)="onStopSelected($event)"></app-map>
+
+        </div>
+    </div>
+
+</div>

@@ -3,9 +3,11 @@ import { Schema, model, Types } from 'mongoose';
 const routeSchema = new Schema({
     startStopId: {
         type: Types.ObjectId,
+        ref: 'Stop'
     },
     endStopId: {
         type: Types.ObjectId,
+        ref: 'Stop'
     },
     distance: Number,
     durationMinutes: Number,
@@ -13,8 +15,14 @@ const routeSchema = new Schema({
         type: String,
         enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     },
+    sector: {
+        type: Number,
+    },
     stops: [{
-        type: Types.ObjectId, 
+        stopId: {
+            type: Types.ObjectId,
+            ref: 'Stop'
+        },
         arrivalTime: String,
         departureTime: String,
         order: Number
@@ -23,13 +31,7 @@ const routeSchema = new Schema({
         type: Types.ObjectId,
         ref: 'TransportOperator',
         required: true
-    },
-    buses: [
-        {
-            type: Types.ObjectId,
-            ref: 'Bus'
-        }
-    ]
+    }
 })
 
 const Route = model('Route', routeSchema)

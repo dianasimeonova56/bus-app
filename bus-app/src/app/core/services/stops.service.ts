@@ -17,12 +17,26 @@ export class StopsService {
 
     constructor(private httpClient: HttpClient) { }
 
-    // getStops(): Observable<Stop[]> {
-    //     return this.httpClient.get<Stop[]>(this.apiUrl)
-    //         .pipe(
-    //             tap(stops => this.selectedStopBehaviourSubject.next(stops))
-    //         );
-    // }
+    getStops(): Observable<Stop[]> {
+        return this.httpClient.get<Stop[]>(this.apiUrl)
+            .pipe(
+                tap(stops => this.stopsBehaviourSubject.next(stops))
+            );
+    }
+
+    getBusStations(): Observable<Stop[]> {
+        return this.httpClient.get<Stop[]>(`${this.apiUrl}/bus-stations`)
+            .pipe(
+                tap(stops => this.stopsBehaviourSubject.next(stops))
+            );
+    }
+
+    getNormalStops(): Observable<Stop[]> {
+        return this.httpClient.get<Stop[]>(`${this.apiUrl}/normal-stops`)
+            .pipe(
+                tap(stops => this.stopsBehaviourSubject.next(stops))
+            );
+    }
 
     getStop(stopId: string | null): Observable<Stop> {
         return this.httpClient.get<Stop>(`${this.apiUrl}/${stopId}`).pipe(

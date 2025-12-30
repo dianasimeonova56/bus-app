@@ -7,14 +7,12 @@ const transportOperatorSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true,
         required: [true, "Transport operator email field is required!"],
         minLength: [10, 'Email should be at least 10 chars long']
     },
     phoneNumber: 
     { 
-        type: String, 
-        unique: true, 
+        type: String,
         required: [true, "Transport operator phone number field is required!"] 
     }
 })
