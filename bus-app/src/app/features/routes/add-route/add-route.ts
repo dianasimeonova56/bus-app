@@ -138,6 +138,10 @@ export class AddRoute {
     }).unsubscribe();
   }
 
+  getDepartureSector(): void {
+
+  }
+
   onStopSelected(stop: { lat: number; lng: number; name: string }) {
     this.latitude?.setValue(stop.lat);
     this.longitude?.setValue(stop.lng);

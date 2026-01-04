@@ -12,8 +12,7 @@ stopsController.post('/create-stop', async (req, res) => {
             return res.status(400).json({ message: 'No stopData provided' });
         }
 
-        const newStop = new Stop(stopData);
-        await newStop.save();
+        const newStop = await stopsService.newStop(stopData);
 
         res.status(201).json(newStop);
     } catch (err) {
@@ -27,6 +26,18 @@ stopsController.get('/', async (req, res) => {
         const stops = await stopsService.getAll();
 
         res.status(200).json(stops);
+    } catch (err) {
+        console.error('Error while fetching stops:', err.message);
+        res.status(400).json({ message: err.message });
+    }
+})
+
+stopsController.get('/:stopId', async (req, res) => {
+    try {
+        const { stopId } = req.params;
+        const stop = await stopsService.getStop(stopId);
+
+        res.status(200).json(stop);
     } catch (err) {
         console.error('Error while fetching stops:', err.message);
         res.status(400).json({ message: err.message });

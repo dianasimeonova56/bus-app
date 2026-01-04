@@ -15,9 +15,6 @@ const routeSchema = new Schema({
         type: String,
         enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     },
-    sector: {
-        type: Number,
-    },
     stops: [{
         stopId: {
             type: Types.ObjectId,

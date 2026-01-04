@@ -14,6 +14,7 @@ const tripSchema = new Schema({
     arrivalTime: String,
     stops: [{
         type: Types.ObjectId, 
+        ref: 'Stop',
         arrivalTime: String,
         departureTime: String,
         order: Number

@@ -24,7 +24,11 @@
                     </div>
 
                     <label for="" class="form-label">Which sector does it depart from?</label>
-                    
+                    <!-- @for (sector of selectedStops[selectedDepartureId]; track stop._id) {
+                        <div cdkDrag [attr.data-id]="stop._id">
+                            {{stop.name}}
+                        </div>
+                        } -->
                     <input type="submit" class="form-control mt-5" value="Add route">
                 </div>
             </form>

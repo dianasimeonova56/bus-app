@@ -5,5 +5,6 @@ export interface Stop {
         type: string;
         coordinates: [number, number];
     },
-    type: string
+    type: string,
+    sectors?: number
 }
