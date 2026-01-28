@@ -1,25 +1,37 @@
 import { Schema, model, Types } from 'mongoose';
 
 const routeSchema = new Schema({
-    startStopId: {
-        type: Types.ObjectId,
-        ref: 'Stop'
+    startStop: {
+        stopId: {
+            type: Types.ObjectId,
+            ref: 'Stop',
+            required: true
+        },
+        sector: Number
     },
-    endStopId: {
-        type: Types.ObjectId,
-        ref: 'Stop'
+    endStop: {
+        stopId: {
+            type: Types.ObjectId,
+            ref: 'Stop',
+            required: true
+        },
+        sector: Number
     },
     distance: Number,
-    durationMinutes: Number,
+    duration: String,
+    startHour: String,
+    arrivalHour: String,
     days: {
-        type: String,
+        type: [String],
         enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     },
     stops: [{
         stopId: {
             type: Types.ObjectId,
-            ref: 'Stop'
+            ref: 'Stop',
+            required: true
         },
+        sector: Number,
         arrivalTime: String,
         departureTime: String,
         order: Number

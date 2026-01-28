@@ -1,4 +1,4 @@
-import Route from '../models/Route'
+import Route from '../models/Route.js'
 
 export default {
     newRoute(routeData) {

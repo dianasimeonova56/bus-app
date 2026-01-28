@@ -1,13 +1,23 @@
-import { Stop } from "./stop.model";
-
 export interface Route {
-    startStopId: Stop,
-    endStopId: Stop,
-    distance: Number,
-    durationMinutes: Number,
-    days: string[],
-    sector: Number,
-    stops: Stop[],
-    transportOperator: String,
-    buses: []
+  startStop: {
+    stopId: string;
+    sector: number;
+  };
+  endStop: {
+    stopId: string;
+    sector: number;
+  };
+  distance: Number;
+  duration: String;
+  days: String[];
+  stops: {
+    stopId: string;
+    arrivalTime: string;
+    departureTime: string;
+    order: number;
+    sector: number;
+  }[];
+  transportOperator: string;
+  startHour: String;
+  arrivalHour: String;
 }

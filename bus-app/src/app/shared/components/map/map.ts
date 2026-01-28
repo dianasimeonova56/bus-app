@@ -1,8 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 // import * as L from 'leaflet';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { latLng, LatLng, tileLayer } from 'leaflet';
 import 'leaflet-control-geocoder';
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import "leaflet-routing-machine";
+import "lrm-graphhopper";
 import { SelectedStop, Stop } from '../../../models';
 
 declare let L: any;
@@ -13,66 +16,151 @@ declare let L: any;
   standalone: true,
   imports: [LeafletModule]
 })
-export class MapComponent {
-  private map: L.Map | undefined;
+export class MapComponent implements OnChanges {
   @Output() stopSelected = new EventEmitter<SelectedStop>();
-  // locations = [
-  //   { id: 1, name: 'Burgas', latitude: 42.490721, longitude: 27.473981 },
-  //   { id: 2, name: 'Varna', latitude: 43.2160, longitude: 27.8972 }
-  // ];
+  @Output() distance = new EventEmitter<number>();
+  @Output() durationStr = new EventEmitter<string>();
+  @Output() duration = new EventEmitter<number>();
+  @Output() legTimesChange = new EventEmitter<number[]>();
 
-  // latlngs: L.LatLngExpression[] = [
-  //   [42.490721, 27.473981],
-  //   [43.2160, 27.8972]
-  // ];
+  @Input() departureStop?: Stop;
+  @Input() arrivalStop?: Stop;
+  @Input() intermediateStops?: Stop[];
 
-  optionsSpec: any = {
-    layers: [{ url: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: 'Open Street Map' }],
-    zoom: 5,
-    center: [46.879966, -121.726909]
-  };
+  private map: L.Map | undefined;
+  private routingControl: any;
 
-  zoom = this.optionsSpec.zoom;
-  center = latLng(this.optionsSpec.center);
   options = {
-    layers: [tileLayer(this.optionsSpec.layers[0].url, { attribution: this.optionsSpec.layers[0].attribution })],
-    zoom: this.optionsSpec.zoom,
-    center: latLng(this.optionsSpec.center)
+    layers: [
+      tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      })
+    ],
+    zoom: 5,
+    center: latLng(46.879966, -121.726909)
   };
-
-  formZoom = this.zoom;
-  zoomLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
-  lat = this.center.lat;
-  lng = this.center.lng;
-
-  onCenterChange(center: LatLng) {
-    this.lat = center.lat;
-    this.lng = center.lng;
-  }
-
-  onZoomChange(zoom: number) {
-    this.formZoom = zoom;
-  }
-
-  doApply() {
-    this.center = latLng(this.lat, this.lng);
-    this.zoom = this.formZoom;
-  }
-
 
   onMapReady(map: L.Map) {
-    (L.Control as any).geocoder({
-      defaultMarkGeocode: false
-    })
+    this.map = map;
+
+    // Override default marker
+    // L.Marker.prototype.options.icon = L.icon({
+    //   iconUrl: 'assets/marker-icon.png',
+    //   shadowUrl: 'assets/marker-shadow.png'
+    // });
+
+    // Geocoder за добавяне на точки
+    (L.Control as any).geocoder({ defaultMarkGeocode: false })
       .on('markgeocode', (e: any) => {
         const latlng = e.geocode.center;
-        L.marker(latlng).addTo(map)
+        L.marker(latlng)
+          .addTo(map)
           .bindPopup(e.geocode.name)
           .openPopup();
-        map.setView(latlng, 13);
 
-        this.stopSelected.emit({ lat: latlng.lat, lng: latlng.lng, name: e.geocode.name });
+        this.stopSelected.emit({
+          lat: latlng.lat,
+          lng: latlng.lng,
+          name: e.geocode.name
+        });
       })
       .addTo(map);
+
+    // Initial routing control
+    this.updateRouting();
+  }
+
+  updateRouting() {
+    if (!this.map) return;
+
+    // Remove old route
+    if (this.routingControl) {
+      this.map.removeControl(this.routingControl);
+    }
+
+    const waypoints: any[] = [];
+
+    if (this.departureStop) waypoints.push(L.latLng(this.departureStop.location.coordinates[1], this.departureStop.location.coordinates[0]));
+    if (this.intermediateStops) {
+
+      this.intermediateStops.forEach(stop => waypoints.push(L.latLng(stop.location.coordinates[1], stop.location.coordinates[0])));
+    }
+    if (this.arrivalStop) waypoints.push(L.latLng(this.arrivalStop.location.coordinates[1], this.arrivalStop.location.coordinates[0]));
+
+    if (waypoints.length < 2) return;
+
+    this.routingControl = L.Routing.control({
+      router: new L.Routing.GraphHopper('3c01185e-9fb4-411a-97f3-fc677dd1fcc3'),
+      waypoints,
+      routeWhileDragging: false
+    }).addTo(this.map);
+
+    this.routingControl.on('routesfound', (e: any) => {
+      if (e.routes && e.routes.length > 0) {
+        const summary = e.routes[0].summary;
+        const distanceKm = summary.totalDistance / 1000;
+        const [durationFormatted, duration] = this.formatDuration(summary.totalTime);
+
+        console.log('Distance (km):', distanceKm);
+        console.log('Duration:', durationFormatted);
+
+
+        this.distance.emit(distanceKm);
+        this.durationStr.emit(durationFormatted);
+        this.duration.emit(duration)
+        const legTimes = this.calculateLegTimes(e.routes[0]);
+        this.legTimesChange.emit(legTimes);
+      }
+    });
+  }
+
+  formatDuration(seconds: number): [string, number] {
+    const total = Math.round(seconds / 60);
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.round((seconds % 3600) / 60);
+
+    if (hrs > 0) {
+      return [`${hrs}h${mins > 0 ? mins : ''}min`, total];
+    } else {
+      return [`${mins}min`, total];
+    }
+  }
+
+  calculateLegTimes(route: any): number[] {
+    const legTimes: number[] = [];
+    const waypointIndices = route.waypointIndices;
+    const instructions = route.instructions;
+
+    for (let i = 0; i < waypointIndices.length - 1; i++) {
+      const fromIdx = waypointIndices[i];
+      const toIdx = waypointIndices[i + 1];
+
+      let legTime = 0;
+
+      instructions.forEach((instr: any) => {
+        if (instr.index >= fromIdx && instr.index < toIdx) {
+          legTime += instr.time;
+        }
+      });
+
+      legTimes.push(legTime);
+    }
+
+    // results (seconds)
+    console.log('Leg times:', legTimes);
+
+    // example usage
+    legTimes.forEach((time, i) => {
+      console.log(`Leg ${i} (${i} → ${i + 1}): ${Math.round(time / 60)} min`);
+    });
+
+    return legTimes;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (!this.map) return;
+    if (changes['departureStop'] || changes['arrivalStop'] || changes['intermediateStops']) {
+      this.updateRouting();
+    }
   }
 }

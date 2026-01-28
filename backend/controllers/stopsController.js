@@ -32,18 +32,6 @@ stopsController.get('/', async (req, res) => {
     }
 })
 
-stopsController.get('/:stopId', async (req, res) => {
-    try {
-        const { stopId } = req.params;
-        const stop = await stopsService.getStop(stopId);
-
-        res.status(200).json(stop);
-    } catch (err) {
-        console.error('Error while fetching stops:', err.message);
-        res.status(400).json({ message: err.message });
-    }
-})
-
 stopsController.get('/bus-stations', async (req, res) => {
     try {
         const busStations = await stopsService.getBusStations();
@@ -60,6 +48,18 @@ stopsController.get('/normal-stops', async (req, res) => {
         const busStations = await stopsService.getNormalStops();
 
         res.status(200).json(busStations);
+    } catch (err) {
+        console.error('Error while fetching stops:', err.message);
+        res.status(400).json({ message: err.message });
+    }
+})
+
+stopsController.get('/:stopId', async (req, res) => {
+    try {
+        const { stopId } = req.params;
+        const stop = await stopsService.getStop(stopId);
+
+        res.status(200).json(stop);
     } catch (err) {
         console.error('Error while fetching stops:', err.message);
         res.status(400).json({ message: err.message });

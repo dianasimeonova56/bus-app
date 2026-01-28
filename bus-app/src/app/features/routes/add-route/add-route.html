@@ -1,52 +1,141 @@
 <div class="container my-5">
     <div class="row">
         <div class="col-6">
-            <form [formGroup]="addStopForm" (ngSubmit)="onSubmit()" class="pt-5">
+            <form [formGroup]="addRouteForm" (ngSubmit)="onSubmit()" class="pt-5">
                 <h2>Make routes</h2>
                 <div class="form-group">
-                    <label for="" class="form-label">Add Departure Stop</label>
-                    <input class="form-control" list="busStations" placeholder="Type to search bus station..."
-                        (change)="onStopDepartureSelected($event)">
-                    <label for="" class="form-label">Add Arrival Stop</label>
-                    <input class="form-control" list="busStations" placeholder="Type to search bus station..."
-                        (change)="onStopArrivalSelected($event)">
+                    <label for="" class="form-label">Departure time</label>
+                    <input class="form-control" type="time" formControlName="startHour" min="06:00" max="22:00">
+                    <label for="" class="form-label">Transport operator</label>
+                    <select class="form-select" formControlName="transportOperator">
+                        <option selected>Choose an operator</option>
+                        @for (operator of operators$ | async; track operator.name) {
+                        <option [value]="operator._id">{{operator.name}}</option>
+                        }
+                    </select>
 
-                    <label for="" class="form-label">Add Intermediate Stops</label>
-                    <input class="form-control" list="normalStops" placeholder="Type to search intermediate stop..."
-                        (change)="onStopIntermediateSelected($event)">
+                    <div formGroupName="departureStop">
+                        <label for="" class="form-label">Add Departure Stop</label>
+                        <input class="form-control" list="busStations" placeholder="Type to search bus station..."
+                            (input)="onStopDepartureSelected($event)" formControlName="departureStopId">
+                        @if (selectedDeparture) {
+                        <label class="form-label">
+                            Which sector does it depart from?
+                        </label>
 
-                    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-                        @for (stop of selectedStops; track stop._id) {
-                        <div cdkDrag [attr.data-id]="stop._id">
-                            {{stop.name}}
-                        </div>
+                        <select class="form-select" formControlName="departureSector">
+                            <option value="" disabled>
+                                Choose a sector
+                            </option>
+
+                            @for (sector of departureSectors; track sector) {
+                            <option [value]="sector">
+                                Sector {{ sector }}
+                            </option>
+                            }
+                        </select>
                         }
                     </div>
 
-                    <label for="" class="form-label">Which sector does it depart from?</label>
-                    <!-- @for (sector of selectedStops[selectedDepartureId]; track stop._id) {
-                        <div cdkDrag [attr.data-id]="stop._id">
-                            {{stop.name}}
+                    <div>
+                        <label for="" class="form-label">Add Intermediate
+                            Stops</label>
+                        <input class="form-control" list="allStops" placeholder="Type to search intermediate stop..."
+                            (blur)="onStopIntermediateSelected($event)">
+                        <div formArrayName="intermediateStops" cdkDropList (cdkDropListDropped)="drop($event)">
+                            @for (stopCtrl of intermediateStops.controls; track stopCtrl.value.intermediateStopId) {
+                            <div cdkDrag [formGroupName]="stopCtrl.value.intermediateStopId" class="col-6 border">
+
+                                <div>{{ stopCtrl.value.intermediateStopName }}</div>
+
+                                <label>Dwell time</label>
+                                <input type="number" class="form-control"
+                                    formControlName="intermediateStopDurationMinutes" min="1" value="1" (input)="updateIntermediateStopDwell(stopCtrl.value.intermediateStopId, $event)"/>
+
+                                @if (stopCtrl.value.sectors > 0) {
+                                <label>Which sector does it depart from?</label>
+
+                                <select class="form-select" formControlName="intermediateSector" (input)="updateIntermediateStopSector(stopCtrl.value.intermediateStopId, $event)">
+                                    <option value="" disabled>Choose sector</option>
+
+                                    @for (s of getSectorsArray(stopCtrl.value.sectors); track s) {
+                                    <option [value]="s">
+                                        Sector {{ s }}
+                                    </option>
+                                    }
+                                </select>
+                                }
+                            </div>
+                            }
                         </div>
-                        } -->
+                    </div>
+
+                    <div formGroupName="arrivalStop">
+                        <label for="" class="form-label">Add Arrival Stop</label>
+                        <input class="form-control" list="busStations" placeholder="Type to search bus station..."
+                            (input)="onStopArrivalSelected($event)" formControlName="arrivalStopId">
+                        @if (selectedArrival) {
+                        <label class="form-label">
+                            On which sector does it arrive?
+                        </label>
+
+                        <select class="form-select" formControlName="arrivalSector">
+                            <option value="" disabled>
+                                Choose a sector
+                            </option>
+
+                            @for (sector of arrivalSectors; track sector) {
+                            <option [value]="sector">
+                                Sector {{ sector }}
+                            </option>
+                            }
+                        </select>
+                        }
+                    </div>
+
+
+                    <label class="form-label">When does it run?</label>
+                    @for(day of daysOfWeek; track $index) {
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" [value]="day"
+                            (change)="onCheckboxChange($event)">
+                        <label class="form-check-label">{{day}}</label>
+                    </div>
+                    }
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" value="everyday" (change)="selectAllDays()">
+                        <label class="form-check-label">Everyday</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" value="weekend" (change)="selectWeekend()">
+                        <label class="form-check-label">Weekends</label>
+                    </div>
                     <input type="submit" class="form-control mt-5" value="Add route">
                 </div>
             </form>
 
             <datalist id="busStations">
                 @for (stop of busStations$ | async; track stop._id) {
-                    <option [value]="stop.name"></option>
+                <option [value]="stop.name"></option>
                 }
             </datalist>
             <datalist id="normalStops">
                 @for (stop of normalStops$ | async; track stop._id) {
-                    <option [value]="stop.name"></option>
+                <option [value]="stop.name"></option>
+                }
+            </datalist>
+            <datalist id="allStops">
+                @for (stop of allStops$ | async; track stop._id) {
+                <option [value]="stop.name"></option>
                 }
             </datalist>
         </div>
 
         <div class="col-6">
-            <app-map (stopSelected)="onStopSelected($event)"></app-map>
+            <app-map [departureStop]="selectedDeparture" [arrivalStop]="selectedArrival"
+                [intermediateStops]="selectedStops" (distance)="distanceKm = $event"
+                (durationStr)="durationStr = $event" (duration)="duration = $event"
+                (legTimesChange)="legTimes = $event"></app-map>
 
         </div>
     </div>

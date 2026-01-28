@@ -43,6 +43,7 @@ export class AddTransportOperator {
   onSubmit(): void {
     if (this.name != null && this.email != null && this.phone != null) {
       const newTransportOperator = {
+        _id: '',
         name: this.name.value,
         email: this.email.value,
         phoneNumber: this.phone.value

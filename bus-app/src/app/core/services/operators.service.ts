@@ -49,16 +49,4 @@ export class OperatorsService {
     //         })
     //     );
     // }
-
-    // searchPlays(playName?: string, director?: string, playDate?: Date): Observable<Play[]> {
-    //     let query = new HttpParams();
-
-    //     if (playName) query = query.set('playName', playName);
-    //     if (director) query = query.set('director', director);
-    //     if (playDate) query = query.set('playDate', playDate.toString());
-    //     console.log(playDate?.toString());
-
-
-    //     return this.httpClient.get<Play[]>(`${this.apiUrl}/search`, { params: query });
-    // }
 }
