@@ -19,7 +19,7 @@ export class AddTransportOperator {
   transportOperatorForm: FormGroup;
 
   constructor() {
-    this.transportOperatorForm=this.formBuilder.group({
+    this.transportOperatorForm = this.formBuilder.group({
       name: [''],
       email: [''],
       phone: ['']
@@ -41,23 +41,23 @@ export class AddTransportOperator {
   }
 
   onSubmit(): void {
+    debugger
     if (this.name != null && this.email != null && this.phone != null) {
       const newTransportOperator = {
-        _id: '',
         name: this.name.value,
         email: this.email.value,
         phoneNumber: this.phone.value
       }
 
-      this.operatorsService.createOperator(newTransportOperator).subscribe({
-        next: () => {
-          console.log('Stop created:', stop);
-          this.transportOperatorForm.reset();
-        },
-        error: (err) => {
-          console.log("Login failed", err);
-        }
-      })
+      this.operatorsService.createOperator(newTransportOperator)
+        .subscribe({
+          next: (created) => {
+            console.log('Created operator:', created);
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
     }
   }
 }

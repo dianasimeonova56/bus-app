@@ -1,5 +1,4 @@
 import express from 'express';
-import TransportOperator from '../models/TransportOperator.js'
 import operatorsService from '../services/operatorsService.js'
 
 const operatorController = express.Router();
@@ -12,8 +11,7 @@ operatorController.post('/create-operator', async (req, res) => {
             return res.status(400).json({ message: 'No operatorData provided' });
         }
 
-        const newOperator = new TransportOperator(operatorData);
-        await newOperator.save();
+        const newOperator = await operatorsService.newOperator(operatorData);
 
         res.status(201).json(newOperator);
     } catch (err) {
