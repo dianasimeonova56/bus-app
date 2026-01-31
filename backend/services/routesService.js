@@ -5,5 +5,10 @@ export default {
         const route = new Route(routeData);
 
         return route.save();
-    }
+    },
+    getAll() {
+        const routes = Route.find();
+
+        return routes;
+    },
 }

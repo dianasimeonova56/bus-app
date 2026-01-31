@@ -20,4 +20,36 @@ routesController.post('/create-route', async (req, res) => {
     }
 });
 
+routesController.get('/', async (req, res) => {
+    try {
+        const routes = await routesService.getAll()
+            .populate({
+                path: 'stops',
+                populate: {
+                    path: 'stopId'
+                }
+            }
+            )
+            .populate({
+                path: 'endStop',
+                populate: {
+                    path: 'stopId'
+                }
+            }
+            )
+            .populate({
+                path: 'startStop',
+                populate: {
+                    path: 'stopId'
+                }
+            }
+            )
+
+        res.status(200).json(routes);
+    } catch (err) {
+        console.error('Error while saving route:', err.message);
+        res.status(400).json({ message: err.message });
+    }
+});
+
 export default routesController

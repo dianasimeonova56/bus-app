@@ -268,6 +268,19 @@ export class AddRoute {
     });
   }
 
+    formatDuration(seconds: number): [string, number] {
+    const total = Math.round(seconds / 60);
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.round((seconds % 3600) / 60);
+
+    if (hrs > 0) {
+      return [`${hrs}h${mins > 0 ? mins : ''}min`, total];
+    } else {
+      return [`${mins}min`, total];
+    }
+  }
+
+
   /* ================== SUBMIT ================== */
 
   onSubmit() {
@@ -280,6 +293,11 @@ export class AddRoute {
 
     console.log(schedule);
 
+    let durationTotal = this.duration + dwellings.reduce((acc: any, num: any) => acc + (num *60), 0)
+    console.log(durationTotal);
+    
+    durationTotal = this.formatDuration(durationTotal);
+    console.log(durationTotal);
 
     console.log(formValue.intermediateStops);
 
@@ -292,8 +310,8 @@ export class AddRoute {
         stopId: formValue.arrivalStop.arrivalStopId,
         sector: formValue.arrivalStop.arrivalSector
       },
-      distance: this.distanceKm,
-      duration: this.durationStr,
+      distance: Number(this.distanceKm.toFixed(1)),
+      duration: durationTotal[0],
       days: this.days.value as string[],
       stops: formValue.intermediateStops.map((s: any, index: number) => ({
         stopId: s.intermediateStopId,

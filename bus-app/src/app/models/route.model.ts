@@ -1,4 +1,5 @@
 export interface Route {
+  _id?: String;
   startStop: {
     stopId: string;
     sector: number;

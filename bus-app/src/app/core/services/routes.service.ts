@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, tap } from "rxjs";
-import { Route } from "../../models/index";
+import { Route, RoutePopulated } from "../../models/index";
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +10,7 @@ import { Route } from "../../models/index";
 export class RoutesService {
     private apiUrl = 'http://localhost:3000/routes';
     private routesBehaviourSubject = new BehaviorSubject<Route[]>([]);
+    private routesPopulatedBehaviourSubject = new BehaviorSubject<RoutePopulated[]>([]);
     private selectedRouteBehaviourSubject = new BehaviorSubject<Route | null>(null);
 
     public routes$ = this.routesBehaviourSubject.asObservable();
@@ -17,10 +18,12 @@ export class RoutesService {
 
     constructor(private httpClient: HttpClient) { }
 
-    getRoutes(): Observable<Route[]> {
-        return this.httpClient.get<Route[]>(this.apiUrl)
+    getRoutes(): Observable<RoutePopulated[]> {
+        return this.httpClient.get<RoutePopulated[]>(this.apiUrl)
             .pipe(
-                tap(stops => this.routesBehaviourSubject.next(stops))
+                tap(stops => {
+                    this.routesPopulatedBehaviourSubject.next(stops)
+                })
             );
     }
 

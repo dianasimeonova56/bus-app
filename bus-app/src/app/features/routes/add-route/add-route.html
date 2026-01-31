@@ -134,7 +134,7 @@
         <div class="col-6">
             <app-map [departureStop]="selectedDeparture" [arrivalStop]="selectedArrival"
                 [intermediateStops]="selectedStops" (distance)="distanceKm = $event"
-                (durationStr)="durationStr = $event" (duration)="duration = $event"
+                (duration)="duration = $event"
                 (legTimesChange)="legTimes = $event"></app-map>
 
         </div>

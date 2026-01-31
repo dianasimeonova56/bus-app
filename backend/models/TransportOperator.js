@@ -17,6 +17,6 @@ const transportOperatorSchema = new Schema({
     }
 })
 
-const TransportOperator = model('Transport Operator', transportOperatorSchema)
+const TransportOperator = model('TransportOperator', transportOperatorSchema)
 
 export default TransportOperator;

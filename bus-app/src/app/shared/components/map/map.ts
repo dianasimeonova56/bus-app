@@ -19,7 +19,6 @@ declare let L: any;
 export class MapComponent implements OnChanges {
   @Output() stopSelected = new EventEmitter<SelectedStop>();
   @Output() distance = new EventEmitter<number>();
-  @Output() durationStr = new EventEmitter<string>();
   @Output() duration = new EventEmitter<number>();
   @Output() legTimesChange = new EventEmitter<number[]>();
 
@@ -97,34 +96,35 @@ export class MapComponent implements OnChanges {
 
     this.routingControl.on('routesfound', (e: any) => {
       if (e.routes && e.routes.length > 0) {
+        
         const summary = e.routes[0].summary;
         const distanceKm = summary.totalDistance / 1000;
-        const [durationFormatted, duration] = this.formatDuration(summary.totalTime);
+        //const [durationFormatted, duration] = this.formatDuration(summary.totalTime);
 
-        console.log('Distance (km):', distanceKm);
-        console.log('Duration:', durationFormatted);
+        // console.log('Distance (km):', distanceKm);
+        // console.log('Duration:', durationFormatted);
 
 
         this.distance.emit(distanceKm);
-        this.durationStr.emit(durationFormatted);
-        this.duration.emit(duration)
+        //this.durationStr.emit(durationFormatted);
+        this.duration.emit(summary.totalTime)
         const legTimes = this.calculateLegTimes(e.routes[0]);
         this.legTimesChange.emit(legTimes);
       }
     });
   }
 
-  formatDuration(seconds: number): [string, number] {
-    const total = Math.round(seconds / 60);
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.round((seconds % 3600) / 60);
+  // formatDuration(seconds: number): [string, number] {
+  //   const total = Math.round(seconds / 60);
+  //   const hrs = Math.floor(seconds / 3600);
+  //   const mins = Math.round((seconds % 3600) / 60);
 
-    if (hrs > 0) {
-      return [`${hrs}h${mins > 0 ? mins : ''}min`, total];
-    } else {
-      return [`${mins}min`, total];
-    }
-  }
+  //   if (hrs > 0) {
+  //     return [`${hrs}h${mins > 0 ? mins : ''}min`, total];
+  //   } else {
+  //     return [`${mins}min`, total];
+  //   }
+  // }
 
   calculateLegTimes(route: any): number[] {
     const legTimes: number[] = [];
