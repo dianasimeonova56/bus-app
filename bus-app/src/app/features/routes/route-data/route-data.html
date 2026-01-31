@@ -1,0 +1,24 @@
+<div class="container">
+    <h2>Route Data</h2>
+    <form [formGroup]="routeFilter" action="" method="GET" class="row" (ngSubmit)="onSubmit()">
+        <div class="col-3"><select class="form-select" formControlName="stop">
+                @for (stop of allStops$ | async; track stop._id) {
+                <option [value]="stop._id">{{stop.name}}</option>
+                }
+            </select></div>
+        <div class="col-3">
+            <select class="form-select" formControlName="transportOperator">
+                @for (operator of operators$ | async; track operator._id) {
+                <option [value]="operator._id">{{operator.name}}</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-3"><input type="date" name="" formControlName="date"></div>
+        <div class="col-3"><input type="time" name="" formControlName="time"></div>
+
+        <input type="submit" value="Submit" class="form-control">
+    </form>
+
+    <app-load-departures [routes]="routes"></app-load-departures>
+</div>

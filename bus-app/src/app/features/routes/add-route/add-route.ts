@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { OperatorsService, StopsService, RoutesService } from '../../../core/services';
-import { IntermediateStop, Stop, TransportOperator } from '../../../models';
+import { Stop, TransportOperator } from '../../../models';
 import {
   ReactiveFormsModule,
   FormBuilder,

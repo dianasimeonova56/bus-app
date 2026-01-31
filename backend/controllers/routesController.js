@@ -52,4 +52,18 @@ routesController.get('/', async (req, res) => {
     }
 });
 
+routesController.get('/search', async (req, res) => {
+    try {
+        const filter = req.query;
+
+        const routes = await routesService.searchRoutes(filter);
+
+        res.status(200).json(routes);
+    } catch (err) {
+        console.error('Error while searching routes:', err.message);
+        res.status(400).json({ message: err.message });
+    }
+
+})
+
 export default routesController

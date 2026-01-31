@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, tap } from "rxjs";
+import { BehaviorSubject, Observable, tap, Timestamp } from "rxjs";
 import { Route, RoutePopulated } from "../../models/index";
 
 @Injectable({
@@ -67,15 +67,15 @@ export class RoutesService {
     //     );
     // }
 
-    // searchPlays(playName?: string, director?: string, playDate?: Date): Observable<Play[]> {
-    //     let query = new HttpParams();
+    searchRoutes(stop?: string, transportOperator?: string, date?: Date, time?: string): Observable<RoutePopulated[]> {
+        let query = new HttpParams();
 
-    //     if (playName) query = query.set('playName', playName);
-    //     if (director) query = query.set('director', director);
-    //     if (playDate) query = query.set('playDate', playDate.toString());
-    //     console.log(playDate?.toString());
+        if (stop) query = query.set('stop', stop);
+        if (transportOperator) query = query.set('director', transportOperator);
+        if (date) query = query.set('date', date.toString());
+        if (time) query = query.set('time', time);
 
 
-    //     return this.httpClient.get<Play[]>(`${this.apiUrl}/search`, { params: query });
-    // }
+        return this.httpClient.get<RoutePopulated[]>(`${this.apiUrl}/search`, { params: query });
+    }
 }

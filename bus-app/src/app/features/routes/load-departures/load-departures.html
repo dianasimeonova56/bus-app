@@ -1,29 +1,26 @@
-<div class="container">
-    <div class="row">
-        <div class="departures col mt-5">
-            <table class="table">
-                <h2>Departures</h2>
-                <tbody>
-
-                    @for(route of this.departures$| async; track route._id){
-                    <tr>
-                        <td>Departs from: {{route.startStop.stopId.name}} at {{route.startHour}}</td>
-                        <td>Arrives at: {{route.arrivalHour}} at {{route.endStop.stopId.name}}</td>
-                        @for(stop of route.stops; track stop.stopId) {
-                        <td>{{stop.stopId.name}}</td>
-                        <td>Arrives at:{{stop.arrivalTime}}</td>
-                        <td>Departs at:{{stop.departureTime}}</td>
-                        @if(stop.sector) {
-                        <td>Sector:{{stop.sector}}</td>
-                        }
-                        }
-                        <td>Duration: {{route.duration}}</td>
-                        <td>Distance: {{route.distance}}</td>
-                    </tr>
+<div class="row">
+    <div class="departures col mt-5">
+        <table class="table">
+            <h2>Departures</h2>
+            <tbody>
+                @for(route of this.departures$ | async; track route._id){
+                <tr>
+                    <td>Departs from: {{route.startStop.stopId.name}} at {{route.startHour}}</td>
+                    <td>Arrives at: {{route.arrivalHour}} at {{route.endStop.stopId.name}}</td>
+                    @for(stop of route.stops; track stop.stopId) {
+                    <td>{{stop.stopId.name}}</td>
+                    <td>Arrives at:{{stop.arrivalTime}}</td>
+                    <td>Departs at:{{stop.departureTime}}</td>
+                    @if(stop.sector) {
+                    <td>Sector:{{stop.sector}}</td>
                     }
-                </tbody>
+                    }
+                    <td>Duration: {{route.duration}}</td>
+                    <td>Distance: {{route.distance}}</td>
+                </tr>
+                }
+            </tbody>
 
-            </table>
-        </div>
+        </table>
     </div>
 </div>
