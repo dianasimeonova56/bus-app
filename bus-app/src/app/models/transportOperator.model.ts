@@ -1,5 +1,5 @@
 export interface TransportOperator {
-    _id: String,
+    _id?: String,
     name: String,
     email: String,
     phoneNumber: String
