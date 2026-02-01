@@ -22,6 +22,7 @@ export class RouteData {
   operators$: Observable<TransportOperator[]>;
   routeFilter: FormGroup;
   routes: RoutePopulated[] = [];
+  stopId: string = '';
 
   constructor() {
     this.allStops$ = this.stopsService.getStops();
@@ -45,7 +46,7 @@ export class RouteData {
 
     this.routesService.searchRoutes(stopId, transportOperatorId, day, time).subscribe(routes => {
       this.routes = routes;
-      console.log(this.routes);
+      this.stopId = stopId;
     });
   }
 }

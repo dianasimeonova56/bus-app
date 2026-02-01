@@ -1,26 +1,28 @@
 <div class="row">
     <div class="departures col mt-5">
-        <table class="table">
-            <h2>Departures</h2>
-            <tbody>
-                @for(route of this.departures$ | async; track route._id){
-                <tr>
-                    <td>Departs from: {{route.startStop.stopId.name}} at {{route.startHour}}</td>
-                    <td>Arrives at: {{route.arrivalHour}} at {{route.endStop.stopId.name}}</td>
-                    @for(stop of route.stops; track stop.stopId) {
-                    <td>{{stop.stopId.name}}</td>
-                    <td>Arrives at:{{stop.arrivalTime}}</td>
-                    <td>Departs at:{{stop.departureTime}}</td>
-                    @if(stop.sector) {
-                    <td>Sector:{{stop.sector}}</td>
-                    }
-                    }
-                    <td>Duration: {{route.duration}}</td>
-                    <td>Distance: {{route.distance}}</td>
-                </tr>
-                }
-            </tbody>
+        <h2>Departures</h2>
 
-        </table>
+
+        @for(route of this.departures$ | async; track route._id){
+        <div class="d-flex">
+            <div [appHighlightStop]="route.startStop.stopId._id" [searchedStopId]="searchedStopId">Departs from:
+                {{route.startStop.stopId.name}} at {{route.startHour}}</div>
+            <div [appHighlightStop]="route.endStop.stopId._id" [searchedStopId]="searchedStopId">Arrives at:
+                {{route.arrivalHour}} at {{route.endStop.stopId.name}}</div>
+            @for(stop of route.stops; track stop.stopId) {
+            <div [appHighlightStop]="stop.stopId._id" [searchedStopId]="searchedStopId">
+                <div>{{stop.stopId.name}}</div>
+                <div>Arrives at:{{stop.arrivalTime}}</div>
+                <div>Departs at:{{stop.departureTime}}</div>
+                @if(stop.sector) {
+                <div>Sector:{{stop.sector}}</div>
+                }
+            </div>
+
+            }
+            <div>Duration: {{route.duration}}</div>
+            <div>Distance: {{route.distance}}</div>
+        </div>
+        }
     </div>
 </div>
