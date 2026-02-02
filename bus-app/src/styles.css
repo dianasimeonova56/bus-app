@@ -1,7 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
     --color-blue-100: #393185;
+    --color-blue-200: #414bd4;
     --color-white: #FFFFFF;
+    --font-heading: "Exo 2", sans-serif;
+    --font-body: "Inter", sans-serif;
 }
 
 html,
@@ -11,7 +14,32 @@ body {
 
 body {
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+nav,
+button {
+    font-family: var(--font-heading);
+}
+
+h1,
+.h1 {
+    font-size: 56px;
+}
+
+body,
+p,
+input,
+textarea,
+label {
+    font-family: var(--font-body);
 }
 
 .bg-white {
@@ -20,4 +48,49 @@ body {
 
 .bg-blue {
     background-color: var(--color-blue-100);
+}
+.bg-blue-light {
+    background-color: var(--color-blue-200);
+}
+
+.button {
+    padding: 15px 30px;
+    border-radius: 12px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    border-color: transparent;
+    width: fit-content;
+    text-decoration: none;
+}
+
+.button-blue {
+    background-color: var(--color-blue-100);
+    color: var(--color-white);
+    transition: all 0.4s ease;
+}
+
+.button-white {
+    background-color: var(--color-white);
+    color: var(--color-blue-100);
+    transition: all 0.4s ease;
+}
+
+.button-blue:hover {
+    background-color: var(--color-white);
+    color: var(--color-blue-100);
+}
+
+.button-white:hover {
+    background-color: var(--color-blue-100);
+    color: var(--color-white);
+}
+
+@media (max-width: 989px) {
+    h1,
+    .h1 {
+        font-size: 36px;
+    }
 }

@@ -6,10 +6,11 @@ import { AddTransportOperator } from './features/add-transport-operator/add-tran
 import { RouteData } from './features/routes/route-data/route-data';
 import { Footer, Header } from './shared/components';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { Hero } from './features/hero/hero';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, AddStop, AddRoute, AddTransportOperator, RouteData, Header, Footer],
+  imports: [RouterOutlet, AddStop, AddRoute, AddTransportOperator, RouteData, Header, Footer, Hero],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

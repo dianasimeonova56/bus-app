@@ -1,0 +1,56 @@
+.hero img {
+    object-fit: cover;
+    height: 75vh;
+    width: 100vw;
+}
+
+.hero::before {
+    background-color: #000;
+    content: "";
+    height: 100%;
+    left: 0;
+    opacity: 20%;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.slogan {
+    z-index: 10;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    padding-top: 12vw;
+    padding-left: 10vw;
+    color: var(--color-white);
+    text-shadow: 0px 0px 4px rgba(0, 0, 0, .1);
+}
+
+.slogan .h1 {
+    max-width: 15ch;
+    word-wrap: break-word;
+}
+
+/* .hero .button-blue::before {
+    background-image: url("assets/icons/bus.svg");
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    display: inline-block;
+    opacity: 0;
+}
+.hero .button-blue::before:hover {
+    opacity: 1;
+    visibility: visible;
+} */
+
+@media (max-width: 989px) {
+    .slogan {
+        padding-top: 35vw;
+    }
+}
