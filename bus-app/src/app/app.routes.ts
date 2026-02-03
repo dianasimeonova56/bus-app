@@ -9,7 +9,7 @@ export const routes: Routes = [
     },
     {
         path: 'home',
-        title: "Drama Varna Tickets",
+        title: "Burgas Bus",
         loadComponent: () => import('./features/home/home/home').then(c => c.Home)
     },
 ];

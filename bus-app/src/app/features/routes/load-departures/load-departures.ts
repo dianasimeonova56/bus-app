@@ -32,4 +32,11 @@ export class LoadDepartures {
   isSearchedStop(stopId: string): boolean {
     return this.searchedStopId === stopId;
   }
+
+  expandedRouteId: String | undefined;
+
+  toggle(routeId: String | undefined) {
+    this.expandedRouteId =
+      this.expandedRouteId === routeId ? undefined : routeId;
+  }
 }

@@ -1,12 +1,12 @@
 <div class="container">
-    <h2>Route Data</h2>
-    <form [formGroup]="routeFilter" action="" method="GET" class="row" (ngSubmit)="onSubmit()">
-        <div class="col-3"><select class="form-select" formControlName="stop">
+    <h2 class="text-center my-5">Заминаващи</h2>
+    <form [formGroup]="routeFilter" action="" method="GET" class="row mb-5 d-flex justify-content-between" (ngSubmit)="onSubmit()">
+        <div class="col-2"><select class="form-select" formControlName="stop">
                 @for (stop of allStops$ | async; track stop._id) {
                 <option [value]="stop._id">{{stop.name}}</option>
                 }
             </select></div>
-        <div class="col-3">
+        <div class="col-2">
             <select class="form-select" formControlName="transportOperator">
                 @for (operator of operators$ | async; track operator._id) {
                 <option [value]="operator._id">{{operator.name}}</option>
@@ -14,10 +14,11 @@
             </select>
         </div>
 
-        <div class="col-3"><input type="date" name="" formControlName="date"></div>
-        <div class="col-3"><input type="time" name="" formControlName="time"></div>
+        <div class="col-2 align-self-center "><input type="date" class="form-control" name="" formControlName="date"></div>
+        <div class="col-2 align-self-center time-picker"><input type="time" class="form-control" name="" formControlName="time"></div>
 
-        <input type="submit" value="Submit" class="form-control">
+        <div class="col-2"> <input type="submit" value="Submit" class="form-control"></div>
+
     </form>
 
     <app-load-departures [routes]="routes" [searchedStopId]="stopId"></app-load-departures>
