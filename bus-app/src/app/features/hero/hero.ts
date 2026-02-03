@@ -8,5 +8,5 @@ import { NgxFastMarqueeModule } from 'ngx-fast-marquee';
   styleUrl: './hero.css',
 })
 export class Hero {
-
+busIcon = 'assets/images/bus.svg';
 }
