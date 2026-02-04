@@ -23,6 +23,10 @@ const stopSchema = new Schema({
     type: String,
     required: [true, "Stop name field is required!"]
   },
+  address: {
+    type: String,
+    required: [true, "Stop address field is required!"]
+  },
   location: {
     type: pointSchema,
     required: [true, "Location is required!"]
@@ -30,8 +34,7 @@ const stopSchema = new Schema({
   type: {
     type: String,
     enum: ['Bus Station', 'Normal Stop']
-  }
-
+  },
 }, baseOptions)
 
 const Stop = model('Stop', stopSchema)
@@ -40,6 +43,18 @@ const busStationSchema = new Schema({
   sectors: {
     type: Number,
     required: true
+  },
+  isMainStation: {
+    type: Boolean,
+    default: false
+  },
+  west: {
+    type: Boolean,
+    default: false
+  },
+  south: {
+    type: Boolean,
+    default: false
   }
 });
 
