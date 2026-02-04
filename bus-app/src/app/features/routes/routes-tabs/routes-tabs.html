@@ -1,18 +1,22 @@
 <div ngTabs>
   <div ngTabList selectionMode="follow" selectedTab="movie">
-    <div ngTab value="movie">Movie</div>
-    <div ngTab value="theatres">Cast</div>
-    <div ngTab value="showtimes">Reviews</div>
+    <div ngTab value="south-departures">Автогара Юг - Заминаващи</div>
+    <div ngTab value="south-arrivals">Автогара Юг - Пристигащи</div>
+    <div ngTab value="west-departures">Автогара Запад - Заминаващи</div>
+    <div ngTab value="west-arrivals">Автогара Запад - Пристигащи</div>
   </div>
   <div class="sliding-window">
-    <div ngTabPanel value="movie">
-      <ng-template ngTabContent>Panel 1</ng-template>
+    <div ngTabPanel value="south-departures">
+      <ng-template ngTabContent><app-route-data [stationPosition]="'south'" [routeType]="'departures'"></app-route-data></ng-template>
     </div>
-    <div ngTabPanel value="theatres">
-      <ng-template ngTabContent>Panel 2</ng-template>
+    <div ngTabPanel value="south-arrivals">
+      <ng-template ngTabContent><app-route-data [stationPosition]="'south'" [routeType]="'arrivals'"></app-route-data></ng-template>
     </div>
-    <div ngTabPanel value="showtimes">
-      <ng-template ngTabContent>Panel 3</ng-template>
+    <div ngTabPanel value="west-departures">
+      <ng-template ngTabContent><app-route-data [stationPosition]="'west'" [routeType]="'departures'"></app-route-data></ng-template>
+    </div>
+    <div ngTabPanel value="west-arrivals">
+      <ng-template ngTabContent><app-route-data [stationPosition]="'west'" [routeType]="'arrivals'"></app-route-data></ng-template>
     </div>
   </div>
 </div>
