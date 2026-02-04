@@ -27,6 +27,24 @@ export class RoutesService {
             );
     }
 
+    getArrivals(station: string): Observable<RoutePopulated[]> {
+        return this.httpClient.get<RoutePopulated[]>(`${this.apiUrl}/arrivals/${station}`)
+            .pipe(
+                tap(stops => {
+                    this.routesPopulatedBehaviourSubject.next(stops)
+                })
+            );
+    }
+
+    getDepartures(station: string): Observable<RoutePopulated[]> {
+        return this.httpClient.get<RoutePopulated[]>(`${this.apiUrl}/departures/${station}`)
+            .pipe(
+                tap(stops => {
+                    this.routesPopulatedBehaviourSubject.next(stops)
+                })
+            );
+    }
+
     getBusStations(): Observable<Route[]> {
         return this.httpClient.get<Route[]>(`${this.apiUrl}/bus-stations`)
             .pipe(
