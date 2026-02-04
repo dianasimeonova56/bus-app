@@ -42,12 +42,6 @@ export class MapComponent implements OnChanges {
   onMapReady(map: L.Map) {
     this.map = map;
 
-    // Override default marker
-    // L.Marker.prototype.options.icon = L.icon({
-    //   iconUrl: 'assets/marker-icon.png',
-    //   shadowUrl: 'assets/marker-shadow.png'
-    // });
-
     // Geocoder за добавяне на точки
     (L.Control as any).geocoder({ defaultMarkGeocode: false })
       .on('markgeocode', (e: any) => {
@@ -60,7 +54,7 @@ export class MapComponent implements OnChanges {
         this.stopSelected.emit({
           lat: latlng.lat,
           lng: latlng.lng,
-          name: e.geocode.name
+          address: e.geocode.name
         });
       })
       .addTo(map);
@@ -99,14 +93,8 @@ export class MapComponent implements OnChanges {
         
         const summary = e.routes[0].summary;
         const distanceKm = summary.totalDistance / 1000;
-        //const [durationFormatted, duration] = this.formatDuration(summary.totalTime);
-
-        // console.log('Distance (km):', distanceKm);
-        // console.log('Duration:', durationFormatted);
-
 
         this.distance.emit(distanceKm);
-        //this.durationStr.emit(durationFormatted);
         this.duration.emit(summary.totalTime)
         const legTimes = this.calculateLegTimes(e.routes[0]);
         this.legTimesChange.emit(legTimes);
