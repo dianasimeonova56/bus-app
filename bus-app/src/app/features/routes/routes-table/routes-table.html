@@ -1,0 +1,126 @@
+<div class="routes-list mt-4">
+    <div class="route-row">
+        <div>Времетраене</div>
+        <div>Маршрут</div>
+        <div>Сектор</div>
+        <div>Превозвач</div>
+    </div>
+    @for (route of departures$ | async; track route._id) {
+
+    <!-- SUMMARY ROW -->
+    <div class="route-row" (click)="toggle(route._id)">
+        <!-- Time -->
+        <div class="route-time">
+            {{ route.startHour }}
+            <i class="bi bi-arrow-right"></i>
+            {{ route.arrivalHour }}
+        </div>
+
+        <!-- Route -->
+        <div class="route-path">
+            <span [appHighlightStop]="route.startStop.stopId._id" [searchedStopId]="searchedStopId">
+                {{ route.startStop.stopId.name }}
+            </span>
+            <i class="bi bi-arrow-right"></i>
+            <span [appHighlightStop]="route.endStop.stopId._id" [searchedStopId]="searchedStopId">
+                {{ route.endStop.stopId.name }}
+            </span>
+        </div>
+
+        <!-- Sector -->
+        <div class="route-sector">
+            {{ route.startStop.sector || '-' }}
+        </div>
+
+        <!-- Operator -->
+        <div class="route-operator">
+            {{ route.transportOperator }}
+        </div>
+
+        <!-- Action -->
+        <div class="route-action">
+            <button class="button button-sm button-blue">
+                Спирки и цени
+            </button>
+        </div>
+
+
+    </div>
+    <div class="route-meta-inline mt-2 text-blue">
+        <div>
+            <i class="bi bi-clock "></i>
+            {{ route.duration }}
+        </div>
+
+        <div>
+            <i class="bi bi-geo-alt"></i>
+            {{ route.distance }} км
+        </div>
+    </div>
+
+
+    <!-- DETAILS -->
+    @if (expandedRouteId === route._id) {
+    <div class="route-details">
+
+        <div class="stops-horizontal">
+
+            <div class="times text-blue">
+                <span class="time fw-bold">{{ route.startHour }}</span>
+                @for (stop of route.stops; track stop.stopId) {
+                <span class="time">
+                    {{ stop.arrivalTime }} – {{ stop.departureTime }}
+                </span>
+                }
+                <span class="time fw-bold">{{ route.arrivalHour }}</span>
+            </div>
+            <div class="stops">
+                <div class="stop">
+                    <div class="connecting-line text-blue">
+                        <div class="point departure"><i class="bi bi-circle"></i></div>
+                        <div class="line"></div>
+                    </div>
+                    <span class="name">
+                        {{ route.startStop.stopId.name }}
+                    </span>
+                </div>
+
+                <!-- Intermediate -->
+                @for (stop of route.stops; track stop.stopId) {
+                <div class="stop intermediate">
+
+                    <span class="name" [appHighlightStop]="stop.stopId._id" [searchedStopId]="searchedStopId">
+                        {{ stop.stopId.name }}
+                    </span>
+                    @if (stop.sector) {
+                    <span class="sector">
+                        Сектор {{ stop.sector }}
+                    </span>
+                    }
+                </div>
+                }
+
+                <div class="stop">
+                    <div class="connecting-line text-blue">
+                        <div class="point arrival"><i class="bi bi-circle"></i></div>
+                        <div class="line"></div>
+                    </div>
+                    <span class="name">
+                        {{ route.endStop.stopId.name }}
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Extra info -->
+        <!-- <div class="route-meta">
+            <span>Продължителност: {{ route.duration }}</span>
+            <span>Разстояние: {{ route.distance }} км</span>
+        </div> -->
+
+    </div>
+    }
+
+    }
+</div>
