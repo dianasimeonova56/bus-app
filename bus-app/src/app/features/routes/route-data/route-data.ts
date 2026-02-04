@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { LoadDepartures } from '../load-departures/load-departures';
+import { Component, inject, Input } from '@angular/core';
+import { RoutesTable } from '../routes-table/routes-table';
 import { OperatorsService, RoutesService, StopsService } from '../../../core/services';
 import { Stop, TransportOperator, RoutePopulated } from '../../../models';
 import { Observable } from 'rxjs';
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-route-data',
-  imports: [LoadDepartures, AsyncPipe, ReactiveFormsModule],
+  imports: [RoutesTable, AsyncPipe, ReactiveFormsModule],
   templateUrl: './route-data.html',
   styleUrl: './route-data.css',
 })
@@ -17,6 +17,29 @@ export class RouteData {
   private routesService = inject(RoutesService);
   private fb = inject(FormBuilder);
   private operatorsService = inject(OperatorsService);
+
+  @Input() stationPosition: 'south' | 'west' = 'south';
+  @Input() routeType: 'departures' | 'arrivals' = 'departures';
+
+  ngOnChanges() {
+    if (this.stationPosition) {
+      this.loadRoutes();
+    }
+  }
+
+  loadRoutes() {
+    debugger
+    if (this.routeType === 'departures') {
+      this.routesService.getDepartures(this.stationPosition).subscribe(routes => {
+        this.routes = routes;
+      });
+    } else {
+      this.routesService.getArrivals(this.stationPosition).subscribe(routes => {
+        this.routes = routes;
+      });
+    }
+
+  }
 
   allStops$: Observable<Stop[]>;
   operators$: Observable<TransportOperator[]>;
