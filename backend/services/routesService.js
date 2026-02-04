@@ -1,4 +1,5 @@
 import Route from '../models/Route.js'
+import Stop from '../models/Stop.js'
 import mongoose from 'mongoose';
 
 export default {
@@ -12,10 +13,20 @@ export default {
 
         return routes;
     },
+    async getStationDepartures(station) {
+        return Route.find({ startStop: station })
+            .populate({ path: 'stops', populate: { path: 'stopId' } })
+            .populate({ path: 'endStop', populate: { path: 'stopId' } })
+            .populate({ path: 'startStop', populate: { path: 'stopId' } });
+    },
+    async getStationArrivals(station) {
+       return Route.find({ startStop: station })
+            .populate({ path: 'stops', populate: { path: 'stopId' } })
+            .populate({ path: 'endStop', populate: { path: 'stopId' } })
+            .populate({ path: 'startStop', populate: { path: 'stopId' } });
+    },
     searchRoutes(filter = {}) {
         const { stop, transportOperatorId, day, time } = filter;
-        console.log(filter);
-        
 
         const query = {};
 

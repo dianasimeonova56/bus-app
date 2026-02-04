@@ -1,5 +1,6 @@
 import express from 'express'
 import routesService from '../services/routesService.js'
+import Stop from '../models/Stop.js'
 
 const routesController = express.Router();
 
@@ -48,6 +49,54 @@ routesController.get('/', async (req, res) => {
         res.status(200).json(routes);
     } catch (err) {
         console.error('Error while saving route:', err.message);
+        res.status(400).json({ message: err.message });
+    }
+});
+
+routesController.get('/departures/:station', async (req, res) => {
+    try {
+        const station = req.params.station; // "south" или "west"
+        const mainStations = await Stop.find({ isMainStation: true });
+
+        const stationObj = mainStations.find(s => {
+            if (station === 'south') return s.south === true;
+            if (station === 'west') return s.west === true;
+            return false;
+        });
+
+        if (!stationObj) {
+            return res.status(404).json({ message: 'Station not found' });
+        }
+
+        const routes = await routesService.getStationDepartures(stationObj._id);
+
+        res.status(200).json(routes);
+    } catch (err) {
+        console.error('Error while loading routes:', err);
+        res.status(400).json({ message: err.message });
+    }
+});
+
+routesController.get('/arrivals/:station', async (req, res) => {
+    try {
+        const station = req.params.station; // "south" или "west"
+        const mainStations = await Stop.find({ isMainStation: true });
+
+        const stationObj = mainStations.find(s => {
+            if (station === 'south') return s.south === true;
+            if (station === 'west') return s.west === true;
+            return false;
+        });
+
+        if (!stationObj) {
+            return res.status(404).json({ message: 'Station not found' });
+        }
+
+        const routes = await routesService.getStationArrivals(stationObj._id);
+
+        res.status(200).json(routes);
+    } catch (err) {
+        console.error('Error while loading routes:', err);
         res.status(400).json({ message: err.message });
     }
 });
