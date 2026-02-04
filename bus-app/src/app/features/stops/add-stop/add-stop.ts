@@ -25,6 +25,7 @@ export class AddStop {
       latitude: [''],
       longitude: [''],
       name: [''],
+      address: [''],
       type: [''],
       sectors: ['']
     });
@@ -35,6 +36,10 @@ export class AddStop {
 
   get name(): AbstractControl<any, any> | null {
     return this.addStopForm.get('name');
+  }
+
+  get address(): AbstractControl<any, any> | null {
+    return this.addStopForm.get('address');
   }
 
   get latitude(): AbstractControl<any, any> | null {
@@ -54,10 +59,11 @@ export class AddStop {
   }
 
   onSubmit(): void {
-    if (this.name != null && this.latitude != null && this.longitude != null) {
-      const { name, latitude, longitude, type, sectors } = this.addStopForm.value;
+    if (this.name != null && this.address != null && this.latitude != null && this.longitude != null) {
+      const { name, address, latitude, longitude, type, sectors } = this.addStopForm.value;
       const newStop: Stop = {
         name,
+        address,
         location: {
           type: 'Point',
           coordinates: [
@@ -76,7 +82,7 @@ export class AddStop {
       
 
       this.stopService.createStop(newStop).subscribe({
-        next: () => {
+        next: (stop) => {
           console.log('Stop created:', stop);
           this.addStopForm.reset();
         },
@@ -87,9 +93,9 @@ export class AddStop {
     }
   }
 
-  onStopSelected(stop: { lat: number; lng: number; name: string }) {
+  onStopSelected(stop: { lat: number; lng: number; address: string }) {
     this.latitude?.setValue(stop.lat);
     this.longitude?.setValue(stop.lng);
-    this.name?.setValue(stop.name);
+    this.address?.setValue(stop.address);
   }
 }
