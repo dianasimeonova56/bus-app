@@ -7,80 +7,91 @@
     </div>
 
     @for (item of (displayData$ | async); track item._id) {
-        @let r = isTrip(item) ? item.route : item;
+        <ng-container>
+            @let r = isTrip(item) ? item.route : item;
 
-        <div class="route-row" (click)="toggle(item._id)">
-            <div class="route-time">
-                {{ r.startHour }} <i class="bi bi-arrow-right"></i> {{ r.arrivalHour }}
+            <div class="route-row" (click)="toggle(item._id)">
+                <div class="route-time">
+                    {{ r.startHour }} <i class="bi bi-arrow-right"></i> {{ r.arrivalHour }}
+                </div>
+
+                <div class="route-path">
+                    <span [appHighlightStop]="isSearchedStop(r.startStop.stopId._id)">
+                        {{ r.startStop.stopId.name }}
+                    </span>
+                    <i class="bi bi-arrow-right"></i>
+                    <span [appHighlightStop]="isSearchedStop(r.endStop.stopId._id)">
+                        {{ r.endStop.stopId.name }}
+                    </span>
+                </div>
+
+                <div class="route-sector">{{ r.startStop.sector || '-' }}</div>
+                <div class="route-operator">{{ r.transportOperator?.name || r.transportOperator }}</div>
+
+                <div class="route-action">
+                    <button class="button button-sm button-blue">Спирки и цени</button>
+                </div>
             </div>
 
-            <div class="route-path">
-                <span [appHighlightStop]="isSearchedStop(r.startStop.stopId._id)">
-                    {{ r.startStop.stopId.name }}
-                </span>
-                <i class="bi bi-arrow-right"></i>
-                <span [appHighlightStop]="isSearchedStop(r.endStop.stopId._id)">
-                    {{ r.endStop.stopId.name }}
-                </span>
+            <div class="route-meta-inline mt-2 text-blue">
+                @if (isTrip(item)) {
+                    <div class="me-3 fw-bold">
+                        <i class="bi bi-calendar-event"></i> {{ item.date | date:'dd.MM.yyyy' }}
+                    </div>
+                }
+                <div><i class="bi bi-clock"></i> {{ r.duration }}</div>
+                <div><i class="bi bi-geo-alt"></i> {{ r.distance }} км</div>
             </div>
 
-            <div class="route-sector">{{ r.startStop.sector || '-' }}</div>
-            <div class="route-operator">{{ r.transportOperator?.name || r.transportOperator }}</div>
+            @if (expandedRouteId === item._id) {
+                <div class="route-details">
+                    <div class="stops-horizontal">
+                        
+                        <div class="times text-blue">
+                            <span class="time fw-bold">{{ r.startHour }}</span>
+                            @for (stop of r.stops; track stop._id) {
+                                <span class="time">{{ stop.arrivalTime }} – {{ stop.departureTime }}</span>
+                            }
+                            <span class="time fw-bold">{{ r.arrivalHour }}</span>
+                        </div>
 
-            <div class="route-action">
-                <button class="button button-sm button-blue">Спирки и цени</button>
-            </div>
-        </div>
+                        <div class="stops">
+                            <div class="stop">
+                                <div class="connecting-line text-blue">
+                                    <div class="point departure"><i class="bi bi-circle"></i></div>
+                                    <div class="line"></div>
+                                </div>
+                                <span class="name" [appHighlightStop]="isSearchedStop(r.startStop.stopId._id)">
+                                    {{ r.startStop.stopId.name }}
+                                </span>
+                            </div>
 
-        <div class="route-meta-inline mt-2 text-blue">
-            @if (isTrip(item)) {
-                <div class="me-3 fw-bold"><i class="bi bi-calendar-event"></i> {{ item.date | date:'dd.MM.yyyy' }}</div>
+                            @for (stop of r.stops; track stop._id) {
+                                <div class="stop intermediate">
+                                    <span class="name" [appHighlightStop]="isSearchedStop(stop.stopId._id)">
+                                        {{ stop.stopId.name }}
+                                    </span>
+                                    @if (stop.sector) {
+                                        <span class="sector">Сектор {{ stop.sector }}</span>
+                                    }
+                                </div>
+                            }
+
+                            <div class="stop">
+                                <div class="connecting-line text-blue">
+                                    <div class="point arrival"><i class="bi bi-circle"></i></div>
+                                    <div class="line"></div>
+                                </div>
+                                <span class="name" [appHighlightStop]="isSearchedStop(r.endStop.stopId._id)">
+                                    {{ r.endStop.stopId.name }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             }
-            <div><i class="bi bi-clock"></i> {{ r.duration }}</div>
-            <div><i class="bi bi-geo-alt"></i> {{ r.distance }} км</div>
-        </div>
-
-        @if (expandedRouteId === item._id) {
-        <div class="route-details">
-            <div class="stops-horizontal">
-                
-                <div class="times text-blue">
-                    <span class="time fw-bold">{{ r.startHour }}</span>
-                    @for (stop of r.stops; track stop._id) {
-                        <span class="time">{{ stop.arrivalTime }} – {{ stop.departureTime }}</span>
-                    }
-                    <span class="time fw-bold">{{ r.arrivalHour }}</span>
-                </div>
-
-                <div class="stops">
-                    <div class="stop">
-                        <div class="connecting-line text-blue">
-                            <div class="point departure"><i class="bi bi-circle"></i></div>
-                            <div class="line"></div>
-                        </div>
-                        <span class="name">{{ r.startStop.stopId.name }}</span>
-                    </div>
-
-                    @for (stop of r.stops; track stop._id) {
-                    <div class="stop intermediate">
-                        <span class="name" [appHighlightStop]="isSearchedStop(stop.stopId._id)">
-                            {{ stop.stopId.name }} </span>
-                        @if (stop.sector) {
-                            <span class="sector">Сектор {{ stop.sector }}</span>
-                        }
-                    </div>
-                    }
-
-                    <div class="stop">
-                        <div class="connecting-line text-blue">
-                            <div class="point arrival"><i class="bi bi-circle"></i></div>
-                            <div class="line"></div>
-                        </div>
-                        <span class="name">{{ r.endStop.stopId.name }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        }
+        </ng-container>
+    } @empty {
+        <div class="text-center p-5">Няма намерени маршрути.</div>
     }
 </div>
