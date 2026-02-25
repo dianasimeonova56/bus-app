@@ -1,12 +1,10 @@
-import { Route } from "./route.model";
-import { Stop } from "./stop.model";
-import { TransportOperator } from "./transportOperator.model";
+import { RoutePopulated } from "./routePopulated.model";
 
 export interface Trip {
-    route: Route,
-    date: Date,
-    departureTime: String,
-    arrivalTime: String,
-    stops: Stop[],
-    transportOperator: TransportOperator
+    _id?: string;
+    route: RoutePopulated;
+    date: Date | string;
+    status: 'scheduled' | 'active' | 'cancelled' | 'completed';
+    delayMinutes: number;
+    availableSeats: number;
 }

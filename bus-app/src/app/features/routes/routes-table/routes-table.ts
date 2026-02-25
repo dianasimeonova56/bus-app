@@ -1,42 +1,48 @@
-import { Component, inject, Input, SimpleChanges } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { RoutesService } from '../../../core/services';
-import { Observable, of } from 'rxjs';
-import { RoutePopulated } from '../../../models';
-import { AsyncPipe } from '@angular/common'
+import { Observable, BehaviorSubject } from 'rxjs';
+import { AsyncPipe, CommonModule } from '@angular/common'
 import { HighlightStopDirective } from '../../../shared/directive';
 
 @Component({
   selector: 'app-routes-table',
-  imports: [AsyncPipe, HighlightStopDirective],
+  standalone: true,
+  imports: [AsyncPipe, HighlightStopDirective, CommonModule],
   templateUrl: './routes-table.html',
   styleUrl: './routes-table.css',
 })
-export class RoutesTable {
+export class RoutesTable implements OnChanges {
   private routesService = inject(RoutesService);
+  private cdr = inject(ChangeDetectorRef); // Добавено за сигурност
 
-  @Input() routes: RoutePopulated[] | null = null;
+  @Input() data: any[] | null = null; 
   @Input() searchedStopId: string | null = null;
 
-  departures$: Observable<RoutePopulated[]>;
-
-  constructor() {
-    this.departures$ = this.routesService.getRoutes();
-  }
+  private dataSubject = new BehaviorSubject<any[]>([]);
+  displayData$ = this.dataSubject.asObservable();
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['routes'] && this.routes && this.routes.length > 0) {
-      this.departures$ = of(this.routes);
+    if (changes['data']) {
+      // Актуализираме потока от данни
+      this.dataSubject.next(this.data || []);
+      // Казваме на Angular да провери за промени веднага
+      this.cdr.detectChanges();
     }
+  }
+
+  isTrip(item: any): boolean {
+    // Проверка дали обектът е Trip (има вложен route)
+    return !!(item && item.route);
   }
 
   isSearchedStop(stopId: string): boolean {
     return this.searchedStopId === stopId;
   }
 
-  expandedRouteId: String | undefined;
+  expandedRouteId: string | undefined;
 
-  toggle(routeId: String | undefined) {
-    this.expandedRouteId =
-      this.expandedRouteId === routeId ? undefined : routeId;
+  toggle(id: string | undefined) {
+    this.expandedRouteId = this.expandedRouteId === id ? undefined : id;
+    this.cdr.detectChanges(); // За да се отвори/затвори панелът веднага
   }
 }

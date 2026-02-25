@@ -1,29 +1,15 @@
 import { Schema, model, Types } from 'mongoose';
 
 const tripSchema = new Schema({
-    route: {
-        type: Types.ObjectId,
-        ref: 'Route',
-        required: true
+    route: { type: Types.ObjectId, ref: 'Route', required: true },
+    date: { type: Date, required: true },
+    status: {
+        type: String,
+        enum: ['scheduled', 'active', 'cancelled', 'completed'],
+        default: 'scheduled'
     },
-    date: {
-        type: Date,
-        required: true
-    },
-    departureTime: String,
-    arrivalTime: String,
-    stops: [{
-        type: Types.ObjectId, 
-        ref: 'Stop',
-        arrivalTime: String,
-        departureTime: String,
-        order: Number
-    }],
-    transportOperator: {
-        type: Types.ObjectId,
-        ref: 'TransportOperator',
-        required: true
-    },
+    delayMinutes: { type: Number, default: 0 },
+    availableSeats: { type: Number }
 })
 
 const Trip = model('Trip', tripSchema)

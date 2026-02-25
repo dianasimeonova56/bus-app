@@ -1,25 +1,39 @@
 <div class="container">
-    <h2 class="text-center my-5">Заминаващи</h2>
-    <form [formGroup]="routeFilter" action="" method="GET" class="row mb-5 d-flex justify-content-between" (ngSubmit)="onSubmit()">
-        <div class="col-2"><select class="form-select" formControlName="stop">
+    <h2 class="text-center my-5">
+        {{ routeType === 'departures' ? 'Заминаващи' : 'Пристигащи' }}
+    </h2>
+    
+    <form [formGroup]="routeFilter" class="row mb-5 d-flex justify-content-between" (ngSubmit)="onSubmit()">
+        <div class="col-2">
+            <select class="form-select" formControlName="stop">
+                <option value="">Изберете спирка</option>
                 @for (stop of allStops$ | async; track stop._id) {
-                <option [value]="stop._id">{{stop.name}}</option>
+                    <option [value]="stop._id">{{stop.name}}</option>
                 }
-            </select></div>
+            </select>
+        </div>
+        
         <div class="col-2">
             <select class="form-select" formControlName="transportOperator">
+                <option value="">Оператор</option>
                 @for (operator of operators$ | async; track operator._id) {
-                <option [value]="operator._id">{{operator.name}}</option>
+                    <option [value]="operator._id">{{operator.name}}</option>
                 }
             </select>
         </div>
 
-        <div class="col-2 align-self-center "><input type="date" class="form-control" name="" formControlName="date"></div>
-        <div class="col-2 align-self-center time-picker"><input type="time" class="form-control" name="" formControlName="time"></div>
+        <div class="col-2 align-self-center">
+            <input type="date" class="form-control" formControlName="date">
+        </div>
+        
+        <div class="col-2 align-self-center time-picker">
+            <input type="time" class="form-control" formControlName="time">
+        </div>
 
-        <div class="col-2"> <input type="submit" value="Submit" class="form-control"></div>
-
+        <div class="col-2"> 
+            <button type="submit" class="btn btn-primary w-100">Търси</button>
+        </div>
     </form>
 
-    <app-routes-table [routes]="routes" [searchedStopId]="stopId"></app-routes-table >
+    <app-routes-table [data]="results" [searchedStopId]="stopId"></app-routes-table>
 </div>

@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { initDatabase } from './config/dbConfig.js';
+import { initTripCron } from './tripGenerator.js'
 import routes from "./routes.js";
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.urlencoded());
 app.use(routes);
 
 initDatabase();
+initTripCron();
 
 app.get('/', (req, res) => {
   res.send('Server is running...');

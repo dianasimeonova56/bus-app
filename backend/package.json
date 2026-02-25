@@ -13,11 +13,13 @@
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^3.3.1",
-    "mongoose": "^8.19.3"
+    "mongoose": "^8.19.3",
+    "node-cron": "^4.2.1"
   }
 }

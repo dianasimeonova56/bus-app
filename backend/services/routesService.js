@@ -1,63 +1,121 @@
-import Route from '../models/Route.js'
-import Stop from '../models/Stop.js'
+import Route from '../models/Route.js';
+import Trip from '../models/Trip.js';
 import mongoose from 'mongoose';
+import dayjs from 'dayjs';
 
 export default {
-    newRoute(routeData) {
+    async newRoute(routeData) {
         const route = new Route(routeData);
+        const savedRoute = await route.save();
 
-        return route.save();
+        const trips = [];
+        for (let i = 0; i < 7; i++) {
+            const date = dayjs().add(i, 'day');
+            const dayName = date.format('dddd'); // Генерира: "Monday", "Tuesday" и т.н.
+
+            if (savedRoute.days.includes(dayName)) {
+                trips.push({
+                    route: savedRoute._id,
+                    date: date.startOf('day').toDate(),
+                    status: 'scheduled',
+                    availableSeats: 40
+                });
+            }
+        }
+
+        if (trips.length > 0) {
+            await Trip.insertMany(trips);
+        }
+
+        return savedRoute;
     },
+
     getAll() {
-        const routes = Route.find();
-
-        return routes;
+        return Route.find();
     },
-    async getStationDepartures(station) {
-        return Route.find({ startStop: station })
-            .populate({ path: 'stops', populate: { path: 'stopId' } })
-            .populate({ path: 'endStop', populate: { path: 'stopId' } })
-            .populate({ path: 'startStop', populate: { path: 'stopId' } });
-    },
-    async getStationArrivals(station) {
-       return Route.find({ startStop: station })
-            .populate({ path: 'stops', populate: { path: 'stopId' } })
-            .populate({ path: 'endStop', populate: { path: 'stopId' } })
-            .populate({ path: 'startStop', populate: { path: 'stopId' } });
-    },
-    searchRoutes(filter = {}) {
-        const { stop, transportOperatorId, day, time } = filter;
 
-        const query = {};
+    // Връща днешните Trip-ове за заминаващи
+    async getStationDepartures(stationId) {
+        const todayStart = dayjs().startOf('day').toDate();
+        const todayEnd = dayjs().endOf('day').toDate();
 
+        const routes = await Route.find({ 'startStop.stopId': stationId }).select('_id');
+        const routeIds = routes.map(r => r._id);
+
+        return Trip.find({
+            route: { $in: routeIds },
+            date: { $gte: todayStart, $lte: todayEnd }
+        }).populate({
+            path: 'route',
+            populate: [
+                { path: 'startStop.stopId' },
+                { path: 'endStop.stopId' },
+                { path: 'stops.stopId' },
+                { path: 'transportOperator' }
+            ]
+        }).sort({ 'route.startHour': 1 });
+    },
+
+    // Връща днешните Trip-ове за пристигащи
+    async getStationArrivals(stationId) {
+        const todayStart = dayjs().startOf('day').toDate();
+        const todayEnd = dayjs().endOf('day').toDate();
+
+        const routes = await Route.find({ 'endStop.stopId': stationId }).select('_id');
+        const routeIds = routes.map(r => r._id);
+
+        return Trip.find({
+            route: { $in: routeIds },
+            date: { $gte: todayStart, $lte: todayEnd }
+        }).populate({
+            path: 'route',
+            populate: [
+                { path: 'startStop.stopId' },
+                { path: 'endStop.stopId' },
+                { path: 'stops.stopId' },
+                { path: 'transportOperator' }
+            ]
+        }).sort({ 'route.arrivalHour': 1 });
+    },
+
+    async searchRoutes(filter = {}) {
+        const { stop, transportOperatorId, date, time } = filter;
+
+        const routeQuery = {};
         if (stop) {
-            query.$or = [
-                { 'startStop.stopId': stop },
-                { 'endStop.stopId': stop },
-                { 'stops.stopId': stop }
-            ].map(obj => {
-                return Object.fromEntries(
-                    Object.entries(obj).map(([k, v]) => [k, new mongoose.Types.ObjectId(v)])
-                );
-            });
+            routeQuery.$or = [
+                { 'startStop.stopId': new mongoose.Types.ObjectId(stop) },
+                { 'endStop.stopId': new mongoose.Types.ObjectId(stop) },
+                { 'stops.stopId': new mongoose.Types.ObjectId(stop) }
+            ];
         }
-
         if (transportOperatorId) {
-            query.transportOperator = new mongoose.Types.ObjectId(transportOperatorId);
+            routeQuery.transportOperator = new mongoose.Types.ObjectId(transportOperatorId);
         }
-
-        if (day) {
-            query.days = day;
-        }
-
         if (time) {
-            query.startHour = { $gte: time };
+            routeQuery.startHour = { $gte: time };
         }
 
-        return Route.find(query)
-            .populate('startStop.stopId')
-            .populate('endStop.stopId')
-            .populate('stops.stopId')
-            .populate('transportOperator')
+        const matchingRoutes = await Route.find(routeQuery).select('_id');
+        const routeIds = matchingRoutes.map(r => r._id);
+
+        const tripQuery = { route: { $in: routeIds } };
+
+        if (date) {
+            const start = dayjs(date).startOf('day').toDate();
+            const end = dayjs(date).endOf('day').toDate();
+            tripQuery.date = { $gte: start, $lte: end };
+        }
+
+        return Trip.find(tripQuery)
+            .populate({
+                path: 'route',
+                populate: [
+                    { path: 'startStop.stopId' },
+                    { path: 'endStop.stopId' },
+                    { path: 'stops.stopId' },
+                    { path: 'transportOperator' }
+                ]
+            }).sort({ 'route.startHour': 1 });
     }
 }

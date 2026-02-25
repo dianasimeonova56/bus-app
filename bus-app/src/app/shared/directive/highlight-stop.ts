@@ -1,15 +1,17 @@
-import { Directive, ElementRef, HostBinding, Input, OnChanges, Renderer2 } from '@angular/core';
+import { Directive, HostBinding, Input, OnChanges } from '@angular/core';
 
 @Directive({
-  selector: '[appHighlightStop]'
+  selector: '[appHighlightStop]',
+  standalone: true
 })
-export class HighlightStopDirective {
-  @Input('appHighlightStop') stopId!: string;
-  @Input() searchedStopId!: string | null;
+export class HighlightStopDirective implements OnChanges {
+  @Input('appHighlightStop') shouldHighlight: boolean = false;
 
   @HostBinding('class.fw-bold') isBold = false;
+  @HostBinding('class.text-primary') isColored = false;
 
   ngOnChanges() {
-    this.isBold = !!this.searchedStopId && this.stopId === this.searchedStopId;
+    this.isBold = this.shouldHighlight;
+    this.isColored = this.shouldHighlight;
   }
 }

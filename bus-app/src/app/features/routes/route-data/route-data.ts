@@ -1,50 +1,33 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { RoutesTable } from '../routes-table/routes-table';
 import { OperatorsService, RoutesService, StopsService } from '../../../core/services';
-import { Stop, TransportOperator, RoutePopulated } from '../../../models';
+import { Stop, TransportOperator } from '../../../models';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common'
+import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-route-data',
+  standalone: true,
   imports: [RoutesTable, AsyncPipe, ReactiveFormsModule],
   templateUrl: './route-data.html',
   styleUrl: './route-data.css',
 })
-export class RouteData {
+export class RouteData implements OnChanges {
   private stopsService = inject(StopsService);
   private routesService = inject(RoutesService);
   private fb = inject(FormBuilder);
   private operatorsService = inject(OperatorsService);
+  private cdr = inject(ChangeDetectorRef); // Добавено за форсиране на рендер
 
   @Input() stationPosition: 'south' | 'west' = 'south';
   @Input() routeType: 'departures' | 'arrivals' = 'departures';
 
-  ngOnChanges() {
-    if (this.stationPosition) {
-      this.loadRoutes();
-    }
-  }
-
-  loadRoutes() {
-    debugger
-    if (this.routeType === 'departures') {
-      this.routesService.getDepartures(this.stationPosition).subscribe(routes => {
-        this.routes = routes;
-      });
-    } else {
-      this.routesService.getArrivals(this.stationPosition).subscribe(routes => {
-        this.routes = routes;
-      });
-    }
-
-  }
-
   allStops$: Observable<Stop[]>;
   operators$: Observable<TransportOperator[]>;
+  
   routeFilter: FormGroup;
-  routes: RoutePopulated[] = [];
+  results: any[] = [];
   stopId: string = '';
 
   constructor() {
@@ -52,24 +35,46 @@ export class RouteData {
     this.operators$ = this.operatorsService.getOperators();
 
     this.routeFilter = this.fb.group({
-      stop: '',
-      transportOperator: '',
-      date: '',
-      time: ''
-    })
+      stop: [''],
+      transportOperator: [''],
+      date: [''],
+      time: ['']
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['stationPosition'] || changes['routeType']) {
+      this.loadRoutes();
+      // Изчистваме филтъра при смяна на таба
+      this.routeFilter.patchValue({ stop: '', transportOperator: '', date: '', time: '' }, { emitEvent: false });
+    }
+  }
+
+  loadRoutes() {
+    const action = this.routeType === 'departures' 
+      ? this.routesService.getDepartures(this.stationPosition) 
+      : this.routesService.getArrivals(this.stationPosition);
+
+    action.subscribe({
+      next: (routes) => {
+        this.results = [...routes];
+        this.stopId = '';
+        this.cdr.detectChanges(); // СЪБУЖДАНЕ НА ИЗГЛЕДА
+      },
+      error: (err) => console.error('Error loading routes:', err)
+    });
   }
 
   onSubmit() {
-    debugger
-    const form = this.routeFilter.value;
-    const stopId = form.stop;
-    const transportOperatorId = form.transportOperator;
-    const day = form.date;
-    const time = form.time;
+    const { stop, transportOperator, date, time } = this.routeFilter.value;
 
-    this.routesService.searchRoutes(stopId, transportOperatorId, day, time).subscribe(routes => {
-      this.routes = routes;
-      this.stopId = stopId;
+    this.routesService.searchRoutes(stop, transportOperator, date, time).subscribe({
+      next: (trips) => {
+        this.results = [...trips];
+        this.stopId = stop;
+        this.cdr.detectChanges(); // СЪБУЖДАНЕ НА ИЗГЛЕДА
+      },
+      error: (err) => console.error('Error searching routes:', err)
     });
   }
 }
