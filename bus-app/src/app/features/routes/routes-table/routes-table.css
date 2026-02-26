@@ -56,7 +56,7 @@
 .stops-horizontal {
     display: flex;
     align-items: center;
-    gap: 64px;
+    gap: 100px;
     position: relative;
 }
 

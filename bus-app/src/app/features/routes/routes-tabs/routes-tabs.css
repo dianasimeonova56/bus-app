@@ -29,18 +29,22 @@
   border-top-right-radius: 0.5rem;
 }
 .sliding-window {
-  width: 300%;
+  width: 400%;
   display: flex;
   transition: all 0.2s ease-in-out;
 }
+
 [ngTabList]:has([ngTab]:nth-child(1)[aria-selected='true']) ~ .sliding-window {
   transform: translateX(0%);
 }
 [ngTabList]:has([ngTab]:nth-child(2)[aria-selected='true']) ~ .sliding-window {
-  transform: translateX(-33.333%);
+  transform: translateX(-25%);
 }
 [ngTabList]:has([ngTab]:nth-child(3)[aria-selected='true']) ~ .sliding-window {
-  transform: translateX(-66.666%);
+  transform: translateX(-50%);
+}
+[ngTabList]:has([ngTab]:nth-child(4)[aria-selected='true']) ~ .sliding-window {
+  transform: translateX(-75%);
 }
 [ngTabPanel] {
   display: grid;
@@ -48,6 +52,9 @@
   min-height: 100px;
   border-bottom-right-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
+  width: 25%;
+  place-items: center;
+  min-height: 100px;
 }
 [ngTabPanel]:focus {
   outline-offset: -4px;
