@@ -12,4 +12,9 @@ export const routes: Routes = [
         title: "Burgas Bus",
         loadComponent: () => import('./features/home/home/home').then(c => c.Home)
     },
+    {
+        path: 'admin',
+        title: "Admin",
+        loadComponent: () => import('./features/admin/admin-panel/admin-panel').then(c => c.AdminPanel)
+    },
 ];

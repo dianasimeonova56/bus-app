@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { OperatorsService } from '../../core/services';
+import { OperatorsService } from '../../../core/services';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { TransportOperator } from '../../models';
+import { TransportOperator } from '../../../models';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -41,7 +41,7 @@ export class AddTransportOperator {
   }
 
   onSubmit(): void {
-    debugger
+    
     if (this.name != null && this.email != null && this.phone != null) {
       const newTransportOperator = {
         name: this.name.value,
