@@ -11,14 +11,15 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(routes);
 
-initDatabase();
-initTripCron();
+initDatabase().then(() => {
+  console.log('Database connected successfully');
+  
+  initTripCron();
 
-app.get('/', (req, res) => {
-  res.send('Server is running...');
-});
-
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server is listening on http://localhost:${PORT}`);
+  const PORT = 3000;
+  app.listen(PORT, () => {
+    console.log(`Server is listening on http://localhost:${PORT}`);
+  });
+}).catch(err => {
+  console.error('Failed to connect to database', err);
 });
