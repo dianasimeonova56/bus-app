@@ -3,7 +3,15 @@ import { Schema, model, Types } from 'mongoose';
 const ticketSchema = new Schema({
     passenger: {
         type: Types.ObjectId,
-        ref: 'Passenger',
+        ref: 'User',
+        required: true
+    },
+    seatNumber: {
+        type: Number,
+        required: true
+    },
+    price: {
+        type: Number,
         required: true
     },
     trip: {
@@ -11,25 +19,20 @@ const ticketSchema = new Schema({
         ref: 'Trip',
         required: true
     },
-    seatNumber: {
-        type: Number
+    status: {
+        type: String,
+        enum: ['cancelled', 'active', 'passed', 'reserved'],
+        default: 'active'
     },
-    price: {
-        type: Number
+    booking: {
+        type: Types.ObjectId,
+        ref: 'Booking',
+        required: true
     },
-    purchaseDate:
-    {
+    createdAt: {
         type: Date,
         default: Date.now
-    },
-    departureStopId:
-    {  
-        type: Types.ObjectId 
-    },
-    destinationStopId: 
-    { 
-        type: Types.ObjectId 
-    },
+    }
 })
 
 const Ticket = model('Ticket', ticketSchema)

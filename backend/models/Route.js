@@ -21,6 +21,9 @@ const routeSchema = new Schema({
     duration: String,
     startHour: String,
     arrivalHour: String,
+    maxSeats: {
+        type: Number
+    },
     days: {
         type: [String],
         enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -34,13 +37,16 @@ const routeSchema = new Schema({
         sector: Number,
         arrivalTime: String,
         departureTime: String,
-        order: Number
+        order: Number,
+        ticketPrice: Number
     }],
     transportOperator: {
         type: Types.ObjectId,
         ref: 'TransportOperator',
         required: true
-    }
+    },
+    oneWayTicketPrice: Number,
+    twoWayTicketPrice: Number
 })
 
 const Route = model('Route', routeSchema)

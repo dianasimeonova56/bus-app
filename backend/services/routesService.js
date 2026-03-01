@@ -11,7 +11,7 @@ export default {
         const trips = [];
         for (let i = 0; i < 7; i++) {
             const date = dayjs().add(i, 'day');
-            const dayName = date.format('dddd'); // Генерира: "Monday", "Tuesday" и т.н.
+            const dayName = date.format('dddd');
 
             if (savedRoute.days.includes(dayName)) {
                 trips.push({
@@ -34,7 +34,6 @@ export default {
         return Route.find();
     },
 
-    // Връща днешните Trip-ове за заминаващи
     async getStationDepartures(stationId) {
         const todayStart = dayjs().startOf('day').toDate();
         const todayEnd = dayjs().endOf('day').toDate();
@@ -56,7 +55,6 @@ export default {
         }).sort({ 'route.startHour': 1 });
     },
 
-    // Връща днешните Trip-ове за пристигащи
     async getStationArrivals(stationId) {
         const todayStart = dayjs().startOf('day').toDate();
         const todayEnd = dayjs().endOf('day').toDate();

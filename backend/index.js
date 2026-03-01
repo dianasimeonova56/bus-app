@@ -6,11 +6,13 @@ import routes from "./routes.js";
 import { auth } from './middlewares/authMiddleware.js';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
+import Stripe from 'stripe';
 
 const PORT = process.env.PORT || 3000;
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME;
 export const SESSION_SECRET = process.env.SESSION_SECRET;
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 

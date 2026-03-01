@@ -1,9 +1,9 @@
-import { Passenger } from "./passenger.model";
+import { User } from "./user.model";
 import { Stop } from "./stop.model";
 import { Trip } from "./trip.model";
 
 export interface Ticket {
-    passenger: Passenger,
+    user: User,
     trip: Trip,
     seatNumber: Number,
     price: Number,
