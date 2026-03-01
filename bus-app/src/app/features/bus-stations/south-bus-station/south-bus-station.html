@@ -1,0 +1,21 @@
+<div class="container">
+    <div class="row">
+        <h2>Автогара Юг</h2>
+        <div ngTabs>
+            <div ngTabList selectionMode="follow" selectedTab="movie">
+                <div ngTab value="south-departures">Заминаващи</div>
+                <div ngTab value="south-arrivals">Пристигащи</div>
+            </div>
+            <div class="sliding-window">
+                <div ngTabPanel value="south-departures">
+                    <ng-template ngTabContent><app-route-data [stationPosition]="'south'"
+                            [routeType]="'departures'"></app-route-data></ng-template>
+                </div>
+                <div ngTabPanel value="south-arrivals">
+                    <ng-template ngTabContent><app-route-data [stationPosition]="'south'"
+                            [routeType]="'arrivals'"></app-route-data></ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

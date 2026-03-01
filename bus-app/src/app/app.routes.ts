@@ -14,6 +14,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home/home').then(c => c.Home)
     },
     {
+        path: 'bus-stations',
+        title: "Burgas Bus - South",
+        loadComponent: () => import('./features/bus-stations/south-bus-station/south-bus-station').then(c => c.SouthBusStation)
+    },
+    {
+        path: 'bus-stations/south',
+        title: "Burgas Bus - South",
+        loadComponent: () => import('./features/bus-stations/south-bus-station/south-bus-station').then(c => c.SouthBusStation)
+    },
+    {
+        path: 'bus-stations/west',
+        title: "Burgas Bus - West",
+        loadComponent: () => import('./features/bus-stations/west-bus-station/west-bus-station').then(c => c.WestBusStation)
+    },
+    {
         path: 'admin',
         title: "Admin",
         loadComponent: () => import('./features/admin/admin-panel/admin-panel').then(c => c.AdminPanel),
