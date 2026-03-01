@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services';
 
@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header {
+export class Header implements OnInit {
   protected authService = inject(AuthService)
   private router = inject(Router);
 
@@ -16,7 +16,6 @@ export class Header {
   readonly currentUser = this.authService.currentUser;
 
   protected role = this.currentUser()?.user_role;
-  openMenu: boolean = false;
 
   logout(): void {
     this.authService.logout().subscribe({
@@ -26,5 +25,10 @@ export class Header {
         console.log("Logout error", err);
       }
     });
+  }
+  
+  ngOnInit(): void {
+    console.log(this.role);
+    
   }
 }

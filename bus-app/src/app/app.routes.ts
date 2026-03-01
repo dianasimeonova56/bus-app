@@ -32,11 +32,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/auth/register/register').then(c => c.Register),
         canActivate: [guestGuard]
     },
-    //  {
-    //       path: 'profile',
-    //       title: "Profile",
-    //       loadComponent: () => import('./features/profile/user-profile/user-profile').then(c => c.UserProfile),
-    //       canActivate: [roleGuard, authGuard],
-    //       data: { roles: ['user'] }
-    //  },
+    {
+        path: 'profile',
+        title: "Profile",
+        loadComponent: () => import('./features/profile/profile').then(c => c.Profile),
+        canActivate: [roleGuard, authGuard],
+        data: { roles: ['user'] }
+    },
 ];

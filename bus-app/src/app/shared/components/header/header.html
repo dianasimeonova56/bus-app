@@ -45,18 +45,18 @@
       @if(isLoggedIn()) {
       @if(role === 'admin') {
       <li class="nav-item mx-1">
-        <a class="nav-link" href="/admin">Админ панел</a>
+        <a class="nav-link" routerLink="/admin" routerLinkActive="active">Админ панел</a>
       </li>}
       @if(role === 'user') {
       <li class="nav-item mx-1">
-        <a class="nav-link" href="/admin">user панел</a>
+        <a class="nav-link" routerLink="/profile" routerLinkActive="active">Профил</a>
       </li>}
       <li class="nav-item">
-        <a class="nav-link"routerLink="/logout" routerLinkActive="active" (click)="logout()">Излизане</a>
+        <a class="nav-link" routerLink="/logout" routerLinkActive="active" (click)="logout()">Излизане</a>
       </li>
       } @else {
       <li class="nav-item">
-        <a class="nav-link"routerLink="/login" routerLinkActive="active">Вписване</a>
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Вписване</a>
       </li>
       <!-- <li class="nav-item">
         <a class="nav-link"routerLink="/register" routerLinkActive="active">Регистриране</a>

@@ -1,0 +1,63 @@
+<div class="container">
+    <div class="row">
+        <div class="p-5 m-2 border rounded">
+            <p class="h3 text-center mb-5">Здравей, {{this.currentUser()?.first_name}}
+                {{this.currentUser()?.last_name}}! </p>
+            <form action="" class="form-group col-6" [formGroup]="editProfileForm">
+                <label for="email" class="mb-1">email</label>
+                <input class="form-control mb-4" type="email" id="email" formControlName="email" required
+                    >
+                @if(isEmailValid) {
+                <p class="error">
+                    {{ emailErrorMessage }}
+                </p>
+                }
+                <label for="first_name" class="mb-1">First name</label>
+                <input class="form-control mb-4" type="text" id="first_name" formControlName="first_name" required
+                    >
+                @if(isfirstNameValid) {
+                <p class="error">
+                    {{ firstNameErrorMessage }}
+                </p>
+                }
+                <label for="last_name" class="mb-1">Last Name</label>
+                <input class="form-control mb-4" type="text" id="last_name" formControlName="last_name" required
+                    >
+                @if(islastNameValid) {
+                <p class="error">
+                    {{ lastNameErrorMessage }}
+                </p>
+                }
+                <label for="phone_number" class="mb-1">Phone</label>
+                <input class="form-control mb-4" type="tel" id="phone_number" formControlName="phone_number" required
+                    >
+                @if(isPhoneValid) {
+                <p class="error">
+                    {{ phoneErrorMessage }}
+                </p>
+                }
+                <div [formGroup]="passwords" class="form-group">
+                    <label for="password" class="form-label">Парола</label>
+                    <input class="form-control form-control-lg mb-4" id="password" type="password"
+                        formControlName="password" />
+                    @if(isPasswordsValid) {
+                    <p class="error">
+                        {{ passwordErrorMessage }}
+                    </p>
+                    }
+
+                    <label for="rePassword" class="form-label">Повторете паролата</label>
+                    <input class="form-control form-control-lg mb-4" id="rePassword" type="password"
+                        formControlName="rePassword" />
+                    @if(isPasswordsValid) {
+                    <p class="error">
+                        {{ rePasswordErrorMessage }}
+                    </p>
+                    }
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block mb-4"
+                    [disabled]="editProfileForm.invalid">Edit Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
