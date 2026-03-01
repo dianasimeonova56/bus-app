@@ -1,5 +1,5 @@
 export * from './stop.model'
-export * from './passenger.model'
+export * from './user.model'
 export * from './ticket.model'
 export * from './route.model'
 export * from './trip.model'

@@ -1,0 +1,78 @@
+<section class="">
+    <div class="container py-5">
+        <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-md-8 col-lg-7 col-xl-6">
+                <img src="assets/images/bus png.png" class="img-fluid" alt="Bus Icon">
+            </div>
+            <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                    <h2 class="text-center mb-4">Регистрация</h2>
+
+                    <div class="form-group form-outline">
+                        <label for="email" class="form-label">Имейл</label>
+                        <input class="form-control form-control-lg mb-4" id="email" type="email"
+                            formControlName="email" />
+                        @if(isEmailValid) {
+                        <p class="error">
+                            {{ emailErrorMessage }}
+                        </p>
+                        }
+
+                        <label for="first_name" class="form-label">Име</label>
+                        <input class="form-control form-control-lg mb-4" id="first_name" type="text"
+                            formControlName="first_name" />
+                        @if(isfirstNameValid) {
+                        <p class="error">
+                            {{ firstNameErrorMessage }}
+                        </p>
+                        }
+
+                        <label for="last_name" class="form-label">Фамилия</label>
+                        <input class="form-control form-control-lg mb-4" id="last_name" type="text"
+                            formControlName="last_name" />
+                        @if(islastNameValid) {
+                        <p class="error">
+                            {{ lastNameErrorMessage }}
+                        </p>
+                        }
+
+                        <label for="phone_number" class="form-label">Телефонен номер</label>
+                        <input class="form-control form-control-lg mb-4" id="phone_number" type="tel"
+                            formControlName="phone_number" />
+                        @if(isPhoneValid) {
+                        <p class="error">
+                            {{ phoneErrorMessage }}
+                        </p>
+                        }
+
+                        <div [formGroup]="passwords" class="form-group">
+                            <label for="password" class="form-label">Парола</label>
+                            <input class="form-control form-control-lg mb-4" id="password" type="password"
+                                formControlName="password" />
+                            @if(isPasswordsValid) {
+                            <p class="error">
+                                {{ passwordErrorMessage }}
+                            </p>
+                            }
+
+                            <label for="rePassword" class="form-label">Повторете паролата</label>
+                            <input class="form-control form-control-lg mb-4" id="rePassword" type="password"
+                                formControlName="rePassword" />
+                            @if(isPasswordsValid) {
+                            <p class="error">
+                                {{ rePasswordErrorMessage }}
+                            </p>
+                            }
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block mb-4"
+                        [disabled]="registerForm.invalid">Регистрация</button>
+                </form>
+                <p class="account">
+                    Вече имате потребителски профил?
+                    <a routerLink="/login" routerLinkActive="active">Вписване</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
