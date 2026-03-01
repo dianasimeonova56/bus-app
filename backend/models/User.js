@@ -33,7 +33,7 @@ const passengerSchema = new Schema({
     },
     user_role: {
         type: String,
-        enum: ['passenger', 'admin'],
+        enum: ['user', 'admin'],
     }
 })
 
