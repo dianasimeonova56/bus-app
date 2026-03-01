@@ -1,10 +1,8 @@
 import mongoose from 'mongoose';
 import dayjs from 'dayjs';
-// ПРОВЕРИ ТЕЗИ ПЪТИЩА! Трябва да са същите като в контролерите ти
 import Route from './models/Route.js'; 
 import Trip from './models/Trip.js';
 
-// 1. Смени 'transport_db' с името на твоята база, която виждаш в Compass
 const MONGO_URI = 'mongodb://127.0.0.1:27017/test_db'; 
 
 async function seed() {
@@ -23,15 +21,13 @@ async function seed() {
         let createdCount = 0;
 
         for (const route of routes) {
-            // Генерираме пътувания за следващите 10 дни, за да сме сигурни
             for (let i = 0; i < 10; i++) {
                 const targetDate = dayjs().add(i, 'day');
-                const dayName = targetDate.format('dddd'); // Ще върне "Monday", "Tuesday" и т.н.
+                const dayName = targetDate.format('dddd');
 
                 if (route.days.includes(dayName)) {
                     const dateOnly = targetDate.startOf('day').toDate();
                     
-                    // Използваме updateOne с upsert, за да не пълним дубликати при повторно пускане
                     await Trip.updateOne(
                         { route: route._id, date: dateOnly },
                         { 
