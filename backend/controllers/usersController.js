@@ -1,6 +1,6 @@
 import { Router } from "express";
 import userServices from "../services/usersService.js";
-import { AUTH_COOKIE_NAME } from "../config/index.js";
+import { AUTH_COOKIE_NAME } from "../index.js";
 import { isAuth, isGuest } from "../middlewares/authMiddleware.js";
 
 const userController = Router();
