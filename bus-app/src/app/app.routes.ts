@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard, guestGuard, roleGuard } from './core/guards';
 
 export const routes: Routes = [
     {
@@ -15,6 +16,27 @@ export const routes: Routes = [
     {
         path: 'admin',
         title: "Admin",
-        loadComponent: () => import('./features/admin/admin-panel/admin-panel').then(c => c.AdminPanel)
+        loadComponent: () => import('./features/admin/admin-panel/admin-panel').then(c => c.AdminPanel),
+        canActivate: [roleGuard, authGuard],
+        data: { roles: ['admin'] }
     },
+    {
+        path: 'login',
+        title: "Log In",
+        loadComponent: () => import('./features/auth/login/login').then(c => c.Login),
+        canActivate: [guestGuard]
+    },
+    {
+        path: 'register',
+        title: "Register",
+        loadComponent: () => import('./features/auth/register/register').then(c => c.Register),
+        canActivate: [guestGuard]
+    },
+    //  {
+    //       path: 'profile',
+    //       title: "Profile",
+    //       loadComponent: () => import('./features/profile/user-profile/user-profile').then(c => c.UserProfile),
+    //       canActivate: [roleGuard, authGuard],
+    //       data: { roles: ['user'] }
+    //  },
 ];
