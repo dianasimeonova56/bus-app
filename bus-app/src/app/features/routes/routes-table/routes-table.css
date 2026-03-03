@@ -87,6 +87,21 @@
     gap: 36px;
 }
 
+.buy-button {
+    display: inline-flex;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-20px);
+    transition: all 0.4s ease-out;
+    max-height: fit-content;
+}
+
+.intermediate:hover .buy-button {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
 .connecting-line {
     position: absolute;
     top: 0;
