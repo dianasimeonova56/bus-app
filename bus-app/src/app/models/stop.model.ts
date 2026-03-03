@@ -8,4 +8,5 @@ export interface Stop {
     },
     type: string,
     sectors?: number
+    price?: number
 }

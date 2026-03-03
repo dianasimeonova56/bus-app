@@ -17,8 +17,11 @@ export interface Route {
     departureTime: string;
     order: number;
     sector: number;
+    price: number;
   }[];
   transportOperator: string;
   startHour: String;
   arrivalHour: String;
+  oneWayTicketPrice: Number;
+  twoWayTicketPrice: Number;
 }

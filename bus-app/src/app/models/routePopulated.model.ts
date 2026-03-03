@@ -19,6 +19,7 @@ export interface RoutePopulated {
             type: string
         };
         sector: number;
+
     };
     distance: Number;
     duration: String;
@@ -39,4 +40,6 @@ export interface RoutePopulated {
     transportOperator: string;
     startHour: String;
     arrivalHour: String;
+    oneWayTicketPrice: number;
+    twoWayTicketPrice: number;
 }
