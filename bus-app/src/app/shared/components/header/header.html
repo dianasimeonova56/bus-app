@@ -43,11 +43,11 @@
         <a class="nav-link" href="#">Контакти</a>
       </li>
       @if(isLoggedIn()) {
-      @if(role === 'admin') {
+      @if(role === "admin") {
       <li class="nav-item mx-1">
         <a class="nav-link" routerLink="/admin" routerLinkActive="active">Админ панел</a>
       </li>}
-      @if(role === 'user') {
+      @if(role === "user") {
       <li class="nav-item mx-1">
         <a class="nav-link" routerLink="/profile" routerLinkActive="active">Профил</a>
       </li>}
