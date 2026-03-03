@@ -90,6 +90,7 @@ label {
 .button-blue:hover {
     background-color: var(--color-white);
     color: var(--color-blue-100);
+    border: 1px solid var(--color-blue-100);
 }
 
 .button-white:hover {
