@@ -54,4 +54,10 @@ export const routes: Routes = [
         canActivate: [roleGuard, authGuard],
         data: { roles: ['user'] }
     },
+    {
+        path: 'booking/:tripId',
+        title: "Резервиране на билет",
+        loadComponent: () => import('./features/booking/booking').then(c => c.Booking),
+        canActivate: [authGuard]
+    },
 ];
