@@ -24,11 +24,15 @@ const bookingSchema = new Schema({
     },
     departureStopId:
     {  
-        type: Types.ObjectId 
+        type: Types.ObjectId,
+        ref: 'Stop',
+        required: true
     },
     destinationStopId: 
     { 
-        type: Types.ObjectId 
+        type: Types.ObjectId,
+        ref: 'Stop',
+        required: true
     },
     tickets: [{
         type: Types.ObjectId,
