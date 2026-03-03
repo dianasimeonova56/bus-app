@@ -50,12 +50,14 @@
 
                                 <label>Dwell time</label>
                                 <input type="number" class="form-control"
-                                    formControlName="intermediateStopDurationMinutes" min="1" value="1" (input)="updateIntermediateStopDwell(stopCtrl.value.intermediateStopId, $event)"/>
+                                    formControlName="intermediateStopDurationMinutes" min="1" value="1"
+                                    (input)="updateIntermediateStopDwell(stopCtrl.value.intermediateStopId, $event)" />
 
                                 @if (stopCtrl.value.sectors > 0) {
                                 <label>Which sector does it depart from?</label>
 
-                                <select class="form-select" formControlName="intermediateSector" (input)="updateIntermediateStopSector(stopCtrl.value.intermediateStopId, $event)">
+                                <select class="form-select" formControlName="intermediateSector"
+                                    (input)="updateIntermediateStopSector(stopCtrl.value.intermediateStopId, $event)">
                                     <option value="" disabled>Choose sector</option>
 
                                     @for (s of getSectorsArray(stopCtrl.value.sectors); track s) {
@@ -65,6 +67,11 @@
                                     }
                                 </select>
                                 }
+                                <div class="mt-2 border p-2 bg-light">
+                                    <label for="intermediatePrice">Price for intermediate stop</label>
+                                    <input id="intermediatePrice" type="number" class="form-control"
+                                        placeholder="Въведи цена" formControlName="price">
+                                </div>
                             </div>
                             }
                         </div>
@@ -110,6 +117,14 @@
                         <input type="checkbox" class="form-check-input" value="weekend" (change)="selectWeekend()">
                         <label class="form-check-label">Weekends</label>
                     </div>
+                    <div class="mt-2 border p-2 bg-light">
+                        <label for="oneWayTicketPrice">Price for one way ticket</label>
+                        <input id="oneWayTicketPrice" type="number" class="form-control" placeholder="Въведи цена"
+                            formControlName="oneWayTicketPrice">
+                            <label for="oneWayTicketPrice">Price for two way ticket</label>
+                        <input id="twoWayTicketPrice" type="number" class="form-control" placeholder="Въведи цена"
+                            formControlName="twoWayTicketPrice">
+                    </div>
                     <input type="submit" class="form-control mt-5" value="Add route">
                 </div>
             </form>
@@ -133,8 +148,7 @@
 
         <div class="col-6">
             <app-map [departureStop]="selectedDeparture" [arrivalStop]="selectedArrival"
-                [intermediateStops]="selectedStops" (distance)="distanceKm = $event"
-                (duration)="duration = $event"
+                [intermediateStops]="selectedStops" (distance)="distanceKm = $event" (duration)="duration = $event"
                 (legTimesChange)="legTimes = $event"></app-map>
 
         </div>

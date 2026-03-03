@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { OperatorsService, StopsService, RoutesService } from '../../../core/services';
 import { Stop, TransportOperator } from '../../../models';
@@ -37,8 +37,6 @@ export class AddRoute {
 
   currentRoutePoints: [number, number][] = [];
 
-  addRouteForm: FormGroup;
-
   daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   departureSectors: number[] = [];
@@ -49,27 +47,28 @@ export class AddRoute {
   duration = 0;
   legTimes: number[] = [];
 
-  constructor() {
-    this.addRouteForm = this.fb.group({
-      departureStop: this.fb.group({
-        departureStopId: null,
-        departureSector: null
-      }),
-      intermediateStops: this.fb.array([]),
-      arrivalStop: this.fb.group({
-        arrivalStopId: null,
-        arrivalSector: null
-      }),
-      days: this.fb.array([]),
-      startHour: '',
-      transportOperator: ''
-    });
+  addRouteForm: FormGroup = this.fb.group({
+    departureStop: this.fb.group({
+      departureStopId: [null],
+      departureSector: [null]
+    }),
+    intermediateStops: this.fb.array([]),
+    arrivalStop: this.fb.group({
+      arrivalStopId: [null],
+      arrivalSector: [null]
+    }),
+    days: this.fb.array([]),
+    startHour: [''],
+    transportOperator: [''],
+    oneWayTicketPrice: [0],
+    twoWayTicketPrice: [0]
+  });
 
+  constructor() {
     this.busStations$ = this.stopService.getBusStations();
     this.normalStops$ = this.stopService.getNormalStops();
     this.allStops$ = this.stopService.getStops();
     this.operators$ = this.operatorsService.getOperators();
-
   }
 
   /* ================== GETTERS ================== */
@@ -120,18 +119,16 @@ export class AddRoute {
   /* ================== STOPS ================== */
 
   addIntermediateStop(stop: Stop) {
-
     const control = this.fb.group({
-      intermediateStopId: stop._id,
-      sectors: stop.sectors ?? 0,
-      intermediateSector: null,
-      intermediateStopDurationMinutes: 1,
-      intermediateStopName: stop.name,
-      location: stop.location
+      intermediateStopId: [stop._id],
+      sectors: [stop.sectors ?? 0],
+      intermediateSector: [null],
+      intermediateStopDurationMinutes: [1],
+      intermediateStopName: [stop.name],
+      location: [stop.location],
+      price: [0]
     });
-
     this.intermediateStops.push(control);
-
   }
 
   updateIntermediateStopSector(stopId: string, event: Event) {
@@ -205,23 +202,18 @@ export class AddRoute {
 
   onStopIntermediateSelected(event: Event) {
     const value = (event.target as HTMLInputElement).value;
-
     this.allStops$.pipe(take(1)).subscribe(stops => {
       const found = stops.find(s => s.name === value);
       if (!found) return;
 
-      if (
-        found._id === this.selectedDeparture?._id ||
-        found._id === this.selectedArrival?._id ||
-        this.selectedStops.some(s => s._id === found._id)
-      ) {
+      if (found._id === this.selectedDeparture?._id || found._id === this.selectedArrival?._id ||
+        this.selectedStops.some(s => s._id === found._id)) {
         alert('Stop already used!');
         return;
       }
-
       this.addIntermediateStop(found);
       this.selectedStops = this.intermediateStops.value;
-
+      (event.target as HTMLInputElement).value = ''; // Изчистваме инпута след избор
     });
   }
 
@@ -268,7 +260,7 @@ export class AddRoute {
     });
   }
 
-    formatDuration(seconds: number): [string, number] {
+  formatDuration(seconds: number): [string, number] {
     const total = Math.round(seconds / 60);
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.round((seconds % 3600) / 60);
@@ -284,22 +276,14 @@ export class AddRoute {
   /* ================== SUBMIT ================== */
 
   onSubmit() {
-    debugger
+    if (this.addRouteForm.invalid) return;
+
     const formValue = this.addRouteForm.value;
-
-    const dwellings = formValue.intermediateStops.map((stop: any) => stop.intermediateStopDurationMinutes)
-
+    const dwellings = formValue.intermediateStops.map((stop: any) => stop.intermediateStopDurationMinutes);
     const schedule = this.buildSchedule(formValue.startHour, this.legTimes, dwellings);
 
-    console.log(schedule);
-
-    let durationTotal = this.duration + dwellings.reduce((acc: any, num: any) => acc + (num *60), 0)
-    console.log(durationTotal);
-    
-    durationTotal = this.formatDuration(durationTotal);
-    console.log(durationTotal);
-
-    console.log(formValue.intermediateStops);
+    let durationTotalSeconds = this.duration + dwellings.reduce((acc: number, num: number) => acc + (num * 60), 0);
+    const formattedDuration = this.formatDuration(durationTotalSeconds);
 
     const newRoute = {
       startStop: {
@@ -311,29 +295,33 @@ export class AddRoute {
         sector: formValue.arrivalStop.arrivalSector
       },
       distance: Number(this.distanceKm.toFixed(1)),
-      duration: durationTotal[0],
-      days: this.days.value as string[],
+      duration: formattedDuration[0],
+      days: formValue.days,
       stops: formValue.intermediateStops.map((s: any, index: number) => ({
         stopId: s.intermediateStopId,
         order: index + 1,
         sector: s.intermediateSector,
         arrivalTime: schedule[index].arrival,
         departureTime: schedule[index].departure,
+        price: s.price // <--- Изпращаме цената за всяка спирка
       })),
       transportOperator: formValue.transportOperator,
       startHour: formValue.startHour,
-      arrivalHour: schedule[schedule.length - 1].arrival
+      arrivalHour: schedule[schedule.length - 1].arrival,
+      oneWayTicketPrice: formValue.oneWayTicketPrice,
+      twoWayTicketPrice: formValue.twoWayTicketPrice
     };
 
     this.routesService.createRoute(newRoute).subscribe({
       next: () => {
-        console.log('Route created');
+        alert('Route created successfully!');
         this.addRouteForm.reset();
-        this.days.clear();
         this.intermediateStops.clear();
+        this.days.clear();
         this.selectedStops = [];
       },
       error: err => console.error(err)
     });
   }
 }
+
