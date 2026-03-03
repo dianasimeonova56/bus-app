@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="row">
+        <div class="p-5 m-2 border rounded">
+            <p class="h3 text-center mb-5">Booking</p>
+            <form action="" class="form-group col-6" [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+                
+                <label for="trip" class="mb-1">Trip</label>
+                <input class="form-control mb-4" type="text" id="trip" formControlName="trip" required readonly>
+                
+                <label for="departure" class="mb-1">Departure</label>
+                <input class="form-control mb-4" type="text" id="departure" formControlName="departure" required readonly>
+                
+                <label for="destination" class="mb-1">Destination</label>
+                <input class="form-control mb-4" type="text" id="destination" formControlName="destination" required readonly>
+
+                @if(showTicketType()) {
+                    <label class="form-label d-block fw-bold mb-2">Ticket type</label>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="ticketType" id="oneWay" value="oneWayTicket"
+                            formControlName="ticketType">
+                        <label class="form-check-label" for="oneWay">One Way Ticket</label>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="radio" name="ticketType" id="twoWay" value="twoWayTicket"
+                            formControlName="ticketType">
+                        <label class="form-check-label" for="twoWay">Two Way Ticket</label>
+                    </div>
+                }
+
+                <label for="ticket_num" class="mb-1">Ticket amount</label>
+                <input class="form-control mb-4" type="number" id="ticket_num" formControlName="ticket_num" required>
+
+                <div class="mb-4">
+                    <p class="h4">Total Price: {{ totalPrice() }} €</p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg btn-block mb-4"
+                    [disabled]="bookingForm.invalid">Checkout</button>
+            </form>
+        </div>
+    </div>
+</div>
