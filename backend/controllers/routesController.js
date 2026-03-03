@@ -18,7 +18,6 @@ routesController.post('/create-route', async (req, res) => {
 
 routesController.get('/search', async (req, res) => {
     try {
-        // Вече връща масив от Trips, съдържащи Routes
         const results = await routesService.searchRoutes(req.query);
         res.status(200).json(results);
     } catch (err) {
@@ -26,7 +25,6 @@ routesController.get('/search', async (req, res) => {
     }
 });
 
-// Helper за дестинациите (South/West)
 const getStationByPosition = async (stationParam) => {
     const mainStations = await Stop.find({ isMainStation: true });
     return mainStations.find(s => 

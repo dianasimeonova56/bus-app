@@ -38,7 +38,7 @@ const routeSchema = new Schema({
         arrivalTime: String,
         departureTime: String,
         order: Number,
-        ticketPrice: Number
+        price: Number
     }],
     transportOperator: {
         type: Types.ObjectId,
