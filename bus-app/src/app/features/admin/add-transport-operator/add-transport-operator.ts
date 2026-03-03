@@ -22,7 +22,8 @@ export class AddTransportOperator {
     this.transportOperatorForm = this.formBuilder.group({
       name: [''],
       email: [''],
-      phone: ['']
+      phone: [''],
+      website: ['']
     });
     this.operators$ = this.operatorsService.operators$;
     this.operatorsService.getOperators().subscribe();
@@ -40,13 +41,18 @@ export class AddTransportOperator {
     return this.transportOperatorForm.get('phone');
   }
 
+  get website(): AbstractControl<any, any> | null {
+    return this.transportOperatorForm.get('website');
+  }
+
   onSubmit(): void {
     
     if (this.name != null && this.email != null && this.phone != null) {
       const newTransportOperator = {
         name: this.name.value,
         email: this.email.value,
-        phoneNumber: this.phone.value
+        phoneNumber: this.phone.value,
+        website: this.website?.value
       }
 
       this.operatorsService.createOperator(newTransportOperator)
