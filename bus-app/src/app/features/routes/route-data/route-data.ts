@@ -5,6 +5,7 @@ import { Stop, TransportOperator } from '../../../models';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { TripsService } from '../../../core/services/trips.service';
 
 @Component({
   selector: 'app-route-data',
@@ -16,9 +17,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 export class RouteData implements OnChanges {
   private stopsService = inject(StopsService);
   private routesService = inject(RoutesService);
+  private tripsService = inject(TripsService);
   private fb = inject(FormBuilder);
   private operatorsService = inject(OperatorsService);
-  private cdr = inject(ChangeDetectorRef); // Добавено за форсиране на рендер
+  private cdr = inject(ChangeDetectorRef);
 
   @Input() stationPosition: 'south' | 'west' = 'south';
   @Input() routeType: 'departures' | 'arrivals' = 'departures';
@@ -44,13 +46,12 @@ export class RouteData implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['stationPosition'] || changes['routeType']) {
-      this.loadRoutes();
-      // Изчистваме филтъра при смяна на таба
+      this.loadTrips();
       this.routeFilter.patchValue({ stop: '', transportOperator: '', date: '', time: '' }, { emitEvent: false });
     }
   }
 
-  loadRoutes() {
+  loadTrips() {
     const action = this.routeType === 'departures' 
       ? this.routesService.getDepartures(this.stationPosition) 
       : this.routesService.getArrivals(this.stationPosition);
@@ -59,7 +60,7 @@ export class RouteData implements OnChanges {
       next: (routes) => {
         this.results = [...routes];
         this.stopId = '';
-        this.cdr.detectChanges(); // СЪБУЖДАНЕ НА ИЗГЛЕДА
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error loading routes:', err)
     });
@@ -72,7 +73,7 @@ export class RouteData implements OnChanges {
       next: (trips) => {
         this.results = [...trips];
         this.stopId = stop;
-        this.cdr.detectChanges(); // СЪБУЖДАНЕ НА ИЗГЛЕДА
+        this.cdr.detectChanges();
       },
       error: (err) => console.error('Error searching routes:', err)
     });
