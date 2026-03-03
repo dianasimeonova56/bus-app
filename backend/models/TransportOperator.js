@@ -14,6 +14,9 @@ const transportOperatorSchema = new Schema({
     { 
         type: String,
         required: [true, "Transport operator phone number field is required!"] 
+    },
+    website: {
+        type: String
     }
 })
 
