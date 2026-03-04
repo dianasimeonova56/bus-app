@@ -6,7 +6,7 @@ export default {
     },
     async getOne(tripId){
         const updatedTrip = await Trip.findById(tripId)
-            .populate({path: 'route',
+            .populate('route', {path: 'route',
                 populate: { path: 'startStop.stopId endStop.stopId stops.stopId' }});
         console.log(updatedTrip);
         

@@ -1,8 +1,8 @@
 import Booking from '../models/Booking.js';
 import Ticket from '../models/Ticket.js';
 import Trip from '../models/Trip.js';
+import Stripe from 'stripe';
 import 'dotenv/config';
-import Stripe from '../index.js'
 
 export default {
     async createBooking(bookingData) {
@@ -25,7 +25,9 @@ export default {
             trip: trip._id,
             seats: bookingData.seats,
             totalPrice: bookingData.totalPrice,
-            status: 'pending'
+            status: 'pending',
+            departureStopId: bookingData.departureStopId,
+            destinationStopId: bookingData.destinationStopId
         });
 
         await booking.save();
@@ -46,7 +48,8 @@ export default {
         return { booking, tickets };
     },
     async createCheckoutSession(booking, tickets) {
-        const session = await Stripe.checkout.sessions.create({
+        const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+        const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: tickets.map((ticket, i) => ({
                 price_data: {

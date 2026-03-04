@@ -3,9 +3,9 @@ import bookingsService from "../services/bookingsService.js";
 
 const bookingController = Router();
 
-bookingController.post('/create/:bookingData', async (req, res) => {
+bookingController.post('/create', async (req, res) => {
   try {
-    const bookingData = req.body; // { user, trip, seats, totalPrice }
+    const bookingData = req.body;
 
     const { booking, tickets } = await bookingsService.createBooking(bookingData);
 
