@@ -1,45 +1,38 @@
 export interface RoutePopulated {
-    _id?: String;
+    _id?: string;
     startStop: {
-        stopId: {
-            _id: string,
-            location: [],
-            name: string,
-            sectors: number, 
-            type: string
-        };
+        stopId: PopulatedStop;
         sector: number;
     };
     endStop: {
-        stopId: {
-            _id: string,
-            location: [],
-            name: string,
-            sectors: number, 
-            type: string
-        };
+        stopId: PopulatedStop;
         sector: number;
-
     };
-    distance: Number;
-    duration: String;
-    days: String[];
+    distance: number;
+    duration: string;
+    days: string[];
     stops: {
-        stopId: {
-            _id: string,
-            location: [],
-            name: string,
-            sectors: number, 
-            type: string
-        };
+        stopId: PopulatedStop;
         arrivalTime: string;
         departureTime: string;
         order: number;
         sector: number;
     }[];
     transportOperator: string;
-    startHour: String;
-    arrivalHour: String;
+    startHour: string;
+    arrivalHour: string;
     oneWayTicketPrice: number;
     twoWayTicketPrice: number;
+}
+
+export interface PopulatedStop {
+    _id: string;
+    name: string;
+    sectors: number;
+    type: string;
+    address?: string;
+    location: {
+        type: string;
+        coordinates: [number, number];
+    };
 }
