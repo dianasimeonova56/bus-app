@@ -29,4 +29,24 @@ export class TripsService {
 
         return this.httpClient.get<any[]>(`${this.apiUrl}/search`, { params });
     }
+
+    getDepartures(station: string, limit?: number): Observable<any[]> {
+        let queryParams = new HttpParams();
+        if (limit) {
+            queryParams = queryParams.append('limit', limit.toString());
+        }
+        return this.httpClient.get<any[]>(`${this.apiUrl}/departures/${station}`, {
+            params: queryParams
+        });
+    }
+
+    getArrivals(station: string, limit?: number): Observable<any[]> {
+       let queryParams = new HttpParams();
+        if (limit) {
+            queryParams = queryParams.append('limit', limit.toString());
+        }
+        return this.httpClient.get<any[]>(`${this.apiUrl}/arrivals/${station}`, {
+            params: queryParams
+        });
+    }
 }

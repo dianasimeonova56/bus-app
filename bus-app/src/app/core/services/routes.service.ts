@@ -17,14 +17,6 @@ export class RoutesService {
         return this.httpClient.post(`${this.apiUrl}/create-route`, { routeData: body });
     }
 
-    getDepartures(station: string): Observable<any[]> {
-        return this.httpClient.get<any[]>(`${this.apiUrl}/departures/${station}`);
-    }
-
-    getArrivals(station: string): Observable<any[]> {
-        return this.httpClient.get<any[]>(`${this.apiUrl}/arrivals/${station}`);
-    }
-
     searchRoutes(stop?: string, transportOperator?: string, date?: string, time?: string): Observable<any[]> {
         let params = new HttpParams();
         if (stop) params = params.set('stop', stop);
