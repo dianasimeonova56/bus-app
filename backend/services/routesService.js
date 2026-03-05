@@ -78,6 +78,8 @@ export default {
 
     async searchRoutes(filter = {}) {
         const { stop, transportOperatorId, date, time } = filter;
+        console.log(filter);
+        
 
         const routeQuery = {};
         if (stop) {

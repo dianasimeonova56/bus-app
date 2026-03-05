@@ -1,11 +1,10 @@
 import { Component, inject, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { RoutesTable } from '../routes-table/routes-table';
-import { OperatorsService, RoutesService, StopsService } from '../../../core/services';
+import { OperatorsService, RoutesService, StopsService, TripsService } from '../../../core/services';
 import { Stop, TransportOperator } from '../../../models';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { TripsService } from '../../../core/services/trips.service';
 
 @Component({
   selector: 'app-route-data',
@@ -68,8 +67,10 @@ export class RouteData implements OnChanges {
 
   onSubmit() {
     const { stop, transportOperator, date, time } = this.routeFilter.value;
+    console.log(this.routeFilter.value);
+    
 
-    this.routesService.searchRoutes(stop, transportOperator, date, time).subscribe({
+    this.tripsService.searchTrips(stop, transportOperator, date, time).subscribe({
       next: (trips) => {
         this.results = [...trips];
         this.stopId = stop;

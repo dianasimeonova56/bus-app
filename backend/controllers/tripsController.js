@@ -18,6 +18,17 @@ tripsController.get('/', async (req, res) => {
     }
 });
 
+tripsController.get('/search', async (req, res) => {
+    try {
+        console.log(req.query);
+        
+        const results = await tripsService.searchTrips(req.query);
+        res.status(200).json(results);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
 tripsController.get('/:id', async (req, res) => {
     try {
         const tripId = req.params.id;
@@ -68,6 +79,8 @@ tripsController.get('/arrivals/:station', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
+
+
 
 
 export default tripsController;

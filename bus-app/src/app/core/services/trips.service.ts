@@ -19,4 +19,14 @@ export class TripsService {
     createBooking(bookingData: any): Observable<any> {
         return this.httpClient.post(`http://localhost:3000/booking/create`, bookingData);
     }
+
+    searchTrips(stop?: string, transportOperator?: string, date?: string, time?: string): Observable<any[]> {
+        let params = new HttpParams();
+        if (stop) params = params.set('stop', stop);
+        if (transportOperator) params = params.set('transportOperator', transportOperator);
+        if (date) params = params.set('date', date);
+        if (time) params = params.set('time', time);
+
+        return this.httpClient.get<any[]>(`${this.apiUrl}/search`, { params });
+    }
 }
