@@ -28,7 +28,6 @@ const generateTripsForPeriod = async () => {
                             availableSeats: 40,
                             status: 'scheduled'
                         });
-                        console.log(`Created trip for ${route._id} on ${targetDate.format('YYYY-MM-DD')}`);
                     }
                 }
             }

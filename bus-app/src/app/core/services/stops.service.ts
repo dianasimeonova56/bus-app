@@ -54,25 +54,4 @@ export class StopsService {
             tap(updatedStop => this.selectedStopBehaviourSubject.next(updatedStop))
         );
     }
-
-    // deleteStop(stopId: string): Observable<void> {
-    //     return this.httpClient.delete<void>(`${this.apiUrl}/${stopId}/delete`).pipe(
-    //         tap(() => {
-    //             const current = this.stopsBehaviourSubject.value;
-    //             this.stopsBehaviourSubject.next(current.filter(s => s._id !== stopId));//get the ones that are still available
-    //         })
-    //     );
-    // }
-
-    // searchPlays(playName?: string, director?: string, playDate?: Date): Observable<Play[]> {
-    //     let query = new HttpParams();
-
-    //     if (playName) query = query.set('playName', playName);
-    //     if (director) query = query.set('director', director);
-    //     if (playDate) query = query.set('playDate', playDate.toString());
-    //     console.log(playDate?.toString());
-
-
-    //     return this.httpClient.get<Play[]>(`${this.apiUrl}/search`, { params: query });
-    // }
 }

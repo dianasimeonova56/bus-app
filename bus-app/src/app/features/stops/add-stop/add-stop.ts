@@ -78,16 +78,13 @@ export class AddStop {
         newStop.sectors = sectors;
       }
 
-      console.log(newStop);
-      
-
       this.stopService.createStop(newStop).subscribe({
         next: (stop) => {
           console.log('Stop created:', stop);
           this.addStopForm.reset();
         },
         error: (err) => {
-          console.log("Login failed", err);
+          console.error("Login failed", err);
         }
       })
     }

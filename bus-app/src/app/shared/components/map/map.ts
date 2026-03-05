@@ -134,14 +134,6 @@ export class MapComponent implements OnChanges {
       legTimes.push(legTime);
     }
 
-    // results (seconds)
-    console.log('Leg times:', legTimes);
-
-    // example usage
-    legTimes.forEach((time, i) => {
-      console.log(`Leg ${i} (${i} → ${i + 1}): ${Math.round(time / 60)} min`);
-    });
-
     return legTimes;
   }
 

@@ -172,7 +172,7 @@ export class Register {
             this.router.navigate(['/home']);
           },
           error: (err) => {
-            console.log("Registration failed", err);
+            console.error("Registration failed", err);
             this.markFormGroupTouched();
           }
         });

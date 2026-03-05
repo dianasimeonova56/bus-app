@@ -8,7 +8,7 @@ import { AuthService } from '../../../core/services';
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
-export class Header implements OnInit {
+export class Header {
   protected authService = inject(AuthService)
   private router = inject(Router);
 
@@ -22,13 +22,8 @@ export class Header implements OnInit {
       next: () => {
         this.router.navigate(['/home'])
       }, error: (err) => {
-        console.log("Logout error", err);
+        console.error("Logout error", err);
       }
     });
-  }
-  
-  ngOnInit(): void {
-    console.log(this.role);
-    
   }
 }

@@ -31,7 +31,6 @@ export class AuthService {
             withCredentials: true
         }).pipe(
             tap(user => {
-                console.log(user);
                 this._currentUser.set(user);
                 this._isLoggedIn.set(true);
                 localStorage.setItem('currentUser', JSON.stringify(user))

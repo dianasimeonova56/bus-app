@@ -8,13 +8,9 @@ const MONGO_URI = 'mongodb://127.0.0.1:27017/test_db';
 async function seed() {
     try {
         await mongoose.connect(MONGO_URI);
-        console.log('✅ Свързан с MongoDB...');
-
         const routes = await Route.find();
-        console.log(`🔍 Намерени маршрути: ${routes.length}`);
 
         if (routes.length === 0) {
-            console.log('❌ Няма маршрути в колекцията "routes". Провери името на базата!');
             process.exit();
         }
 
@@ -44,9 +40,6 @@ async function seed() {
                 }
             }
         }
-
-        console.log(`🚀 Успешно създадени/обновени ${createdCount} пътувания (Trips)!`);
-        console.log('Провери Compass сега.');
     } catch (err) {
         console.error('❌ ГРЕШКА:', err);
     } finally {

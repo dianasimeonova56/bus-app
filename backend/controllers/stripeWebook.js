@@ -21,13 +21,10 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    console.log(session);
-    
     const bookingId = session.metadata.bookingId;
 
     try {
       await bookingService.handleCheckoutCompleted(bookingId);
-      console.log(`Booking ${bookingId} and tickets activated.`);
     } catch (err) {
       console.error(err);
     }

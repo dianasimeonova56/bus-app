@@ -65,14 +65,13 @@ export class Login {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      console.log(email, password);
       
       this.authService.login(email, password).subscribe({
         next: () => {
           this.router.navigate(['/home']);
         },
         error: (err) => {
-          console.log("Login failed", err);
+          console.error("Login failed", err);
 
           this.markFormGroupTouched();
         }
