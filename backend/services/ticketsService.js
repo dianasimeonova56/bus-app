@@ -11,27 +11,4 @@ export default {
 
         return tickets;
     },
-    async generateTicketsForBooking(bookingId) {
-        const booking = await Booking.findById(bookingId);
-        if (!booking) throw new Error("Booking not found!");
-
-        const trip = await Trip.findById(booking.trip);
-        if (!trip) throw new Error("Trip not found!");
-
-        const ticketsToCreate = booking.seats.map(seatNumber => ({
-            booking: booking._id,
-            trip: booking.trip,
-            passenger: booking.passenger,
-            seatNumber,
-            price: booking.totalPrice / booking.seats.length,
-            status: "pending"
-        }));
-
-        const tickets = await Ticket.insertMany(ticketsToCreate);
-
-        booking.tickets = tickets.map(t => t._id);
-        await booking.save();
-
-        return tickets;
-    }
 }

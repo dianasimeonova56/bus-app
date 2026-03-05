@@ -6,7 +6,6 @@ const bookingController = Router();
 bookingController.post('/create', async (req, res) => {
   try {
     const bookingData = req.body;
-
     const { booking, tickets } = await bookingsService.createBooking(bookingData);
 
     const session = await bookingsService.createCheckoutSession(booking, tickets);
@@ -16,5 +15,4 @@ bookingController.post('/create', async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
 export default bookingController;

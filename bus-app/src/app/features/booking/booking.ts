@@ -40,6 +40,37 @@ export class Booking {
     this.bookingForm.valueChanges.pipe(startWith(this.bookingForm.value))
   );
 
+  constructor() {
+    const navigation = this.router.currentNavigation()?.extras;
+    const ticketInfo = navigation?.state?.['stopData'];
+
+    const tripId = this.route.snapshot.paramMap.get('tripId');
+
+    if (tripId) {
+      this.tripsService.getTripById(tripId).subscribe({
+        next: (trip) => {
+          this.currentTrip.set(trip);
+
+          const depName = trip.route.startStop.stopId.name
+          const destName = ticketInfo ? ticketInfo.stopId.name : trip.route.endStop.stopId.name;
+
+          this.bookingForm.patchValue({
+            trip: trip._id,
+            departure: depName,
+            destination: destName
+          });
+
+          this.bookingForm.setValidators(this.routeOrderValidator());
+
+          const initialPrice = ticketInfo ? ticketInfo.price : trip.route.oneWayTicketPrice;
+          
+          this.basePrice.set(initialPrice);
+          this.totalPrice()
+        }
+      });
+    }
+  }
+
   allStopsInOrder = computed(() => {
     const trip = this.currentTrip();
     if (!trip) return [];
@@ -101,40 +132,6 @@ export class Booking {
     return Math.round(total * 100) / 100;
   });
 
-  constructor() {
-    const navigation = this.router.currentNavigation()?.extras;
-    const ticketInfo = navigation?.state?.['stopData'];
-
-    const tripId = this.route.snapshot.paramMap.get('tripId');
-
-    if (tripId) {
-      this.tripsService.getTripById(tripId).subscribe({
-        next: (trip) => {
-          this.currentTrip.set(trip);
-          console.log(trip);
-          
-
-          const depName = trip.route.startStop.stopId.name;
-          const destName = ticketInfo ? ticketInfo.stopId.name : trip.route.endStop.stopId.name;
-
-          this.bookingForm.patchValue({
-            trip: trip._id,
-            departure: depName,
-            destination: destName
-          });
-
-          this.bookingForm.setValidators(this.routeOrderValidator());
-
-          const initialPrice = ticketInfo ? ticketInfo.price : trip.route.oneWayTicketPrice;
-          console.log(initialPrice, ticketInfo, trip.route.oneWayTicketPrice);
-          
-          this.basePrice.set(initialPrice);
-          this.totalPrice()
-        }
-      });
-    }
-  }
-
   routeOrderValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const stops = this.allStopsInOrder();
@@ -158,16 +155,14 @@ export class Booking {
     if (this.bookingForm.valid && path.length >= 2) {
       const formValue = this.bookingForm.value;
 
-      const seatArray = Array.from({ length: Number(formValue.ticket_num) }, (_, i) => i + 1);
-
       const bookingData = {
         user: this.currentUser?._id,
         trip: this.currentTrip()?._id,
         departureStopId: path[0]._id,
         destinationStopId: path[path.length - 1]._id,
-        seats: seatArray,
         totalPrice: this.totalPrice(),
-        ticketType: formValue.ticketType
+        ticketType: formValue.ticketType,
+        seats: formValue.ticket_num
       };
 
       this.tripsService.createBooking(bookingData).subscribe({

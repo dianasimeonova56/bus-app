@@ -4,6 +4,11 @@ import routesService from '../services/routesService.js';
 
 const tripsController = express.Router();
 
+tripsController.get("/success", (req, res) => {
+    res.status(200).json({message: "All good"})
+})
+
+
 tripsController.get('/', async (req, res) => {
     try {
         const trips = tripsService.getAll();
@@ -63,5 +68,6 @@ tripsController.get('/arrivals/:station', async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 });
+
 
 export default tripsController;

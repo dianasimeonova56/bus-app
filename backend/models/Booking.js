@@ -43,9 +43,9 @@ const bookingSchema = new Schema({
         type: String,
         enum: ['pending', 'reserved', 'active', 'passed']
     },
-    seats: [{
+    seats: {
         type: Number
-    }]
+    }
 })
 
 const Booking = model('Booking', bookingSchema)

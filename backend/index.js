@@ -19,7 +19,13 @@ app.use(cors({
   origin: 'http://localhost:4200',
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => {
+    if (req.originalUrl.includes('/webhook')) {
+      req.rawBody = buf;
+    }
+  }
+}));
 app.use(cookieParser());
 app.use(express.urlencoded());
 app.use(auth);
@@ -28,7 +34,7 @@ app.use(routes);
 initDatabase().then(() => {
   console.log('Database connected successfully');
   
-  //initTripCron();
+  initTripCron();
 
   app.listen(PORT, () => {
     console.log(`Server is listening on http://localhost:${PORT}`);

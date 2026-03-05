@@ -17,6 +17,6 @@ export class TripsService {
     }
 
     createBooking(bookingData: any): Observable<any> {
-        return this.httpClient.post(`${this.apiUrl}/booking/create`, bookingData);
+        return this.httpClient.post(`http://localhost:3000/booking/create`, bookingData);
     }
 }
