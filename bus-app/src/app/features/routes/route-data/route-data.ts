@@ -5,6 +5,7 @@ import { Stop, TransportOperator } from '../../../models';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 
 @Component({
   selector: 'app-route-data',
@@ -23,6 +24,7 @@ export class RouteData implements OnChanges {
 
   @Input() stationPosition: 'south' | 'west' = 'south';
   @Input() routeType: 'departures' | 'arrivals' = 'departures';
+  onHomePage: boolean = false;
 
   allStops$: Observable<Stop[]>;
   operators$: Observable<TransportOperator[]>;
@@ -31,7 +33,7 @@ export class RouteData implements OnChanges {
   results: any[] = [];
   stopId: string = '';
 
-  constructor() {
+  constructor(location: Location) {
     this.allStops$ = this.stopsService.getStops();
     this.operators$ = this.operatorsService.getOperators();
 
@@ -41,7 +43,11 @@ export class RouteData implements OnChanges {
       date: [''],
       time: ['']
     });
+
+    this.onHomePage = location.isCurrentPathEqualTo('/home') || location.isCurrentPathEqualTo('/');
   }
+
+  
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['stationPosition'] || changes['routeType']) {
@@ -52,9 +58,8 @@ export class RouteData implements OnChanges {
 
   loadTrips() {
     const action = this.routeType === 'departures' 
-      ? this.routesService.getDepartures(this.stationPosition) 
-      : this.routesService.getArrivals(this.stationPosition);
-
+      ? this.tripsService.getDepartures(this.stationPosition, 5) 
+      : this.tripsService.getArrivals(this.stationPosition, 5)
     action.subscribe({
       next: (routes) => {
         this.results = [...routes];

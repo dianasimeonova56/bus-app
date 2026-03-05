@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {Tab, Tabs, TabList, TabPanel, TabContent} from '@angular/aria/tabs';
 import { RouteData } from "../route-data/route-data";
 
@@ -9,5 +9,5 @@ import { RouteData } from "../route-data/route-data";
   styleUrl: './routes-tabs.css',
 })
 export class RoutesTabs {
-
+  
 }
