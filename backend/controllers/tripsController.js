@@ -1,11 +1,12 @@
 import express from 'express';
 import tripsService from '../services/tripsService.js';
 import routesService from '../services/routesService.js';
+import Stop from '../models/Stop.js'
 
 const tripsController = express.Router();
 
 tripsController.get("/success", (req, res) => {
-    res.status(200).json({message: "All good"})
+    res.status(200).json({ message: "All good" })
 })
 
 
@@ -20,8 +21,6 @@ tripsController.get('/', async (req, res) => {
 
 tripsController.get('/search', async (req, res) => {
     try {
-        console.log(req.query);
-        
         const results = await tripsService.searchTrips(req.query);
         res.status(200).json(results);
     } catch (err) {
@@ -32,7 +31,7 @@ tripsController.get('/search', async (req, res) => {
 tripsController.get('/:id', async (req, res) => {
     try {
         const tripId = req.params.id;
-        
+
         const trip = await tripsService.getOne(tripId);
 
         res.json(trip);
@@ -53,7 +52,7 @@ tripsController.patch('/:id/cancel', async (req, res) => {
 
 const getStationByPosition = async (stationParam) => {
     const mainStations = await Stop.find({ isMainStation: true });
-    return mainStations.find(s => 
+    return mainStations.find(s =>
         (stationParam === 'south' && s.south) || (stationParam === 'west' && s.west)
     );
 };
@@ -61,9 +60,11 @@ const getStationByPosition = async (stationParam) => {
 tripsController.get('/departures/:station', async (req, res) => {
     try {
         const stationObj = await getStationByPosition(req.params.station);
+        console.log(stationObj);
+        
         if (!stationObj) return res.status(404).json({ message: 'Station not found' });
-        const routes = await routesService.getStationDepartures(stationObj._id);
-        res.status(200).json(routes);
+        const trips = await tripsService.getStationDepartures(stationObj._id, req.query);
+        res.status(200).json(trips);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
@@ -73,8 +74,8 @@ tripsController.get('/arrivals/:station', async (req, res) => {
     try {
         const stationObj = await getStationByPosition(req.params.station);
         if (!stationObj) return res.status(404).json({ message: 'Station not found' });
-        const routes = await routesService.getStationArrivals(stationObj._id);
-        res.status(200).json(routes);
+        const trips = await tripsService.getStationArrivals(stationObj._id, req.query);
+        res.status(200).json(trips);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }

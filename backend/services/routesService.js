@@ -34,53 +34,8 @@ export default {
         return Route.find();
     },
 
-    async getStationDepartures(stationId) {
-        const todayStart = dayjs().startOf('day').toDate();
-        const todayEnd = dayjs().endOf('day').toDate();
-
-        const routes = await Route.find({ 'startStop.stopId': stationId }).select('_id');
-        const routeIds = routes.map(r => r._id);
-
-        return Trip.find({
-            route: { $in: routeIds },
-            date: { $gte: todayStart, $lte: todayEnd }
-        }).populate({
-            path: 'route',
-            populate: [
-                { path: 'startStop.stopId' },
-                { path: 'endStop.stopId' },
-                { path: 'stops.stopId' },
-                { path: 'transportOperator' }
-            ]
-        }).sort({ 'route.startHour': 1 });
-    },
-
-    async getStationArrivals(stationId) {
-        const todayStart = dayjs().startOf('day').toDate();
-        const todayEnd = dayjs().endOf('day').toDate();
-
-        const routes = await Route.find({ 'endStop.stopId': stationId }).select('_id');
-        const routeIds = routes.map(r => r._id);
-
-        return Trip.find({
-            route: { $in: routeIds },
-            date: { $gte: todayStart, $lte: todayEnd }
-        }).populate({
-            path: 'route',
-            populate: [
-                { path: 'startStop.stopId' },
-                { path: 'endStop.stopId' },
-                { path: 'stops.stopId' },
-                { path: 'transportOperator' }
-            ]
-        }).sort({ 'route.arrivalHour': 1 });
-    },
-
     async searchRoutes(filter = {}) {
         const { stop, transportOperatorId, date, time } = filter;
-        console.log(filter);
-        
-
         const routeQuery = {};
         if (stop) {
             routeQuery.$or = [
