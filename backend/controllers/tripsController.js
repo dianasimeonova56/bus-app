@@ -60,7 +60,6 @@ const getStationByPosition = async (stationParam) => {
 tripsController.get('/departures/:station', async (req, res) => {
     try {
         const stationObj = await getStationByPosition(req.params.station);
-        console.log(stationObj);
         
         if (!stationObj) return res.status(404).json({ message: 'Station not found' });
         const trips = await tripsService.getStationDepartures(stationObj._id, req.query);

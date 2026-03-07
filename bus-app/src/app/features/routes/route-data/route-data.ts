@@ -5,7 +5,7 @@ import { Stop, TransportOperator } from '../../../models';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-route-data',
@@ -28,9 +28,12 @@ export class RouteData implements OnChanges {
 
   allStops$: Observable<Stop[]>;
   operators$: Observable<TransportOperator[]>;
-  
+
   routeFilter: FormGroup;
   results: any[] = [];
+  paginationMeta: any = null;
+  currentPage: number = 1;
+  pageSize: number = 5;
   stopId: string = '';
 
   constructor(location: Location) {
@@ -47,7 +50,7 @@ export class RouteData implements OnChanges {
     this.onHomePage = location.isCurrentPathEqualTo('/home') || location.isCurrentPathEqualTo('/');
   }
 
-  
+
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['stationPosition'] || changes['routeType']) {
@@ -56,13 +59,20 @@ export class RouteData implements OnChanges {
     }
   }
 
-  loadTrips() {
-    const action = this.routeType === 'departures' 
-      ? this.tripsService.getDepartures(this.stationPosition, 5) 
-      : this.tripsService.getArrivals(this.stationPosition, 5)
+  loadTrips(page: number = 1) {
+    this.currentPage = page;
+    this.pageSize = this.onHomePage ? 5 : 10;
+
+    const action = this.routeType === 'departures'
+      ? this.tripsService.getDepartures(this.stationPosition, page, this.pageSize)
+      : this.tripsService.getArrivals(this.stationPosition, page, this.pageSize);
+
     action.subscribe({
-      next: (routes) => {
-        this.results = [...routes];
+      next: (response) => {
+        console.log(response);
+
+        this.results = response.docs;
+        this.paginationMeta = response.meta;
         this.stopId = '';
         this.cdr.detectChanges();
       },
@@ -70,18 +80,30 @@ export class RouteData implements OnChanges {
     });
   }
 
-  onSubmit() {
+  onSubmit(page: number = 1) {
+    this.currentPage = page;
     const { stop, transportOperator, date, time } = this.routeFilter.value;
-    console.log(this.routeFilter.value);
-    
 
-    this.tripsService.searchTrips(stop, transportOperator, date, time).subscribe({
-      next: (trips) => {
-        this.results = [...trips];
+    this.tripsService.searchTrips(stop, transportOperator, date, time, page, this.pageSize).subscribe({
+      next: (response) => {
+        this.results = response.docs;
+        this.paginationMeta = response.meta;
         this.stopId = stop;
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error searching routes:', err)
     });
+  }
+
+  onPageChange(newPage: number) {
+    const hasFilters = Object.values(this.routeFilter.value).some(val => val !== '' && val !== null);
+
+    if (hasFilters && !this.onHomePage) {
+      this.onSubmit(newPage);
+    } else {
+      this.loadTrips(newPage);
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

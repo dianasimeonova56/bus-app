@@ -2,6 +2,8 @@ import Trip from '../models/Trip.js';
 import Route from '../models/Route.js'
 import mongoose from 'mongoose';
 import dayjs from 'dayjs';
+import { getPagination, formatResponse } from '../utils/paginationUtil.js';
+
 export default {
     getAll() {
         return Trip.find();
@@ -23,10 +25,9 @@ export default {
     },
     async searchTrips(filter = {}) {
         const { stop, transportOperator, date, time } = filter;
-        console.log(filter);
+        const { page, limit, skip } = getPagination(filter);
 
         const routeQuery = {};
-
         if (stop) {
             const sId = new mongoose.Types.ObjectId(stop);
             routeQuery.$or = [
@@ -35,94 +36,178 @@ export default {
                 { 'stops.stopId': sId }
             ];
         }
-
         if (transportOperator) routeQuery.transportOperator = transportOperator;
-
         if (time) routeQuery.startHour = { $gte: time };
 
-        const matchingRouteIds = await mongoose.model('Route').find(routeQuery).distinct('_id');
+        const matchingRouteIds = await Route.find(routeQuery).distinct('_id');
 
-        if ((!stop || !transportOperator || !time) && matchingRouteIds.length === 0) {
-            return [];
+        if ((stop || transportOperator || time) && matchingRouteIds.length === 0) {
+            return formatResponse([], 0, page, limit);
         }
 
         const tripQuery = { status: 'scheduled' };
-
         if (matchingRouteIds.length > 0) {
             tripQuery.route = { $in: matchingRouteIds };
         }
 
-        const today = dayjs().startOf('day');
+        const todayStart = dayjs().startOf('day').toDate();
 
         if (date) {
             const searchDate = dayjs(date).startOf('day');
-            if (searchDate.isBefore(today)) return [];
+            if (searchDate.isBefore(dayjs().startOf('day'))) {
+                return formatResponse([], 0, page, limit);
+            }
 
             tripQuery.date = {
                 $gte: searchDate.toDate(),
                 $lte: searchDate.endOf('day').toDate()
             };
         } else {
-            tripQuery.date = { $gte: today.toDate() };
+            tripQuery.date = { $gte: todayStart };
         }
 
-        return Trip.find(tripQuery)
-            .populate({
-                path: 'route',
-                populate: [
-                    { path: 'startStop.stopId' },
-                    { path: 'endStop.stopId' },
-                    { path: 'transportOperator' }
-                ]
-            })
-            .sort({ date: 1 });
-    },
-    async getStationDepartures(stationId, query) {
-        const limit = query.limit ? Number(query.limit) : 0;
-        
-        const todayStart = dayjs().startOf('day').toDate();
-        const todayEnd = dayjs().endOf('day').toDate();
+        const [totalDocs, trips] = await Promise.all([
+            Trip.countDocuments(tripQuery),
+            Trip.find(tripQuery)
+                .populate({
+                    path: 'route',
+                    populate: [
+                        {
+                            path: 'startStop.stopId',
+                            model: 'Stop'
+                        },
+                        {
+                            path: 'endStop.stopId',
+                            model: 'Stop'
+                        },
+                        {
+                            path: 'transportOperator',
+                            model: 'TransportOperator'
+                        },
+                        {
+                            path: 'stops.stopId',
+                            model: 'Stop'
+                        }
+                    ]
+                })
+                .sort({ date: 1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
 
-        const routes = await Route.find({ 'startStop.stopId': stationId }).select('_id');
+        return formatResponse(trips, totalDocs, page, limit);
+    },
+
+    async getStationDepartures(stationId, query) {
+        const { page, limit, skip } = getPagination(query);
+        const now = dayjs();
+        const currentHour = now.format('HH:mm');
+
+        const startOfSearch = now.subtract(1, 'day').endOf('day').toDate();
+
+        const routes = await Route.find({ 'startStop.stopId': stationId }).select('_id startHour');
         const routeIds = routes.map(r => r._id);
 
-        console.log( routeIds);
-        
-
-        return Trip.find({
+        const tripQuery = {
             route: { $in: routeIds },
-            date: { $gte: todayStart, $lte: todayEnd }
-        }).limit(limit)
-            .populate({
-                path: 'route',
-                populate: [
-                    { path: 'startStop.stopId' },
-                    { path: 'endStop.stopId' },
-                    { path: 'stops.stopId' },
-                    { path: 'transportOperator' }
-                ]
-            }).sort({ 'route.startHour': 1 });
+            status: 'scheduled',
+            date: { $gte: startOfSearch }
+        };
+
+        const [totalDocs, trips] = await Promise.all([
+            Trip.countDocuments(tripQuery),
+            Trip.find(tripQuery)
+                .populate({
+                    path: 'route',
+                    populate: [
+                        {
+                            path: 'startStop.stopId',
+                            model: 'Stop'
+                        },
+                        {
+                            path: 'endStop.stopId',
+                            model: 'Stop'
+                        },
+                        {
+                            path: 'transportOperator',
+                            model: 'TransportOperator'
+                        },
+                        {
+                            path: 'stops.stopId',
+                            model: 'Stop'
+                        }
+                    ]
+                })
+                .sort({ date: 1, 'route.startHour': 1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
+
+
+        const filteredTrips = trips.filter(trip => {
+            const tripDate = dayjs(trip.date);
+            if (tripDate.isSame(now, 'day') || tripDate.add(3, 'hour').isSame(now, 'day')) {
+                return trip.route.startHour >= currentHour;
+            }
+            return true;
+        });
+
+        return formatResponse(filteredTrips, totalDocs, page, limit);
     },
 
     async getStationArrivals(stationId, query) {
-        const limit = query.limit ? Number(query.limit) : 0;
-        const todayStart = dayjs().startOf('day').toDate();
-        const todayEnd = dayjs().endOf('day').toDate();
+        const { page, limit, skip } = getPagination(query);
+        const now = dayjs();
+        const currentHour = now.format('HH:mm'); // И ТУК
 
-        const routes = await Route.find({ 'endStop.stopId': stationId }).select('_id');
+        const startOfSearch = now.subtract(1, 'day').endOf('day').toDate();
+
+        const routes = await Route.find({ 'endStop.stopId': stationId }).select('_id arrivalHour');
         const routeIds = routes.map(r => r._id);
 
-        return Trip.find({
+        const tripQuery = {
             route: { $in: routeIds },
-            date: { $gte: todayStart, $lte: todayEnd }
-        }).limit(limit).populate({
-            path: 'route',
-            populate: [
-                { path: 'startStop.stopId' },
-                { path: 'endStop.stopId' },
-                { path: 'stops.stopId' },
-                { path: 'transportOperator' }
-            ]
-        }).sort({ 'route.arrivalHour': 1 });
-    },
+            status: 'scheduled',
+            date: { $gte: startOfSearch }
+        };
+
+        const [totalDocs, trips] = await Promise.all([
+            Trip.countDocuments(tripQuery),
+            Trip.find(tripQuery)
+                .populate({
+                    path: 'route',
+                    populate: [
+                        {
+                            path: 'startStop.stopId',
+                            model: 'Stop'
+                        },
+                        {
+                            path: 'endStop.stopId',
+                            model: 'Stop'
+                        },
+                        {
+                            path: 'transportOperator',
+                            model: 'TransportOperator'
+                        },
+                        {
+                            path: 'stops.stopId',
+                            model: 'Stop'
+                        }
+                    ]
+                })
+                .sort({ date: 1, 'route.arrivalHour': 1 })
+                .skip(skip)
+                .limit(limit)
+        ]);
+
+        const filteredTrips = trips.filter(trip => {
+            const tripDate = dayjs(trip.date);
+            if (tripDate.isSame(now, 'day') || tripDate.add(3, 'hour').isSame(now, 'day')) {
+                return trip.route.arrivalHour >= currentHour;
+            }
+            return true;
+        });
+
+        return formatResponse(filteredTrips, totalDocs, page, limit);
+    }
 }
