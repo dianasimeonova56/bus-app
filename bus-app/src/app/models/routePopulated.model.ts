@@ -17,6 +17,7 @@ export interface RoutePopulated {
         departureTime: string;
         order: number;
         sector: number;
+        price: number
     }[];
     transportOperator: string;
     startHour: string;
