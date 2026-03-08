@@ -4,17 +4,91 @@
             <p class="h3 text-center mb-5">Booking</p>
             <div class="row">
                 <form action="" class="form-group col-6" [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+                    @if(isManualSelection()) {
+                    <div [hidden]="formValues()?.departure"> <label for="mainStation" class="mb-1">От къде
+                            тръгвате?</label>
+                        <select id="mainStation" class="form-select" formControlName="mainStation">
+                            <option value="" selected disabled>Изберете автогара</option>
+                            @for (stop of mainHubs(); track stop._id) {
+                            <option [value]="stop._id">{{stop.name}}</option>
+                            }
+                        </select>
+                    </div>
 
-                    <label for="trip" class="mb-1">Trip</label>
+                    @if(formValues()?.departure) {
+                    <div class="mb-3">
+                        <label for="departure" class="mb-1 text-muted small">Начална точка (Автогара)</label>
+                        <div class="d-flex gap-2">
+                            <input class="form-control bg-light" type="text" id="departure" formControlName="departure"
+                                readonly>
+                            <button type="button" class="btn btn-outline-secondary btn-sm"
+                                (click)="bookingForm.get('mainStation')?.setValue(''); bookingForm.get('departure')?.setValue('')">
+                                Промяна
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="destination" class="mb-1">Накъде пътувате?</label>
+                        <select id="destination" class="form-select" formControlName="destination">
+                            <option value="" selected disabled>Изберете дестинация</option>
+                            @for (stop of destinationOptions(); track stop._id) {
+                            <option [value]="stop.name">{{stop.name}}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="date" class="form-label fw-bold text-primary">Дата на пътуване</label>
+                        <input type="date" id="date" class="form-control border-2" formControlName="date"
+                            [min]="minDate">
+                    </div>
+
+                    @if(formValues()?.destination) {
+                    <div class="mb-4 animate-fade-in">
+                        <label class="form-label d-block fw-bold mb-3">Налични часове:</label>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            @for (trip of availableTimesForRoute(); track trip._id) {
+                            <div class="time-wrapper">
+                                <input type="radio" class="btn-check" [id]="trip._id" [value]="trip._id"
+                                    formControlName="departureTime">
+
+                                <label class="btn btn-outline-primary hour-card d-flex flex-column text-center"
+                                    [for]="trip._id">
+                                    <span class="fs-4 fw-bold">{{ trip.route.startHour }}</span>
+                                    <small class="text-muted">Пристига: {{ getArrivalTimeForStop(trip) }}</small>
+
+                                    <div class="mt-2">
+                                        @if (trip.availableSeats <= 5) { <span class="badge bg-danger">Остават {{
+                                            trip.availableSeats }} места!</span>
+                                            } @else {
+                                            <span class="badge bg-light text-dark">{{ trip.availableSeats }} свободни
+                                                места</span>
+                                            }
+                                    </div>
+                                </label>
+                            </div>
+                            } @empty {
+                            <div class="alert alert-info w-100 shadow-sm border-0">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Няма налични курсове за избраната дата. Моля, опитайте с друга дата или дестинация.
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+                    }
+                    } @else {
+                    <label for="trip" class="mb-1">Избран маршрут</label>
                     <input class="form-control mb-4" type="text" id="trip" formControlName="trip" required readonly>
-
                     <label for="departure" class="mb-1">Departure</label>
                     <input class="form-control mb-4" type="text" id="departure" formControlName="departure" required
                         readonly>
-
                     <label for="destination" class="mb-1">Destination</label>
-                    <input class="form-control mb-4" type="text" id="destination" formControlName="destination" required
+                    <input id="destination" class="form-control mb-4" type="text" formControlName="destination" required
                         readonly>
+                    }
 
                     @if(showTicketType()) {
                     <label class="form-label d-block fw-bold mb-2">Ticket type</label>

@@ -1,0 +1,29 @@
+.hour-card {
+    min-width: 110px;
+    padding: 15px 10px;
+    border-radius: 15px;
+    border: 2px solid #0d6efd;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+}
+
+.hour-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.2);
+}
+
+.btn-check:checked + .hour-card {
+    background-color: #0d6efd !important;
+    color: white !important;
+    border-color: #0d6efd;
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.4);
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
