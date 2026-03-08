@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, tap } from "rxjs";
+import { BehaviorSubject, Observable, of, tap } from "rxjs";
 import { Stop } from "../../models/index";
 
 @Injectable({
@@ -18,10 +18,15 @@ export class StopsService {
     constructor(private httpClient: HttpClient) { }
 
     getStops(): Observable<Stop[]> {
-        return this.httpClient.get<Stop[]>(this.apiUrl)
-            .pipe(
-                tap(stops => this.stopsBehaviourSubject.next(stops))
-            );
+        const currentStops = this.stopsBehaviourSubject.value;
+
+        if (currentStops.length > 0) {
+            return of(currentStops);
+        }
+
+        return this.httpClient.get<Stop[]>(this.apiUrl).pipe(
+            tap(stops => this.stopsBehaviourSubject.next(stops))
+        );
     }
 
     getBusStations(): Observable<Stop[]> {
