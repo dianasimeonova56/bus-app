@@ -158,7 +158,7 @@ export default {
     async getStationArrivals(stationId, query) {
         const { page, limit, skip } = getPagination(query);
         const now = dayjs();
-        const currentHour = now.format('HH:mm'); // И ТУК
+        const currentHour = now.format('HH:mm');
 
         const startOfSearch = now.subtract(1, 'day').endOf('day').toDate();
 
