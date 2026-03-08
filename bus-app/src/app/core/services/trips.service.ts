@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable, of, pipe, tap } from "rxjs";
 import { Trip } from "../../models/trip.model";
 import { PaginatedResponse } from "../../models";
 
@@ -9,8 +9,33 @@ export class TripsService {
     private httpClient = inject(HttpClient);
     private apiUrl = 'http://localhost:3000/trips';
 
+    private tripsCache$ = new BehaviorSubject<Trip[]>([]);
+
+    private updateCache(newTrips: Trip[]) {
+        const currentCache = this.tripsCache$.value;
+        const updatedCache = [...currentCache];
+
+        newTrips.forEach(newTrip => {
+            const exist = updatedCache.find(t => t._id === newTrip._id);
+
+            if(!exist) {
+                updatedCache.push(newTrip);
+            }
+        });
+
+        this.tripsCache$.next(updatedCache);
+    }
+
     getTripById(id: string): Observable<Trip> {
-        return this.httpClient.get<Trip>(`${this.apiUrl}/${id}`);
+        const cachedTrip = this.tripsCache$.value.find(t => id === t._id);
+
+        if(cachedTrip) {
+            return of(cachedTrip);
+        }
+
+        return this.httpClient.get<Trip>(`${this.apiUrl}/${id}`).pipe(
+            tap(trip => this.updateCache([trip]))
+        );
     }
 
     cancelTrip(id: string): Observable<Trip> {
@@ -38,7 +63,9 @@ export class TripsService {
         if (date) params = params.set('date', date);
         if (time) params = params.set('time', time);
 
-        return this.httpClient.get<PaginatedResponse<Trip>>(`${this.apiUrl}/search`, { params });
+        return this.httpClient.get<PaginatedResponse<Trip>>(`${this.apiUrl}/search`, { params }).pipe(
+            tap(search => this.tripsCache$.next(search.docs))
+        );
     }
 
     getDepartures(station: string, page: number = 1, limit: number = 10): Observable<PaginatedResponse<Trip>> {
@@ -46,7 +73,9 @@ export class TripsService {
             .set('page', page.toString())
             .set('limit', limit.toString());
 
-        return this.httpClient.get<PaginatedResponse<Trip>>(`${this.apiUrl}/departures/${station}`, { params });
+        return this.httpClient.get<PaginatedResponse<Trip>>(`${this.apiUrl}/departures/${station}`, { params }).pipe(
+            tap(dep => this.tripsCache$.next(dep.docs))
+        );
     }
 
     getArrivals(station: string, page: number = 1, limit: number = 10): Observable<PaginatedResponse<Trip>> {
@@ -54,6 +83,8 @@ export class TripsService {
             .set('page', page.toString())
             .set('limit', limit.toString());
 
-        return this.httpClient.get<PaginatedResponse<Trip>>(`${this.apiUrl}/arrivals/${station}`, { params });
+        return this.httpClient.get<PaginatedResponse<Trip>>(`${this.apiUrl}/arrivals/${station}`, { params }).pipe(
+            tap(arr => this.tripsCache$.next(arr.docs))
+        );
     }
 }
