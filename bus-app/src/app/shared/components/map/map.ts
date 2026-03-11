@@ -35,14 +35,24 @@ export class MapComponent implements OnChanges {
         attribution: '© OpenStreetMap contributors'
       })
     ],
-    zoom: 5,
-    center: latLng(46.879966, -121.726909)
+    zoom: 12,
+    center: latLng(42.5048, 27.4626)
   };
+
+  customSvgIcon = L.divIcon({
+    html: `
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2Z" fill="#007bff" stroke="white" stroke-width="2"/>
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>`,
+    className: "custom-leaflet-icon",
+    iconSize: [30, 30],
+    iconAnchor: [15, 30]
+  });
 
   onMapReady(map: L.Map) {
     this.map = map;
 
-    // Geocoder за добавяне на точки
     (L.Control as any).geocoder({ defaultMarkGeocode: false })
       .on('markgeocode', (e: any) => {
         const latlng = e.geocode.center;
@@ -59,14 +69,12 @@ export class MapComponent implements OnChanges {
       })
       .addTo(map);
 
-    // Initial routing control
     this.updateRouting();
   }
 
   updateRouting() {
     if (!this.map) return;
 
-    // Remove old route
     if (this.routingControl) {
       this.map.removeControl(this.routingControl);
     }
@@ -83,64 +91,65 @@ export class MapComponent implements OnChanges {
     if (waypoints.length < 2) return;
 
     this.routingControl = L.Routing.control({
-      router: new L.Routing.GraphHopper('3c01185e-9fb4-411a-97f3-fc677dd1fcc3'),
-      waypoints,
-      routeWhileDragging: false
-    }).addTo(this.map);
+    router: new L.Routing.GraphHopper('3c01185e-9fb4-411a-97f3-fc677dd1fcc3'),
+    waypoints,
+    routeWhileDragging: false,
+    show: false,
+    fitSelectedRoutes: true,
+    addWaypoints: false,
+    plan: L.Routing.plan(waypoints, {
+      draggableWaypoints: false,
+      addWaypoints: false,
+      createMarker: (i: number, wp: any) => {
+        return L.marker(wp.latLng, {
+          draggable: false,
+          icon: this.customSvgIcon
+        });
+      }
+    })
+  }).addTo(this.map);
 
     this.routingControl.on('routesfound', (e: any) => {
-      if (e.routes && e.routes.length > 0) {
-        
-        const summary = e.routes[0].summary;
-        const distanceKm = summary.totalDistance / 1000;
+    if (e.routes && e.routes.length > 0) {
 
-        this.distance.emit(distanceKm);
-        this.duration.emit(summary.totalTime)
-        const legTimes = this.calculateLegTimes(e.routes[0]);
-        this.legTimesChange.emit(legTimes);
+      const summary = e.routes[0].summary;
+      const distanceKm = summary.totalDistance / 1000;
+
+      this.distance.emit(distanceKm);
+      this.duration.emit(summary.totalTime)
+      const legTimes = this.calculateLegTimes(e.routes[0]);
+      this.legTimesChange.emit(legTimes);
+    }
+  });
+  }
+
+calculateLegTimes(route: any): number[] {
+  const legTimes: number[] = [];
+  const waypointIndices = route.waypointIndices;
+  const instructions = route.instructions;
+
+  for (let i = 0; i < waypointIndices.length - 1; i++) {
+    const fromIdx = waypointIndices[i];
+    const toIdx = waypointIndices[i + 1];
+
+    let legTime = 0;
+
+    instructions.forEach((instr: any) => {
+      if (instr.index >= fromIdx && instr.index < toIdx) {
+        legTime += instr.time;
       }
     });
+
+    legTimes.push(legTime);
   }
 
-  // formatDuration(seconds: number): [string, number] {
-  //   const total = Math.round(seconds / 60);
-  //   const hrs = Math.floor(seconds / 3600);
-  //   const mins = Math.round((seconds % 3600) / 60);
+  return legTimes;
+}
 
-  //   if (hrs > 0) {
-  //     return [`${hrs}h${mins > 0 ? mins : ''}min`, total];
-  //   } else {
-  //     return [`${mins}min`, total];
-  //   }
-  // }
-
-  calculateLegTimes(route: any): number[] {
-    const legTimes: number[] = [];
-    const waypointIndices = route.waypointIndices;
-    const instructions = route.instructions;
-
-    for (let i = 0; i < waypointIndices.length - 1; i++) {
-      const fromIdx = waypointIndices[i];
-      const toIdx = waypointIndices[i + 1];
-
-      let legTime = 0;
-
-      instructions.forEach((instr: any) => {
-        if (instr.index >= fromIdx && instr.index < toIdx) {
-          legTime += instr.time;
-        }
-      });
-
-      legTimes.push(legTime);
-    }
-
-    return legTimes;
+ngOnChanges(changes: SimpleChanges) {
+  if (!this.map) return;
+  if (changes['departureStop'] || changes['arrivalStop'] || changes['intermediateStops']) {
+    this.updateRouting();
   }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (!this.map) return;
-    if (changes['departureStop'] || changes['arrivalStop'] || changes['intermediateStops']) {
-      this.updateRouting();
-    }
-  }
+}
 }
