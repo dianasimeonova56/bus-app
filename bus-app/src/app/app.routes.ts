@@ -66,4 +66,21 @@ export const routes: Routes = [
         loadComponent: () => import('./features/booking/booking').then(c => c.Booking),
         canActivate: [authGuard]
     },
+    {
+        path: 'success',
+        title: "Успех",
+        loadComponent: () => import('./features/status-pages/success-page/success-page').then(c => c.SuccessPage),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'error',
+        title: "Успех",
+        loadComponent: () => import('./features/status-pages/error-page/error-page').then(c => c.ErrorPage),
+        canActivate: [authGuard]
+    },
+    {
+        path: '**',
+        title: "Страницата не е открита",
+        loadComponent: () => import('./features/status-pages/not-found-page/not-found-page').then(c => c.NotFoundPage)
+    }
 ];
