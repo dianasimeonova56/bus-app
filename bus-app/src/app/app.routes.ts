@@ -79,6 +79,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'logout',
+        redirectTo: '/home',
+        pathMatch: 'full'
+    },
+    {
         path: '**',
         title: "Страницата не е открита",
         loadComponent: () => import('./features/status-pages/not-found-page/not-found-page').then(c => c.NotFoundPage)

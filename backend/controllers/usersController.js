@@ -33,7 +33,7 @@ userController.post('/login', isGuest, async (req, res) => {
     }
 });
 
-userController.post('/logout', isAuth, (req, res) => {
+userController.post('/logout', (req, res) => {
     res.clearCookie(AUTH_COOKIE_NAME);
     res.json({ message: 'Logged out successfully' });
 });

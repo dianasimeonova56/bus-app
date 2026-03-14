@@ -30,19 +30,15 @@ export class AuthService {
         return this.httpClient.post<User>(`${this.apiUrl}/login`, { email, password }, {
             withCredentials: true
         }).pipe(
-            tap(user => {
-                this._currentUser.set(user);
-                this._isLoggedIn.set(true);
-                localStorage.setItem('currentUser', JSON.stringify(user))
-            })
+            tap(user => { this.setUserData(user) })
         );
     }
 
-    register(email: string, first_name:string, last_name:string, phone_number:string, password: string, rePassword: string): Observable<User> {
+    register(email: string, first_name: string, last_name: string, phone_number: string, password: string, rePassword: string): Observable<User> {
         return this.httpClient.post<User>(`${this.apiUrl}/register`, {
             email,
             first_name,
-            last_name, 
+            last_name,
             phone_number,
             password,
             rePassword,
@@ -50,11 +46,7 @@ export class AuthService {
         }, {
             withCredentials: true
         }).pipe(
-            tap(user => {
-                this._currentUser.set(user);
-                this._isLoggedIn.set(true);
-                localStorage.setItem('currentUser', JSON.stringify(user))
-            })
+            tap(user => { this.setUserData(user) })
         );
     }
 
@@ -62,11 +54,7 @@ export class AuthService {
         return this.httpClient.post<void>(`${this.apiUrl}/logout`, {}, {
             withCredentials: true
         }).pipe(
-            tap(() => {
-                this._currentUser.set(null);
-                this._isLoggedIn.set(false);
-                localStorage.removeItem('currentUser')
-            })
+            tap(() => { this.clearLocalData() })
         );
     }
 
@@ -81,15 +69,23 @@ export class AuthService {
         }, {
             withCredentials: true
         }).pipe(
-            tap(user => {
-                this._currentUser.set(user);
-                this._isLoggedIn.set(true);
-                localStorage.setItem('currentUser', JSON.stringify(user))
-            })
+            tap(user => { this.setUserData(user) })
         );
     }
 
     getCurrentUserRole(): String | null {
         return this._currentUser()?.user_role || null;
+    }
+
+    clearLocalData(): void {
+        this._currentUser.set(null);
+        this._isLoggedIn.set(false);
+        localStorage.removeItem('currentUser')
+    }
+
+    setUserData(user: any) {
+        localStorage.setItem('user', JSON.stringify(user));
+        this._currentUser.set(user);
+        this._isLoggedIn.set(true);
     }
 }
