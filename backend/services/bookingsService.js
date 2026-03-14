@@ -5,6 +5,20 @@ import Stripe from 'stripe';
 import 'dotenv/config';
 
 export default {
+    async getBookingsForUser(userId) {
+        try {
+            const bookings = await Booking.find({ passenger: userId })
+                .populate('tickets')
+                .populate('trip')
+                .populate("departureStopId")
+                .populate("destinationStopId")
+                .populate({ path: 'trip', populate: 'route' })
+            return bookings;
+        } catch (err) {
+            throw new Error("Error while fetching bookings:", err);
+        }
+
+    },
     async createBooking(bookingData) {
         const trip = await Trip.findById(bookingData.trip);
         if (!trip) throw new Error('Trip not found');
@@ -48,6 +62,11 @@ export default {
 
         const tickets = await Ticket.insertMany(ticketsToCreate);
 
+        const ticketIds = tickets.map(t => t._id);
+
+        booking.tickets = ticketIds;
+        await booking.save();
+
         return { booking, tickets };
     },
     async createCheckoutSession(booking, tickets) {
@@ -72,10 +91,7 @@ export default {
     },
     async handleCheckoutCompleted(bookingId) {
         const booking = await Booking.findById(bookingId);
-         
         if (!booking) throw new Error('Booking not found');
-       
-        
 
         if (booking.status === 'active') return booking;
 
@@ -99,5 +115,37 @@ export default {
         console.log(`Booking ${bookingId} completed. Remaining seats: ${trip.availableSeats}`);
 
         return booking;
+    },
+    async cancelBooking(bookingId) {
+        try {
+            const booking = await Booking.findById(bookingId);
+            if (!booking) throw new Error("Booking not found");
+
+            if (booking.status === 'cancelled') return true;
+
+            const trip = await Trip.findById(booking.trip);
+
+            booking.status = 'cancelled';
+            await booking.save();
+            booking.populate('tickets')
+                .populate('trip')
+                .populate("departureStopId")
+                .populate("destinationStopId")
+                .populate({ path: 'trip', populate: 'route' })
+
+            await Ticket.updateMany(
+                { booking: bookingId },
+                { status: 'cancelled' }
+            );
+
+            if (trip) {
+                trip.availableSeats += booking.seats;
+                await trip.save();
+            }
+
+            return booking;
+        } catch (err) {
+            throw new Error("Error while cancelling trip", err)
+        }
     }
 };
