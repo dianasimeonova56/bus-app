@@ -41,7 +41,7 @@
     <app-routes-table [data]="results" [searchedStopId]="stopId"></app-routes-table>
     @if (onHomePage) {
     <div class="text-center mt-3">
-        <a routerLink="/schedules" class="btn btn-link">Виж пълното разписание</a>
+        <a [routerLink]="['/bus-stations', stationPosition]" class="btn btn-link">Виж пълното разписание</a>
     </div>
     }
     @if (!onHomePage && paginationMeta && paginationMeta.totalPages > 1) {

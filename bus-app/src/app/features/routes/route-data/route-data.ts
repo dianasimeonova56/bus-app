@@ -6,11 +6,12 @@ import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-route-data',
   standalone: true,
-  imports: [RoutesTable, AsyncPipe, ReactiveFormsModule],
+  imports: [RoutesTable, AsyncPipe, ReactiveFormsModule, RouterLink],
   templateUrl: './route-data.html',
   styleUrl: './route-data.css',
 })
