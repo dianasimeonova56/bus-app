@@ -1,19 +1,24 @@
 import { ChangeDetectorRef, Component, inject, OnInit, signal } from '@angular/core';
-import { AuthService } from '../../core/services';
+import { AuthService, BookingsService } from '../../core/services';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { User } from '../../models';
+import { PopulatedBooking, User } from '../../models';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { map, Observable, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe, AsyncPipe],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
 export class Profile implements OnInit {
   private authService = inject(AuthService);
+  private bookingsService = inject(BookingsService);
   readonly currentUser = this.authService.currentUser;
   private formBuilder = inject(FormBuilder);
   user = signal<User | null>(null);
+  bookings$: Observable<PopulatedBooking[]> = of([]);
+  expandedBookingId = signal<string | undefined>(undefined);
 
   editProfileForm: FormGroup;
 
@@ -28,25 +33,31 @@ export class Profile implements OnInit {
         rePassword: ['', Validators.required]
       }, { validators: this.passwordMatchValidator })
     })
+
+    this.bookings$ = this.bookingsService.userBookingsPopulated$;
+    console.log(this.bookings$);
   }
 
   ngOnInit(): void {
-    this.user.set(this.authService.currentUser())
-    // this.bookingService.getBookings(this.authService.getCurrentUserId() ?? null).subscribe({
-    //   next: (plays: PopulatedBooking[]) => this.bookedPlaysNum.set((plays?.length) ?? 0),
-    //   error: (err) => {
-    //     this.errorService.setError(`Failed to load user: ${err}`)
-    //   }
-    // });
-    this.editProfileForm.patchValue({
-    email: this.user()?.email,
-    first_name:  this.user()?.first_name,
-    last_name:  this.user()?.last_name,
-    phone_number:  this.user()?.phone_number
-  });
+    const currentUserData = this.authService.currentUser();
+    this.user.set(currentUserData);
+
+    this.bookingsService.getBookingsForUser(currentUserData?._id)
+      .pipe(
+        map((res: any) => res.bookings || res)
+      )
+      .subscribe({
+        next: (bookings) => {
+        }
+      });
+
   }
 
-   get email(): AbstractControl<any, any> | null {
+  toggle(id: string): void {
+    this.expandedBookingId.update(currentId => currentId === id ? undefined : id);
+  }
+
+  get email(): AbstractControl<any, any> | null {
     return this.editProfileForm.get('email');
   }
 
@@ -90,7 +101,7 @@ export class Profile implements OnInit {
     return this.phone_number?.invalid && (this.phone_number?.dirty || this.phone_number?.touched) || false;
   }
 
-   get isPasswordsValid(): boolean {
+  get isPasswordsValid(): boolean {
     return this.passwords?.invalid && (this.passwords?.dirty || this.passwords?.touched) || false;
   }
 
@@ -178,6 +189,22 @@ export class Profile implements OnInit {
     return '';
   }
 
+  cancelBooking(bookingId: string): void {
+    debugger
+    let res = confirm("Сигурни ли сте, че искате да откажете тази резервация?");
+    
+    if(res) {
+      this.bookingsService.cancelBooking(bookingId).subscribe({
+        next: () => {
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error("Error during cancel trip", err);
+        }
+      })
+    }
+  }
+
   onSave(): void {
     if (this.editProfileForm.valid) {
       const { email, first_name, last_name, phone_number, password } = this.editProfileForm.value;
@@ -186,7 +213,7 @@ export class Profile implements OnInit {
         _id: this.user()?._id,
         email: email,
         first_name: first_name,
-        last_name: last_name, 
+        last_name: last_name,
         phone_number: phone_number,
         password: password
       }

@@ -1,36 +1,32 @@
 <div class="container">
-    <div class="row">
+    <div class="row ">
+        <p class="h3 text-center mb-5">Здравей, {{this.currentUser()?.first_name}}
+            {{this.currentUser()?.last_name}}! </p>
         <div class="p-5 m-2 border rounded">
-            <p class="h3 text-center mb-5">Здравей, {{this.currentUser()?.first_name}}
-                {{this.currentUser()?.last_name}}! </p>
-            <form action="" class="form-group col-6" [formGroup]="editProfileForm">
+            <form action="" class="form-group" [formGroup]="editProfileForm">
                 <label for="email" class="mb-1">email</label>
-                <input class="form-control mb-4" type="email" id="email" formControlName="email" required
-                    >
+                <input class="form-control mb-4" type="email" id="email" formControlName="email" required>
                 @if(isEmailValid) {
                 <p class="error">
                     {{ emailErrorMessage }}
                 </p>
                 }
                 <label for="first_name" class="mb-1">First name</label>
-                <input class="form-control mb-4" type="text" id="first_name" formControlName="first_name" required
-                    >
+                <input class="form-control mb-4" type="text" id="first_name" formControlName="first_name" required>
                 @if(isfirstNameValid) {
                 <p class="error">
                     {{ firstNameErrorMessage }}
                 </p>
                 }
                 <label for="last_name" class="mb-1">Last Name</label>
-                <input class="form-control mb-4" type="text" id="last_name" formControlName="last_name" required
-                    >
+                <input class="form-control mb-4" type="text" id="last_name" formControlName="last_name" required>
                 @if(islastNameValid) {
                 <p class="error">
                     {{ lastNameErrorMessage }}
                 </p>
                 }
                 <label for="phone_number" class="mb-1">Phone</label>
-                <input class="form-control mb-4" type="tel" id="phone_number" formControlName="phone_number" required
-                    >
+                <input class="form-control mb-4" type="tel" id="phone_number" formControlName="phone_number" required>
                 @if(isPhoneValid) {
                 <p class="error">
                     {{ phoneErrorMessage }}
@@ -59,5 +55,78 @@
                     [disabled]="editProfileForm.invalid">Edit Profile</button>
             </form>
         </div>
+        <div class="p-5 m-2 border rounded">
+            <div>
+                <div>Твоите резервации</div>
+                <div class="routes-list mt-4">
+                    <div class="route-row header">
+                        <div>Дата & Час</div>
+                        <div>Маршрут</div>
+                        <div>Места</div>
+                        <div>Статус</div>
+                        <div>Обща цена</div>
+                    </div>
+                    @for (booking of bookings$ | async; track booking._id) {
+                    <ng-container>
+                        <div class="route-row" (click)="toggle(booking._id)">
+                            <div class="route-time">
+                                {{ booking.trip.date | date:'dd.MM.yyyy' }} <br>
+                                <small class="text-muted">{{ booking.trip.route.startHour }}</small>
+                            </div>
+
+                            <div class="route-path">
+                                {{ booking.departureStopId.name}}
+                                <i class="bi bi-arrow-right"></i>
+                                {{ booking.destinationStopId.name }}
+                            </div>
+
+                            <div class="route-sector">
+                                <i class="bi bi-person-badge"></i> {{ booking.seats }} бр.
+                            </div>
+
+                            <div class="route-operator">
+                                <span class="status-badge" [class]="booking.status">
+                                    {{ booking.status }}
+                                </span>
+                            </div>
+
+                            <div class="route-action">
+                                <span class="fw-bold text-blue">{{ booking.totalPrice }} €</span>
+                            </div>
+                        </div>
+
+                        @if (expandedBookingId() === booking._id) {
+                        <div class="route-details tickets-detail">
+                            <h6 class="mb-3 text-blue"><i class="bi bi-ticket-detailed"></i> Вашите билети:</h6>
+
+                            <div class="tickets-grid">
+                                @for (ticket of booking.tickets; track ticket._id) {
+                                <div class="ticket-card">
+                                    <div class="ticket-header">
+                                        <span class="seat-num">Място {{ ticket.seatNumber }}</span>
+                                    </div>
+                                    <div class="ticket-body">
+                                        <div><i class="bi bi-upc-scan"></i> Статус: {{ ticket.status }}</div>
+                                        <div><i class="bi bi-tag"></i> Цена: {{ ticket.price }} €</div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+
+                            <div class="mt-3 d-flex justify-content-end">
+                                <button class="button button-sm button-outline-red" (click)="cancelBooking(booking._id)">
+                                    Откажи резервация
+                                </button>
+                            </div>
+                        </div>
+                        }
+                    </ng-container>
+                    } @empty {
+                    <div class="text-center p-5 text-muted">Все още нямате направени резервации.</div>
+                    }
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

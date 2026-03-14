@@ -42,10 +42,6 @@ export class TripsService {
         return this.httpClient.patch<Trip>(`${this.apiUrl}/${id}/cancel`, {});
     }
 
-    createBooking(bookingData: any): Observable<any> {
-        return this.httpClient.post(`http://localhost:3000/booking/create`, bookingData);
-    }
-
     searchTrips(
         stop?: string,
         transportOperator?: string,

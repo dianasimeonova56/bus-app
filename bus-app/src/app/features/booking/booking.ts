@@ -5,7 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith } from 'rxjs';
 import { TripsService } from '../../core/services/trips.service';
 import { Stop, Trip, User } from '../../models';
-import { AuthService, StopsService } from '../../core/services';
+import { AuthService, BookingsService, StopsService } from '../../core/services';
 import { CommonModule } from '@angular/common';
 import { MapComponent } from '../../shared/components/map/map';
 import { Login } from '../auth/login/login';
@@ -22,6 +22,7 @@ export class Booking {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private tripsService = inject(TripsService);
+  private bookingsService = inject(BookingsService);
   private stopsService = inject(StopsService);
   private authService = inject(AuthService);
 
@@ -293,7 +294,7 @@ export class Booking {
         seats: formValue.ticket_num
       };
 
-      this.tripsService.createBooking(bookingData).subscribe({
+      this.bookingsService.createBooking(bookingData).subscribe({
         next: (res) => {
           if (res.checkoutUrl) {
             window.location.href = res.checkoutUrl;

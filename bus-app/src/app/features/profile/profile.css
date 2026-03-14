@@ -1,0 +1,77 @@
+.route-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 100px 150px 100px;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.header {
+    background: #fcfcfc;
+    font-weight: bold;
+    color: #666;
+    font-size: 13px;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.status-badge.pending { background: #fff3cd; color: #856404; }
+.status-badge.confirmed { background: #d4edda; color: #155724; }
+
+.tickets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.ticket-card {
+    background: white;
+    border: 1px dashed #abc;
+    border-radius: 8px;
+    padding: 12px;
+    transition: transform 0.2s;
+}
+
+.ticket-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.seat-num {
+    font-weight: bold;
+    color: var(--color-blue-100);
+}
+
+.ticket-id {
+    font-size: 10px;
+    color: #999;
+}
+
+.ticket-body {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.button-outline-red {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+}
+
+.button-outline-red:hover {
+    background: #dc3545;
+    color: white;
+}
