@@ -1,4 +1,5 @@
 import { Router } from "express";
+import ticketService from '../services/ticketsService.js'
 
 const ticketsController = Router();
 
