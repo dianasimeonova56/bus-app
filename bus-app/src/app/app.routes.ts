@@ -14,6 +14,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/home/home/home').then(c => c.Home)
     },
     {
+        path: 'bus-subscription-cards',
+        title: "Междуселищни абонаментни карти",
+        loadComponent: () => import('./features/bus-subscription-cards/bus-subscription-information/bus-subscription-information').then(c => c.BusSubscriptionInformation)
+    },
+    {
         path: 'bus-stations',
         title: "Burgas Bus - South",
         loadComponent: () => import('./features/bus-stations/south-bus-station/south-bus-station').then(c => c.SouthBusStation)
