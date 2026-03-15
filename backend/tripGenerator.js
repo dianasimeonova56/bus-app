@@ -4,15 +4,16 @@ import Route from './models/Route.js';
 import Trip from './models/Trip.js';
 
 const generateTripsForPeriod = async () => {
-    console.log('--- Checking/Generating Trips for the next 30 days ---');
     try {
-        const routes = await Route.find();
+        const routes = await Route.find({ isActive: true });
 
-        for (let i = 0; i <= 30; i++) {
-            const targetDate = dayjs().add(i, 'day').startOf('day');
-            const dayName = targetDate.format('dddd');
+        for (const route of routes) {
+            const tripsToInsert = [];
 
-            for (const route of routes) {
+            for (let i = 0; i <= 30; i++) {
+                const targetDate = dayjs().add(i, 'day').startOf('day');
+                const dayName = targetDate.format('dddd');
+
                 if (route.days.includes(dayName)) {
                     const dateAsDate = targetDate.toDate();
 
@@ -22,7 +23,7 @@ const generateTripsForPeriod = async () => {
                     });
 
                     if (!exists) {
-                        await Trip.create({
+                        tripsToInsert.push({
                             route: route._id,
                             date: dateAsDate,
                             availableSeats: 40,
@@ -31,10 +32,14 @@ const generateTripsForPeriod = async () => {
                     }
                 }
             }
+
+            if (tripsToInsert.length > 0) {
+                await Trip.insertMany(tripsToInsert);
+                console.log(`Generated ${tripsToInsert.length} trips for route ${route._id}`);
+            }
         }
-        console.log('--- Trip Generation Complete ---');
     } catch (err) {
-        console.error('Error in generation logic:', err);
+        console.error('Cron Error:', err);
     }
 };
 

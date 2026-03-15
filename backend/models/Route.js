@@ -46,7 +46,11 @@ const routeSchema = new Schema({
         required: true
     },
     oneWayTicketPrice: Number,
-    twoWayTicketPrice: Number
+    twoWayTicketPrice: Number,
+    isActive: {
+        type: Boolean,
+        default: 'true'
+    },
 })
 
 const Route = model('Route', routeSchema)
