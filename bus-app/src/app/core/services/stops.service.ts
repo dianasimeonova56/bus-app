@@ -11,6 +11,9 @@ export class StopsService {
     private apiUrl = 'http://localhost:3000/stops';
     private stopsBehaviourSubject = new BehaviorSubject<Stop[]>([]);
     private selectedStopBehaviourSubject = new BehaviorSubject<Stop | null>(null);
+    
+    private burgasBusStopsSubject = new BehaviorSubject<Stop[]>([]);
+    public burgasBusStops$ = this.burgasBusStopsSubject.asObservable();
 
     public stops$ = this.stopsBehaviourSubject.asObservable();
     public stop$ = this.selectedStopBehaviourSubject.asObservable();
@@ -26,6 +29,16 @@ export class StopsService {
 
         return this.httpClient.get<Stop[]>(this.apiUrl).pipe(
             tap(stops => this.stopsBehaviourSubject.next(stops))
+        );
+    }
+
+    getBurgasBusStops(): Observable<Stop[]> {
+        const params = new HttpParams().set('operator', 'БургасБус');
+
+        return this.httpClient.get<Stop[]>(this.apiUrl, { params }).pipe(
+            tap(stops => {
+                this.burgasBusStopsSubject.next(stops);
+            })
         );
     }
 
