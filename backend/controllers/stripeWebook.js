@@ -2,12 +2,13 @@ import express from 'express';
 import Stripe from 'stripe';
 import 'dotenv/config';
 import bookingService from '../services/bookingsService.js';
+import subscriptionService from '../services/subscriptionService.js';
 
 const router = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
-  
+
   const sig = req.headers['stripe-signature'];
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -21,12 +22,11 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    const bookingId = session.metadata.bookingId;
 
-    try {
-      await bookingService.handleCheckoutCompleted(bookingId);
-    } catch (err) {
-      console.error(err);
+    if (session.metadata.type === 'subscription_purchase') {
+      await subscriptionService.handleSubscriptionPayment(session.metadata);
+    } else {
+      await bookingService.handleCheckoutCompleted(session.metadata.bookingId);
     }
   }
 

@@ -1,0 +1,87 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-primary text-white p-4 rounded-top-4">
+                    <h3 class="mb-0 text-center">Купи абонаментна карта</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form id="subscriptionForm">
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Изберете спирка</label>
+                            <select class="form-select form-select-lg" id="destinationSelect" required>
+                                <option value="" selected disabled>Изберете спирка...</option>
+                                @for(stop of stops$ | async; track stop._id) {
+                                <option value="{{stop._id}}">{{stop.name}}</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Вашият статус (Тип карта)</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="userType" id="regular" value="regular"
+                                        checked>
+                                    <label class="btn btn-outline-secondary w-100 p-3" for="regular">
+                                        <i class="bi bi-person-fill d-block fs-4"></i> Стандартна
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="userType" id="student" value="student">
+                                    <label class="btn btn-outline-secondary w-100 p-3" for="student">
+                                        <i class="bi bi-mortarboard-fill d-block fs-4"></i> Студентска
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="userType" id="senior" value="senior">
+                                    <label class="btn btn-outline-secondary w-100 p-3" for="senior">
+                                        <i class="bi bi-person-hearts d-block fs-4"></i> Пенсионер
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="userType" id="disability"
+                                        value="disability">
+                                    <label class="btn btn-outline-secondary w-100 p-3" for="disability">
+                                        <i class="bi bi-universal-access d-block fs-4"></i> Инвалидна
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 text-center">
+                            <label class="form-label fw-bold d-block">Период на валидност</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="period" id="days10" value="10">
+                                <label class="btn btn-outline-primary" for="days10">10 дни (-35%)</label>
+
+                                <input type="radio" class="btn-check" name="period" id="days15" value="15">
+                                <label class="btn btn-outline-primary" for="days15">15 дни (-50%)</label>
+
+                                <input type="radio" class="btn-check" name="period" id="days30" value="30" checked>
+                                <label class="btn btn-outline-primary" for="days30">30 дни (Full)</label>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded-3">
+                            <div>
+                                <span class="text-muted d-block small">Обща сума</span>
+                                <h2 class="text-primary mb-0" id="finalPriceDisplay">0.00 лв.</h2>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg px-5 rounded-pill shadow">
+                                Продължи към плащане <i class="bi bi-credit-card ms-2"></i>
+                            </button>
+                        </div>
+
+                        <p class="text-center text-muted small">
+                            Картата ще бъде активирана веднага след успешно плащане.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-header bg-success text-white p-4 rounded-top-4">
+                    <h3 class="mb-0 text-center"><i class="bi bi-plus-circle me-2"></i>Добави Нов Абонаментен План</h3>
+                </div>
+                <div class="card-body p-4">
+                    <form [formGroup]="addSubscription" (ngSubmit)="onSubmit()">
+
+                        <div class="mb-4">
+                            <label for="stop" class="form-label fw-bold">Изберете спирка (Дестинация)</label>
+                            <select id="stop" class="form-select form-select-lg" formControlName="stop" required>
+                                <option value="" selected disabled>Изберете дестинация...</option>
+                                @for(stop of stops$ | async; track stop._id) {
+                                    <option [value]="stop._id">{{stop.name}}</option>
+                                }
+                            </select>
+                            <div class="form-text">Това е крайната точка, до която ще важи абонаментът.</div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="mb-3 text-secondary">Ценоразпис (Базови цени за 30 дни)</h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Редовна цена </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-cash"></i></span>
+                                    <input type="number" class="form-control" formControlName="regularPrice" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Студентска цена </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-mortarboard"></i></span>
+                                    <input type="number" class="form-control" formControlName="studentDiscountPrice" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Пенсионерска цена </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person-hearts"></i></span>
+                                    <input type="number" class="form-control" formControlName="seniorDiscountPrice" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Цена за ТЕЛК/Увреждания </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-universal-access"></i></span>
+                                    <input type="number" class="form-control" formControlName="disabilitesDiscountPrice" placeholder="0.00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill shadow" [disabled]="addSubscription.invalid">
+                                <i class="bi bi-save me-2"></i> Запази Абонаментния План
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
