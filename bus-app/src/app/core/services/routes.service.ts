@@ -26,4 +26,12 @@ export class RoutesService {
 
         return this.httpClient.get<any[]>(`${this.apiUrl}/search`, { params });
     }
+
+    updateRoute(id?: string, data?: any): Observable<any> {
+        return this.httpClient.put(`${this.apiUrl}/${id}/update`, data);
+    }
+
+    patchRoute(id: string, data: any): Observable<any> {
+        return this.httpClient.patch(`${this.apiUrl}/${id}`, data);
+    }
 }
