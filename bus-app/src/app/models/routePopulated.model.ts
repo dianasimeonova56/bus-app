@@ -24,6 +24,7 @@ export interface RoutePopulated {
     arrivalHour: string;
     oneWayTicketPrice: number;
     twoWayTicketPrice: number;
+    isActive: boolean;
 }
 
 export interface PopulatedStop {
