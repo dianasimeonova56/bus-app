@@ -44,4 +44,19 @@
             <div class="mb-2"><i class="bi bi-telephone"></i> 056831423 – Транспортна къща</div>
         </div>
     </div>
+
+    <form [formGroup]="cardSearch" class="row my-5 d-flex justify-content-between" (ngSubmit)="onSubmit()">
+        <div class="col-9">
+            <select class="form-select" formControlName="stop">
+                <option value="">Изберете спирка</option>
+                @for (stop of allStops$ | async; track stop._id) {
+                <option [value]="stop._id">{{stop.name}}</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-3">
+            <button type="submit" class="btn btn-primary w-100">Търси</button>
+        </div>
+    </form>
 </div>

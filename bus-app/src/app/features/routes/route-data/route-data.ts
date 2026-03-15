@@ -51,8 +51,6 @@ export class RouteData implements OnChanges {
     this.onHomePage = location.isCurrentPathEqualTo('/home') || location.isCurrentPathEqualTo('/');
   }
 
-
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['stationPosition'] || changes['routeType']) {
       this.loadTrips();
