@@ -1,157 +1,223 @@
-<div class="container my-5">
-    <div class="row">
-        <div class="col-6">
-            <form [formGroup]="addRouteForm" (ngSubmit)="onSubmit()" class="pt-5">
-                <h2>Make routes</h2>
-                <div class="form-group">
-                    <label for="" class="form-label">Departure time</label>
-                    <input class="form-control" type="time" formControlName="startHour" min="06:00" max="22:00">
-                    <label for="" class="form-label">Transport operator</label>
-                    <select class="form-select" formControlName="transportOperator">
-                        <option selected>Choose an operator</option>
-                        @for (operator of operators$ | async; track operator.name) {
-                        <option [value]="operator._id">{{operator.name}}</option>
-                        }
-                    </select>
+<div class="container my-5 px-4">
+  <div class="row g-5">
+    
+    <div class="col-lg-6">
+      <form [formGroup]="addRouteForm" (ngSubmit)="onSubmit()" class="bg-white p-4 rounded shadow-sm border">
+        <h2 class="mb-4 text-primary fw-bold text-uppercase border-bottom pb-2">
+          <i class="bi bi-plus-circle-fill me-2"></i>Създаване на Маршрут
+        </h2>
 
-                    <div formGroupName="departureStop">
-                        <label for="" class="form-label">Add Departure Stop</label>
-                        <input class="form-control" list="busStations" placeholder="Type to search bus station..."
-                            (input)="onStopDepartureSelected($event)" formControlName="departureStopId">
-                        @if (selectedDeparture) {
-                        <label class="form-label">
-                            Which sector does it depart from?
-                        </label>
+        <div class="row mb-4 bg-light p-3 rounded mx-0 border">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold small text-uppercase text-muted">Час на тръгване</label>
+            <input class="form-control shadow-sm" type="time" formControlName="startHour">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-bold small text-uppercase text-muted">Транспортен оператор</label>
+            <select class="form-select shadow-sm" formControlName="transportOperator">
+              <option value="" selected disabled>Избери оператор...</option>
+              @for (operator of operators$ | async; track operator._id) {
+                <option [value]="operator._id">{{operator.name}}</option>
+              }
+            </select>
+          </div>
+        </div>
 
-                        <select class="form-select" formControlName="departureSector">
-                            <option value="" disabled>
-                                Choose a sector
-                            </option>
+        <div class="card mb-4 border-primary border-start border-4 shadow-sm" formGroupName="departureStop">
+          <div class="card-body">
+            <h6 class="card-title text-primary fw-bold"><i class="bi bi-geo-alt-fill"></i> Начална Спирка</h6>
+            <input class="form-control mb-2 shadow-sm" list="busStations" placeholder="Търси начална автогара..."
+                   (input)="onStopDepartureSelected($event)" formControlName="departureStopId">
+            
+            @if (selectedDeparture) {
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge bg-primary px-3 py-2">Избрано: {{selectedDeparture.name}}</span>
+              </div>
+              <label class="small fw-bold text-muted mb-1">Сектор на тръгване:</label>
+              <select class="form-select form-select-sm shadow-sm" formControlName="departureSector">
+                <option [value]="null" disabled>Избери сектор...</option>
+                @for (sector of departureSectors; track sector) {
+                  <option [value]="sector">Сектор {{ sector }}</option>
+                }
+              </select>
+            }
+          </div>
+        </div>
 
-                            @for (sector of departureSectors; track sector) {
-                            <option [value]="sector">
-                                Sector {{ sector }}
-                            </option>
-                            }
-                        </select>
-                        }
-                    </div>
+        <div class="mb-4">
+          <label class="form-label fw-bold text-uppercase small text-muted d-block mb-2">Междинни спирки</label>
+          <div class="input-group mb-3 shadow-sm">
+            <span class="input-group-text bg-success text-white"><i class="bi bi-search"></i></span>
+            <input class="form-control border-success" list="allStops" 
+                   placeholder="Напиши име на спирка за добавяне..."
+                   (blur)="onStopIntermediateSelected($event)">
+          </div>
 
-                    <div>
-                        <label for="" class="form-label">Add Intermediate
-                            Stops</label>
-                        <input class="form-control" list="allStops" placeholder="Type to search intermediate stop..."
-                            (blur)="onStopIntermediateSelected($event)">
-                        <div formArrayName="intermediateStops" cdkDropList (cdkDropListDropped)="drop($event)">
-                            @for (stopCtrl of intermediateStops.controls; track stopCtrl.value.intermediateStopId) {
-                            <div cdkDrag [formGroupName]="stopCtrl.value.intermediateStopId" class="col-6 border">
-
-                                <div>{{ stopCtrl.value.intermediateStopName }}</div>
-
-                                <label>Dwell time</label>
-                                <input type="number" class="form-control"
-                                    formControlName="intermediateStopDurationMinutes" min="1" value="1"
-                                    (input)="updateIntermediateStopDwell(stopCtrl.value.intermediateStopId, $event)" />
-
-                                @if (stopCtrl.value.sectors > 0) {
-                                <label>Which sector does it depart from?</label>
-
-                                <select class="form-select" formControlName="intermediateSector"
-                                    (input)="updateIntermediateStopSector(stopCtrl.value.intermediateStopId, $event)">
-                                    <option value="" disabled>Choose sector</option>
-
-                                    @for (s of getSectorsArray(stopCtrl.value.sectors); track s) {
-                                    <option [value]="s">
-                                        Sector {{ s }}
-                                    </option>
-                                    }
-                                </select>
-                                }
-                                <div class="mt-2 border p-2 bg-light">
-                                    <label for="intermediatePrice">Price for intermediate stop</label>
-                                    <input id="intermediatePrice" type="number" class="form-control"
-                                        placeholder="Въведи цена" formControlName="price">
-                                </div>
-                            </div>
-                            }
-                        </div>
-                    </div>
-
-                    <div formGroupName="arrivalStop">
-                        <label for="" class="form-label">Add Arrival Stop</label>
-                        <input class="form-control" list="busStations" placeholder="Type to search bus station..."
-                            (input)="onStopArrivalSelected($event)" formControlName="arrivalStopId">
-                        @if (selectedArrival) {
-                        <label class="form-label">
-                            On which sector does it arrive?
-                        </label>
-
-                        <select class="form-select" formControlName="arrivalSector">
-                            <option value="" disabled>
-                                Choose a sector
-                            </option>
-
-                            @for (sector of arrivalSectors; track sector) {
-                            <option [value]="sector">
-                                Sector {{ sector }}
-                            </option>
-                            }
-                        </select>
-                        }
-                    </div>
-
-
-                    <label class="form-label">When does it run?</label>
-                    @for(day of daysOfWeek; track $index) {
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" [value]="day"
-                            (change)="onCheckboxChange($event)">
-                        <label class="form-check-label">{{day}}</label>
-                    </div>
-                    }
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="everyday" (change)="selectAllDays()">
-                        <label class="form-check-label">Everyday</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" value="weekend" (change)="selectWeekend()">
-                        <label class="form-check-label">Weekends</label>
-                    </div>
-                    <div class="mt-2 border p-2 bg-light">
-                        <label for="oneWayTicketPrice">Price for one way ticket</label>
-                        <input id="oneWayTicketPrice" type="number" class="form-control" placeholder="Въведи цена"
-                            formControlName="oneWayTicketPrice">
-                            <label for="oneWayTicketPrice">Price for two way ticket</label>
-                        <input id="twoWayTicketPrice" type="number" class="form-control" placeholder="Въведи цена"
-                            formControlName="twoWayTicketPrice">
-                    </div>
-                    <input type="submit" class="form-control mt-5" value="Add route">
+          <div formArrayName="intermediateStops" cdkDropList (cdkDropListDropped)="drop($event)" class="drag-container">
+            @for (stopCtrl of intermediateStops.controls; track stopCtrl.value.intermediateStopId; let i = $index) {
+              <div cdkDrag [formGroupName]="i" class="card mb-3 shadow-sm border draggable-card">
+                
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-2 border-0">
+                  <div cdkDragHandle class="drag-handle d-flex align-items-center" style="cursor: grab;">
+                    <i class="bi bi-grip-vertical fs-4 text-muted"></i>
+                    <span class="ms-2 fw-bold text-dark">{{ i + 1 }}. {{ stopCtrl.value.intermediateStopName }}</span>
+                  </div>
+                  <button type="button" class="btn btn-sm btn-outline-danger border-0" (click)="intermediateStops.removeAt(i)">
+                    <i class="bi bi-trash"></i>
+                  </button>
                 </div>
-            </form>
 
-            <datalist id="busStations">
-                @for (stop of busStations$ | async; track stop._id) {
-                <option [value]="stop.name"></option>
-                }
-            </datalist>
-            <datalist id="normalStops">
-                @for (stop of normalStops$ | async; track stop._id) {
-                <option [value]="stop.name"></option>
-                }
-            </datalist>
-            <datalist id="allStops">
-                @for (stop of allStops$ | async; track stop._id) {
-                <option [value]="stop.name"></option>
-                }
-            </datalist>
+                <div class="card-body pt-0 pb-3">
+                  <div class="row g-2">
+                    <div class="col-md-4">
+                      <label class="small fw-bold text-muted">Престой (мин)</label>
+                      <input type="number" class="form-control form-control-sm shadow-sm" 
+                             formControlName="intermediateStopDurationMinutes"
+                             (input)="updateIntermediateStopDwell(stopCtrl.value.intermediateStopId, $event)">
+                    </div>
+                    
+                    <div class="col-md-4">
+                      <label class="small fw-bold text-muted">Сектор</label>
+                      <select class="form-select form-select-sm shadow-sm" formControlName="intermediateSector"
+                              (input)="updateIntermediateStopSector(stopCtrl.value.intermediateStopId, $event)">
+                        <option [value]="null">Няма</option>
+                        @for (s of getSectorsArray(stopCtrl.value.sectors); track s) {
+                          <option [value]="s">Сектор {{ s }}</option>
+                        }
+                      </select>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label class="small fw-bold text-muted">Цена (€)</label>
+                      <div class="input-group input-group-sm shadow-sm">
+                        <span class="input-group-text bg-light text-success">€</span>
+                        <input type="number" class="form-control border-success" formControlName="price">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *cdkDragPlaceholder class="drag-placeholder bg-light border-dashed rounded mb-3"></div>
+              </div>
+            }
+          </div>
         </div>
 
-        <div class="col-6">
-            <app-map [departureStop]="selectedDeparture" [arrivalStop]="selectedArrival"
-                [intermediateStops]="selectedStops" (distance)="distanceKm = $event" (duration)="duration = $event"
-                (legTimesChange)="legTimes = $event"></app-map>
-
+        <div class="card mb-4 border-danger border-start border-4 shadow-sm" formGroupName="arrivalStop">
+          <div class="card-body">
+            <h6 class="card-title text-danger fw-bold"><i class="bi bi-flag-fill"></i> Крайна Спирка</h6>
+            <input class="form-control mb-2 shadow-sm" list="busStations" placeholder="Търси крайна автогара..."
+                   (input)="onStopArrivalSelected($event)" formControlName="arrivalStopId">
+            
+            @if (selectedArrival) {
+              <div class="badge bg-danger px-3 py-2 mb-2">Избрано: {{selectedArrival.name}}</div>
+              <label class="small fw-bold text-muted d-block mb-1">Сектор на пристигане:</label>
+              <select class="form-select form-select-sm shadow-sm" formControlName="arrivalSector">
+                <option [value]="null" disabled>Избери сектор...</option>
+                @for (sector of arrivalSectors; track sector) {
+                  <option [value]="sector">Сектор {{ sector }}</option>
+                }
+              </select>
+            }
+          </div>
         </div>
+
+        <div class="card mb-4 shadow-sm border-0 bg-light">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+              <h6 class="fw-bold mb-0 text-uppercase small text-muted">График на пътуване</h6>
+              <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-primary shadow-sm" (click)="selectAllDays()">Всеки ден</button>
+                <button type="button" class="btn btn-outline-primary shadow-sm" (click)="selectWeekend()">Уикенд</button>
+                <button type="button" class="btn btn-outline-secondary shadow-sm" (click)="days.clear()">Изчисти</button>
+              </div>
+            </div>
+            
+            <div class="d-flex flex-wrap gap-2 mb-4">
+              @for(day of daysOfWeek; track day) {
+                <div class="form-check bg-white px-3 py-2 border rounded shadow-sm d-flex align-items-center position-relative">
+                  <input type="checkbox" 
+                         class="form-check-input mt-0 me-2" 
+                         [value]="day" 
+                         [checked]="days.value.includes(day)"
+                         (change)="onCheckboxChange($event)"
+                         [id]="'check-' + day">
+                  <label class="form-check-label stretched-link" [for]="'check-' + day">{{ day }}</label>
+                </div>
+              }
+            </div>
+
+            <h6 class="fw-bold border-bottom pb-2 mb-3 text-uppercase small text-muted">Основни Цени за целия маршрут</h6>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="small fw-bold text-muted">Еднопосочен билет (€)</label>
+                <div class="input-group shadow-sm">
+                  <span class="input-group-text bg-white border-end-0 text-success">€</span>
+                  <input type="number" class="form-control border-start-0" formControlName="oneWayTicketPrice">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="small fw-bold text-muted">Двупосочен билет (€)</label>
+                <div class="input-group shadow-sm">
+                  <span class="input-group-text bg-white border-end-0 text-success">€</span>
+                  <input type="number" class="form-control border-start-0" formControlName="twoWayTicketPrice">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-lg mt-3 rounded-pill text-uppercase" 
+                [disabled]="addRouteForm.invalid">
+          <i class="bi bi-save-fill me-2"></i> Запази и Създай Маршрут
+        </button>
+      </form>
     </div>
 
+    <div class="col-lg-6">
+      <div class="sticky-top" style="top: 2rem; z-index: 1000;">
+        <div class="card shadow-sm border-0 overflow-hidden rounded-4" style="height: 70vh;">
+          <app-map [departureStop]="selectedDeparture" [arrivalStop]="selectedArrival"
+                   [intermediateStops]="selectedStops" (distance)="distanceKm = $event" 
+                   (duration)="duration = $event" (legTimesChange)="legTimes = $event">
+          </app-map>
+        </div>
+        
+        <div class="card mt-4 border-0 bg-dark text-white shadow rounded-4">
+          <div class="card-body p-4">
+            <div class="row align-items-center text-center">
+              <div class="col">
+                <div class="small text-uppercase opacity-50 mb-1">Разстояние</div>
+                <div class="h3 mb-0 fw-bold text-warning">{{ distanceKm | number:'1.1-1' }} <small>км</small></div>
+              </div>
+              <div class="col-auto">
+                <div class="vr h-100" style="width: 1px; background-color: rgba(255,255,255,0.2);"></div>
+              </div>
+              <div class="col">
+                <div class="small text-uppercase opacity-50 mb-1">Чисто време</div>
+                <div class="h3 mb-0 fw-bold text-info">{{ formatDuration(duration)[0] }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-light mt-3 border shadow-sm small text-muted rounded-4">
+          <i class="bi bi-info-circle-fill text-primary me-2"></i>
+          Можете да променяте реда на междинните спирки чрез влачене. Картата ще се обнови автоматично.
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<datalist id="busStations">
+  @for (stop of busStations$ | async; track stop._id) {
+    <option [value]="stop.name"></option>
+  }
+</datalist>
+
+<datalist id="allStops">
+  @for (stop of allStops$ | async; track stop._id) {
+    <option [value]="stop.name"></option>
+  }
+</datalist>

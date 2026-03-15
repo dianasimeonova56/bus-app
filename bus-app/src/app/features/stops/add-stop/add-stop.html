@@ -1,33 +1,68 @@
 <div class="container my-5">
-    <div class="row">
-        <div class="col-6">
-            <form [formGroup]="addStopForm" (ngSubmit)="onSubmit()" class="pt-5">
-                <h2>Add stop</h2>
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Add name for the stop"
-                        formControlName="name">
-                    <div class="form-check">
-                        <input type="radio" formControlName="type" value="Bus Station" class="form-control-input" />
-                        <label class="form-check-label" for="">Bus Station</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" formControlName="type" value="Normal Stop" class="form-control-input" />
-                        <label class="form-check-label" for="">Normal
-                            Stop</label>
-                    </div>
-                    @if(this.type?.value === "Bus Station") {
-                        <div>How many sectors does the bus station have?</div>
-                        <input type="number" min="1" class="form-control" formControlName="sectors">
-                    }
-                    <input type="submit" class="form-control mt-5" value="Add Stop">
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="h4 fw-bold text-primary text-uppercase mb-4 border-bottom pb-2">
+            <i class="bi bi-geo-fill me-2"></i>Добави нова спирка
+          </h2>
+
+          <form [formGroup]="addStopForm" (ngSubmit)="onSubmit()">
+            <div class="mb-4">
+              <label class="form-label fw-bold small">Име на спирката</label>
+              <input type="text" class="form-control form-control-lg shadow-sm" 
+                     placeholder="Въведи име (напр. Автогара Юг)"
+                     formControlName="name">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold small d-block mb-3">Тип на обекта</label>
+              <div class="d-flex gap-3">
+                <div class="flex-fill">
+                  <input type="radio" class="btn-check" formControlName="type" value="Bus Station" id="typeBus">
+                  <label class="btn btn-outline-primary w-100 py-3 shadow-sm d-flex flex-column align-items-center" for="typeBus">
+                    <i class="bi bi-building fs-3 mb-1"></i>
+                    <span>Автогара</span>
+                  </label>
                 </div>
-            </form>
-        </div>
+                <div class="flex-fill">
+                  <input type="radio" class="btn-check" formControlName="type" value="Normal Stop" id="typeStop">
+                  <label class="btn btn-outline-secondary w-100 py-3 shadow-sm d-flex flex-column align-items-center" for="typeStop">
+                    <i class="bi bi-signpost-2 fs-3 mb-1"></i>
+                    <span>Спирка</span>
+                  </label>
+                </div>
+              </div>
+            </div>
 
-        <div class="col-6">
-            <app-map (stopSelected)="onStopSelected($event)"></app-map>
+            @if(this.addStopForm.get('type')?.value === "Bus Station") {
+              <div class="mb-4 bg-light p-3 rounded border border-primary border-opacity-25 shadow-sm animate__animated animate__fadeIn">
+                <label class="form-label fw-bold small">Брой сектори</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-white"><i class="bi bi-grid-3x3-gap"></i></span>
+                  <input type="number" min="1" class="form-control" formControlName="sectors" placeholder="Напр. 5">
+                </div>
+                <div class="form-text mt-1">Въведете броя коловози/сектори на автогарата.</div>
+              </div>
+            }
 
+            <button type="submit" class="btn btn-primary btn-lg w-100 mt-3 shadow" [disabled]="addStopForm.invalid">
+              <i class="bi bi-plus-circle me-2"></i>Добави Спирка
+            </button>
+          </form>
         </div>
+      </div>
     </div>
 
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0 h-100 overflow-hidden" style="min-height: 450px;">
+        <div class="card-header bg-dark text-white fw-bold py-3">
+          <i class="bi bi-map me-2"></i>Избери местоположение на картата
+        </div>
+        <div class="card-body p-0">
+          <app-map (stopSelected)="onStopSelected($event)"></app-map>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
