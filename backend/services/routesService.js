@@ -31,7 +31,15 @@ export default {
     },
 
     getAll() {
-        return Route.find();
+        return Route.find()
+            .populate('startStop.stopId')
+            .populate('endStop.stopId')
+            .populate('endStop.stopId')
+            .populate({
+                path: 'stops.stopId',
+                model: 'Stop'
+            })
+            .populate('transportOperator');;
     },
 
     async searchRoutes(filter = {}) {
@@ -72,5 +80,58 @@ export default {
                     { path: 'transportOperator' }
                 ]
             }).sort({ 'route.startHour': 1 });
-    }
+    },
+    async updateRoute(routeId, updateData) {
+        const oldRoute = await Route.findById(routeId);
+        if (!oldRoute) throw new Error("Route not found");
+
+        oldRoute.isActive = false;
+        await oldRoute.save();
+
+        const { _id, ...rest } = oldRoute.toObject();
+        const newRoute = new Route({
+            ...rest,
+            ...updateData,
+            isActive: true
+        });
+        const savedRoute = await newRoute.save();
+
+        const lastTrip = await Trip.findOne({ route: oldRoute._id })
+            .sort({ date: -1 });
+
+        let startDate = lastTrip
+            ? dayjs(lastTrip.date).add(1, 'day').startOf('day')
+            : dayjs().add(1, 'day').startOf('day');
+
+        const trips = [];
+
+        for (let i = 0; i < 7; i++) {
+            const currentDate = startDate.add(i, 'day');
+
+            if (savedRoute.days.includes(currentDate.format('dddd'))) {
+                trips.push({
+                    route: savedRoute._id,
+                    date: currentDate.toDate(),
+                    status: 'scheduled',
+                    availableSeats: 40
+                });
+            }
+        }
+
+        if (trips.length > 0) {
+            await Trip.insertMany(trips);
+        }
+
+        return savedRoute;
+    },
+    async patchRoute(routeId, data) {
+        const updatedRoute = await Route.findByIdAndUpdate(
+            routeId,
+            { $set: data },
+            { new: true }
+        ).populate('startStop.stopId endStop.stopId');
+
+        if (!updatedRoute) throw new Error("Route not found");
+        return updatedRoute;
+    },
 }

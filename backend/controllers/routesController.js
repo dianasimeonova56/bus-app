@@ -4,6 +4,15 @@ import Stop from '../models/Stop.js';
 
 const routesController = express.Router();
 
+routesController.get('/', async (req, res) => {
+    try {
+        const routes = await routesService.getAll();
+        res.status(200).json(routes);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
 routesController.post('/create-route', async (req, res) => {
     try {
         const { routeData } = req.body;
@@ -27,7 +36,7 @@ routesController.get('/search', async (req, res) => {
 
 const getStationByPosition = async (stationParam) => {
     const mainStations = await Stop.find({ isMainStation: true });
-    return mainStations.find(s => 
+    return mainStations.find(s =>
         (stationParam === 'south' && s.south) || (stationParam === 'west' && s.west)
     );
 };
@@ -54,4 +63,24 @@ routesController.get('/arrivals/:station', async (req, res) => {
     }
 });
 
+routesController.put('/:routeId/update', async (req, res) => {
+    try {
+        const routeId = req.params.routeId;
+        const updateData = req.body
+        if (!routeId) return res.status(404).json({ message: 'Route not found' });
+        const savedRoute = await routesService.updateRoute(routeId, updateData);
+        res.status(200).json({ message: "Route updated!", route: savedRoute });
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
+
+routesController.patch('/:id', async (req, res) => {
+    try {
+        const route = await routesService.patchRoute(req.params.id, req.body);
+        res.status(200).json(route);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+});
 export default routesController;
