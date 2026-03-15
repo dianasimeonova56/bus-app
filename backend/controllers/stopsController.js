@@ -21,6 +21,18 @@ stopsController.post('/create-stop', async (req, res) => {
     }
 });
 
+stopsController.get('/operator/:operatorName', async (req, res) => {
+    try {
+        const { operatorName } = req.params.operator;
+
+        const stops = await stopsService.getOperatorStops(operatorName);
+
+        res.json(stops);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
 stopsController.get('/', async (req, res) => {
     try {
         const stops = await stopsService.getAll();
