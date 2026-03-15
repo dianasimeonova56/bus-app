@@ -27,7 +27,7 @@ export default {
         const { stop, transportOperator, date, time } = filter;
         const { page, limit, skip } = getPagination(filter);
 
-        const routeQuery = {};
+        const routeQuery = { isActive: { $ne: false } };
         if (stop) {
             const sId = new mongoose.Types.ObjectId(stop);
             routeQuery.$or = [
