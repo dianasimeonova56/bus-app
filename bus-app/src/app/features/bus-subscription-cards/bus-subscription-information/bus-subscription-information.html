@@ -1,5 +1,5 @@
 <div class="container my-5">
-    <div class="row g-4"> 
+    <div class="row g-4">
         <div class="col-12">
             <h3 class="text-center mb-4">Междуселищни абонаментни карти</h3>
         </div>
@@ -8,8 +8,9 @@
             <div class="card shadow h-100">
                 <h6 class="card-header text-white bg-blue-light">Обща информация</h6>
                 <div class="card-body">
-                    <div class="card-text"><i class="bi bi-bus-front-fill me-2 mb-2 fs-5"></i> 
-                        В търсачката може да откриете междуселищните карти за „Бургасбус”. Цените са за <span class="fw-bold">един месец</span>.
+                    <div class="card-text"><i class="bi bi-bus-front-fill me-2 mb-2 fs-5"></i>
+                        В търсачката може да откриете междуселищните карти за „Бургасбус”. Цените са за <span
+                            class="fw-bold">един месец</span>.
                     </div>
                 </div>
             </div>
@@ -19,8 +20,9 @@
             <div class="card shadow h-100">
                 <h6 class="card-header text-white bg-blue-light">15-дневна карта</h6>
                 <div class="card-body">
-                    <div class="card-text"><i class="bi bi-ticket-detailed me-2 mb-2 fs-5"></i> 
-                        Възможност за карта за <span class="fw-bold">15 дни</span> на стойност <span class="fw-bold">50%</span> от едномесечната.
+                    <div class="card-text"><i class="bi bi-ticket-detailed me-2 mb-2 fs-5"></i>
+                        Възможност за карта за <span class="fw-bold">15 дни</span> на стойност <span
+                            class="fw-bold">50%</span> от едномесечната.
                     </div>
                 </div>
             </div>
@@ -30,7 +32,7 @@
             <div class="card shadow h-100">
                 <h6 class="card-header text-white bg-blue-light">Ученически карти</h6>
                 <div class="card-body">
-                    <div class="card-text"><i class="bi bi-backpack3 me-2 mb-2 fs-5"></i> 
+                    <div class="card-text"><i class="bi bi-backpack3 me-2 mb-2 fs-5"></i>
                         Ученическите цени са без общинско намаление (важи за учащи с адрес в Община Бургас).
                     </div>
                 </div>
@@ -59,4 +61,55 @@
             <button type="submit" class="btn btn-primary w-100">Търси</button>
         </div>
     </form>
+    <div class="row g-4 justify-content-center">
+        @for (card of subscriptionCards; track card._id) {
+        <div class="col-12 col-md-6 col-lg-4 animate-fadeIn">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-primary text-white py-3 px-4">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-geo-alt-fill me-2 fs-5"></i>
+                        <h6 class="mb-0 fw-bold">{{ card.stop.name }}</h6>
+                    </div>
+                </div>
+
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0 align-middle">
+                        <tbody>
+                            <tr>
+                                <td class="ps-4 py-2 small text-muted">Редовна</td>
+                                <td class="text-end pe-4 py-2 fw-bold text-dark">{{ card.regularPrice }} лв.</td>
+                            </tr>
+                            <tr class="bg-light">
+                                <td class="ps-4 py-2 small text-muted">Ученици</td>
+                                <td class="text-end pe-4 py-2 text-primary font-monospace">{{ card.studentDiscountPrice
+                                    }} лв.</td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 py-2 small text-muted">Пенсионери</td>
+                                <td class="text-end pe-4 py-2 text-primary font-monospace">{{ card.seniorDiscountPrice
+                                    }} лв.</td>
+                            </tr>
+                            <tr class="bg-light">
+                                <td class="ps-4 py-2 small text-muted">Увреждания</td>
+                                <td class="text-end pe-4 py-2 text-primary font-monospace">{{
+                                    card.disabilitesDiscountPrice }} лв.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer bg-white border-top-0 py-2 text-center">
+                    <span class="text-muted" style="font-size: 0.65rem;">ID: {{ card._id }}</span>
+                </div>
+            </div>
+        </div>
+        } @empty {
+        <div class="col-12 text-center mt-4">
+            <div class="alert alert-info d-inline-block px-5">
+                Няма намерени абонаментни карти за тази спирка.
+            </div>
+        </div>
+        }
+    </div>
+
 </div>

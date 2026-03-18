@@ -41,4 +41,13 @@ export class SubscriptionService {
     createUserSubscription(body: UserSubscription): Observable<UserSubscription> {
         return this.httpClient.post<UserSubscription>(this.apiUrl + '/buy-subscription', { data: body })
     }
+
+    searchSubscriptions(stopId: string): Observable<any> {
+        let params = new HttpParams().set('stop', stopId);
+        console.log(params);
+        
+        return this.httpClient.get<SubscriptionCard[]>(`${this.apiUrl}/search`, {params}).pipe(
+            tap(search => this.subscriptionsBehaviourSubject.next(search))
+        )
+    }
 }

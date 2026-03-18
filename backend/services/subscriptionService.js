@@ -82,5 +82,8 @@ export default {
         if (!multiplier) throw new Error("Invalid period");
 
         return parseFloat((basePrice * multiplier).toFixed(2));
+    },
+    async searchSubscriptions(searchedStop) {
+        return await SubscriptionCard.find({stop: searchedStop}).populate('stop')
     }
 }

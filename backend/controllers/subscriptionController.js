@@ -30,4 +30,17 @@ subscriptionController.post('/create', async (req, res) => {
     }
 });
 
+subscriptionController.get('/search', async (req, res) => {
+    try {
+        const searchParams = req.query.stop;
+
+        const subscriptions = await subscriptionService.searchSubscriptions(searchParams);
+
+        res.status(200).json({ subscriptions: subscriptions });
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
 export default subscriptionController;

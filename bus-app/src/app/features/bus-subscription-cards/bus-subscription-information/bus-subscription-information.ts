@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StopsService } from '../../../core/services';
+import { StopsService, SubscriptionService } from '../../../core/services';
 import { Observable } from 'rxjs';
-import { Stop } from '../../../models';
+import { Stop, SubscriptionCard } from '../../../models';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
@@ -14,28 +14,28 @@ import { AsyncPipe } from '@angular/common';
 export class BusSubscriptionInformation {
   private fb = inject(FormBuilder);
   private stopsService = inject(StopsService);
+  private subsService = inject(SubscriptionService);
 
   cardSearch: FormGroup;
   allStops$: Observable<Stop[]>;
+  subscriptionCards: SubscriptionCard[] = [];
 
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     this.allStops$ = this.stopsService.getStops();
     this.cardSearch = this.fb.group({
       stop: ['', Validators.required]
     })
   }
 
-    onSubmit(page: number = 1) {
+  onSubmit() {
     const { stop } = this.cardSearch.value;
 
-    // this.tripsService.searchTrips(stop, transportOperator, date, time, page, this.pageSize).subscribe({
-    //   next: (response) => {
-    //     this.results = response.docs;
-    //     this.paginationMeta = response.meta;
-    //     this.stopId = stop;
-    //     this.cdr.detectChanges();
-    //   },
-    //   error: (err) => console.error('Error searching routes:', err)
-    // });
+    this.subsService.searchSubscriptions(stop).subscribe({
+      next: (response) => {
+        this.subscriptionCards = response.subscriptions;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error searching routes:', err)
+    });
   }
 }
