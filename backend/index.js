@@ -7,11 +7,15 @@ import { auth } from './middlewares/authMiddleware.js';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 import Stripe from 'stripe';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const PORT = process.env.PORT || 3000;
 export const JWT_SECRET = process.env.JWT_SECRET;
 export const AUTH_COOKIE_NAME = process.env.AUTH_COOKIE_NAME;
 export const SESSION_SECRET = process.env.SESSION_SECRET;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -29,8 +33,8 @@ app.use(express.json({
 app.use(cookieParser());
 app.use(express.urlencoded());
 app.use(auth);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(routes);
-app.use('/uploads', express.static('uploads'));
 
 initDatabase().then(() => {
   console.log('Database connected successfully');
