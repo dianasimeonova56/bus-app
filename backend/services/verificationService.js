@@ -1,11 +1,10 @@
 import VerificationRequest from '../models/VerificationRequest.js';
-import User from '../models/User.js'; // ЗАДЪЛЖИТЕЛНО импортни User
+import User from '../models/User.js';
 
 export default {
     async sendRequest(body) {
         return await VerificationRequest.create(body);
     },
-
     async verifyRequest(id) {
         const request = await VerificationRequest.findById(id);
         if (!request) throw new Error("Request not found");
@@ -19,7 +18,6 @@ export default {
         
         return request;
     },
-
     async denyRequest(id, comment) {
         const request = await VerificationRequest.findById(id);
         if (!request) throw new Error("Request not found");
@@ -33,5 +31,8 @@ export default {
         });
 
         return request;
+    },
+    async getPendingRequests() {
+       return await VerificationRequest.find({ status: 'pending' }).populate('userId');
     }
 }
