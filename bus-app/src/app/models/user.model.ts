@@ -6,5 +6,6 @@ export interface User {
     phone_number: String,
     password: String,
     created_at: Date,
-    user_role: String
+    user_role: String,
+    isVerifiedAs: String
 }
