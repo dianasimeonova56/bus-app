@@ -63,7 +63,7 @@
     </form>
     <div class="row g-4 justify-content-center">
         @for (card of subscriptionCards; track card._id) {
-        <div class="col-12 col-md-6 col-lg-4 animate-fadeIn">
+        <div class="col-12 col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-header bg-primary text-white py-3 px-4">
                     <div class="d-flex align-items-center">
@@ -77,22 +77,22 @@
                         <tbody>
                             <tr>
                                 <td class="ps-4 py-2 small text-muted">Редовна</td>
-                                <td class="text-end pe-4 py-2 fw-bold text-dark">{{ card.regularPrice }} лв.</td>
+                                <td class="text-end pe-4 py-2 fw-bold text-dark">{{ card.regularPrice }} € </td>
                             </tr>
                             <tr class="bg-light">
                                 <td class="ps-4 py-2 small text-muted">Ученици</td>
-                                <td class="text-end pe-4 py-2 text-primary font-monospace">{{ card.studentDiscountPrice
-                                    }} лв.</td>
+                                <td class="text-end pe-4 py-2 text-primary">{{ card.studentDiscountPrice
+                                    }} € </td>
                             </tr>
                             <tr>
                                 <td class="ps-4 py-2 small text-muted">Пенсионери</td>
-                                <td class="text-end pe-4 py-2 text-primary font-monospace">{{ card.seniorDiscountPrice
-                                    }} лв.</td>
+                                <td class="text-end pe-4 py-2 text-primary">{{ card.seniorDiscountPrice
+                                    }} €</td>
                             </tr>
                             <tr class="bg-light">
                                 <td class="ps-4 py-2 small text-muted">Увреждания</td>
-                                <td class="text-end pe-4 py-2 text-primary font-monospace">{{
-                                    card.disabilitesDiscountPrice }} лв.</td>
+                                <td class="text-end pe-4 py-2 text-primary">{{
+                                    card.disabilitesDiscountPrice }} €</td>
                             </tr>
                         </tbody>
                     </table>

@@ -35,6 +35,13 @@ export function isAuth(req, res, next) {
     next();
 }
 
+export function isAdmin(req, res, next) {
+    if (!req.user.role === 'admin') {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+}
+
 export function isGuest(req, res, next) {
     if (req.isAuthenticated) {
         return res.status(403).json({ error: "Already logged in" });

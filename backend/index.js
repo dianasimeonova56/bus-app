@@ -30,6 +30,7 @@ app.use(cookieParser());
 app.use(express.urlencoded());
 app.use(auth);
 app.use(routes);
+app.use('/uploads', express.static('uploads'));
 
 initDatabase().then(() => {
   console.log('Database connected successfully');

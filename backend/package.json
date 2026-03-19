@@ -16,12 +16,13 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.19",
     "dotenv": "^17.3.1",
-    "express": "^5.1.0",
+    "express": "^5.2.1",
     "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.3",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^3.3.1",
     "mongoose": "^8.19.3",
+    "multer": "^2.1.1",
     "node-cron": "^4.2.1",
     "stripe": "^20.4.0"
   }

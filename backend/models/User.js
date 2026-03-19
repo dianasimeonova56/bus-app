@@ -29,15 +29,20 @@ const passengerSchema = new Schema({
     created_at: {
         type: Date,
         required: true,
-        default: Date.now 
+        default: Date.now
     },
     user_role: {
         type: String,
         enum: ['user', 'admin'],
+    },
+    isVerifiedAs: {
+        type: String,
+        enum: ['none', 'student', 'senior', 'disability'],
+        default: 'none'
     }
 })
 
-passengerSchema.pre('save', async function() {
+passengerSchema.pre('save', async function () {
     this.password = await bcrypt.hash(this.password, 10);
 })
 
