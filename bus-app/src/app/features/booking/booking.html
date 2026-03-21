@@ -80,14 +80,23 @@
                     }
                     }
                     } @else {
-                    <label for="trip" class="mb-1">Избран маршрут</label>
-                    <input class="form-control mb-4" type="text" id="trip" formControlName="trip" required readonly>
-                    <label for="departure" class="mb-1">Departure</label>
-                    <input class="form-control mb-4" type="text" id="departure" formControlName="departure" required
-                        readonly>
-                    <label for="destination" class="mb-1">Destination</label>
-                    <input id="destination" class="form-control mb-4" type="text" formControlName="destination" required
-                        readonly>
+                    <div class="mb-3">
+                        <label class="text-muted small">Маршрут</label>
+                        <h5 class="text-primary">{{formValues()?.departure}} <i class="bi bi-arrow-right"></i>
+                            {{formValues()?.destination}}</h5>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Дата и Час</label>
+                        <input class="form-control mb-2" type="date" formControlName="date" readonly>
+
+                        <div class="d-flex gap-2">
+                            <div class="p-3 border rounded bg-light flex-grow-1 text-center">
+                                <span class="d-block fw-bold fs-4">{{currentTrip()?.route?.startHour}}</span>
+                                <small class="text-muted">Пристига: {{ getArrivalTimeForStop(currentTrip()!) }}</small>
+                            </div>
+                        </div>
+                    </div>
                     }
 
                     @if(showTicketType()) {
