@@ -4,10 +4,11 @@ import { StopsService, SubscriptionService } from '../../../core/services';
 import { Observable } from 'rxjs';
 import { Stop, SubscriptionCard } from '../../../models';
 import { AsyncPipe } from '@angular/common';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-bus-subscription-information',
-  imports: [ReactiveFormsModule, AsyncPipe],
+  imports: [ReactiveFormsModule, AsyncPipe, RouterLink],
   templateUrl: './bus-subscription-information.html',
   styleUrl: './bus-subscription-information.css',
 })
