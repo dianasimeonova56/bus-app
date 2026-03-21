@@ -9,6 +9,9 @@ const DISCOUNT_RATES = {
 };
 
 export default {
+    getSubscription(id) {
+        return SubscriptionCard.findById(id).populate("stop");
+    },
     async createSubscription(subscriptionData) {
         return await SubscriptionCard.create(subscriptionData);
     },

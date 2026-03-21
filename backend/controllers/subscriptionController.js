@@ -43,4 +43,17 @@ subscriptionController.get('/search', async (req, res) => {
     }
 });
 
+subscriptionController.get('/:id', async (req, res) => {
+    try {
+       const id = req.params.id;
+
+        const subscription = await subscriptionService.getSubscription(id);
+
+        res.status(200).json({ subscription });
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
 export default subscriptionController;
