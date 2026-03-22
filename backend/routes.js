@@ -14,6 +14,7 @@ import webhook from './controllers/stripeWebook.js'
 const routes = Router()
 
 routes.use('/webhook', webhook)
+routes.use('/news', newsController)
 routes.use('/stops', stopsController)
 routes.use('/routes', routesController)
 routes.use('/operators', operatorController)
@@ -22,7 +23,6 @@ routes.use('/users', usersController)
 routes.use('/booking', bookingController)
 routes.use('/subscription', subscriptionController)
 routes.use('/verification', verificationController)
-routes.use('/news', newsController)
 routes.all('*url', (req, res) => {
     res.status(400).json({ error: "no route specified" });
 })
