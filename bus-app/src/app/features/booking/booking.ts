@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidatorFn, A
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { startWith, map, filter } from 'rxjs';
-import { TripsService, BookingsService, StopsService, AuthService } from '../../core/services';
+import { TripsService, BookingsService, StopsService, AuthService, SubscriptionService } from '../../core/services'; // Добавен SubscriptionService
 import { Trip, User } from '../../models';
 import { CommonModule } from '@angular/common';
 import { MapComponent } from '../../shared/components/map/map';
@@ -23,6 +23,7 @@ export class Booking implements OnInit {
   private bookingsService = inject(BookingsService);
   private stopsService = inject(StopsService);
   private authService = inject(AuthService);
+  private subscriptionService = inject(SubscriptionService);
 
   bookingForm: FormGroup = this.formBuilder.group({
     mainStation: [''],
@@ -39,7 +40,11 @@ export class Booking implements OnInit {
   basePrice = signal<number>(0);
   availableTrips = signal<Trip[]>([]);
   isManualSelection = signal<boolean>(false);
-  
+
+  // Нови сигнали за абонамента
+  userSubscriptions = signal<any[]>([]);
+  useSubscription = signal<boolean>(false);
+
   currentUser: User | null = this.authService.currentUser();
   minDate: string = new Date().toISOString().split('T')[0];
   allAvailableStops = toSignal(this.stopsService.stops$, { initialValue: [] });
@@ -54,12 +59,34 @@ export class Booking implements OnInit {
     const navigation = this.router.getCurrentNavigation()?.extras;
     const ticketInfo = navigation?.state?.['stopData'];
 
+    if (this.currentUser) {
+      this.subscriptionService.getUserSubscriptions(this.currentUser._id).subscribe({
+        next: (res: any) => {
+          console.log('Данни от сървъра:', res);
+
+          const subsArray = res && Array.isArray(res.subscription) ? res.subscription : [];
+
+          const now = new Date();
+
+          const active = subsArray.filter((s: any) => {
+            return s.expiryDate && new Date(s.expiryDate) > now;
+          });
+
+          this.userSubscriptions.set(active);
+        },
+        error: (err) => {
+          console.error('Грешка при абонаментите:', err);
+          this.userSubscriptions.set([]);
+        }
+      });
+    }
+
     if (tripId) {
       this.isManualSelection.set(false);
       this.tripsService.getTripById(tripId).subscribe(trip => {
         this.currentTrip.set(trip);
         this.availableTrips.set([trip]);
-        
+
         const destName = ticketInfo ? ticketInfo.stopId.name : trip.route.endStop.stopId.name;
         this.bookingForm.patchValue({
           trip: trip._id,
@@ -68,7 +95,7 @@ export class Booking implements OnInit {
           date: new Date(trip.date).toISOString().split('T')[0],
           departureTime: trip._id
         });
-        
+
         this.basePrice.set(ticketInfo ? ticketInfo.price : trip.route.oneWayTicketPrice);
       });
     } else {
@@ -76,6 +103,15 @@ export class Booking implements OnInit {
       this.stopsService.getStops().subscribe();
     }
   }
+
+  hasMatchingSubscription = computed(() => {
+    const destName = this.formValues()?.destination;
+    if (!destName) return false;
+
+    return this.userSubscriptions().some(sub =>
+      sub.planId.stop.name === destName
+    );
+  });
 
   private setupFormListeners(): void {
     this.bookingForm.get('mainStation')?.valueChanges.subscribe(stationId => {
@@ -95,12 +131,16 @@ export class Booking implements OnInit {
         if (selected) {
           this.currentTrip.set(selected);
           this.bookingForm.patchValue({ trip: selected._id }, { emitEvent: false });
-          
+
           const dest = this.bookingForm.get('destination')?.value;
           const stopInfo = selected.route.stops.find(s => s.stopId.name === dest);
           this.basePrice.set(stopInfo ? stopInfo.price : selected.route.oneWayTicketPrice);
         }
       }
+    });
+
+    this.bookingForm.get('destination')?.valueChanges.subscribe(() => {
+      this.useSubscription.set(false);
     });
   }
 
@@ -122,6 +162,9 @@ export class Booking implements OnInit {
   totalPrice = computed(() => {
     const values = this.formValues();
     if (!values || !this.currentTrip()) return 0;
+
+    if (this.useSubscription()) return 0;
+
     let price = this.basePrice();
     if (values.ticketType === 'twoWayTicket' && this.currentTrip()?.route.twoWayTicketPrice) {
       price = this.currentTrip()!.route.twoWayTicketPrice;
@@ -149,17 +192,8 @@ export class Booking implements OnInit {
   intermediateStops = computed(() => this.currentPath().length > 2 ? this.currentPath().slice(1, -1) : []);
   showTicketType = computed(() => {
     const p = this.currentPath();
-    return p.length >= 2 && p[0].type === 'Bus Station' && p[p.length - 1].type === 'Bus Station';
+    return !this.useSubscription() && p.length >= 2 && p[0].type === 'Bus Station' && p[p.length - 1].type === 'Bus Station';
   });
-
-  routeOrderValidator(): ValidatorFn {
-    return (c: AbstractControl): ValidationErrors | null => {
-      const s = this.allStopsInOrder();
-      const start = s.findIndex(x => x.name === c.get('departure')?.value);
-      const end = s.findIndex(x => x.name === c.get('destination')?.value);
-      return (start !== -1 && end !== -1 && start < end) ? null : { invalidOrder: true };
-    };
-  }
 
   getArrivalTimeForStop(trip: Trip): string {
     const dest = this.formValues()?.destination;
@@ -176,11 +210,17 @@ export class Booking implements OnInit {
         departureStopId: path[0]._id,
         destinationStopId: path[path.length - 1]._id,
         totalPrice: this.totalPrice(),
-        ticketType: this.bookingForm.value.ticketType,
-        seats: this.bookingForm.value.ticket_num
+        ticketType: this.useSubscription() ? 'subscription' : this.bookingForm.value.ticketType,
+        seats: this.bookingForm.value.ticket_num,
+        useSubscription: this.useSubscription()
       };
+
       this.bookingsService.createBooking(data).subscribe(res => {
-        if (res.checkoutUrl) window.location.href = res.checkoutUrl;
+        if (this.useSubscription()) {
+          this.router.navigate(['/profile']);
+        } else if (res.checkoutUrl) {
+          window.location.href = res.checkoutUrl;
+        }
       });
     }
   }
