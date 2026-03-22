@@ -1,0 +1,17 @@
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.invalid-feedback {
+  font-size: 0.85rem;
+}

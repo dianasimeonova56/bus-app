@@ -1,0 +1,67 @@
+<div class="news-page-container py-5">
+  <div class="container">
+    
+    <div class="text-center mb-5">
+      <h1 class="display-4 fw-bold text-dark">Всички Новини</h1>
+      <p class="lead text-muted">Бъдете в крак с последните промени и събития</p>
+      <div class="mx-auto bg-primary" style="height: 3px; width: 50px;"></div>
+    </div>
+
+    @if (isLoading()) {
+      <div class="row g-4">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm overflow-hidden" aria-hidden="true">
+              <div class="placeholder-glow"><div class="placeholder col-12" style="height: 200px;"></div></div>
+              <div class="card-body">
+                <h5 class="card-title placeholder-glow"><span class="placeholder col-6"></span></h5>
+                <p class="card-text placeholder-glow"><span class="placeholder col-12"></span></p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="row g-4">
+        @for (news of newsList(); track news._id) {
+          <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
+            <app-news-card [newsItem]="news" class="w-100"></app-news-card>
+          </div>
+        } @empty {
+          <div class="col-12 text-center py-5">
+            <i class="bi bi-search display-1 text-muted"></i>
+            <p class="fs-4 text-muted mt-3">Все още няма добавени новини.</p>
+          </div>
+        }
+      </div>
+
+      @if (paginationMeta() && paginationMeta().totalPages > 1) {
+        <nav class="mt-5">
+          <ul class="pagination justify-content-center">
+            
+            <li class="page-item" [class.disabled]="!paginationMeta().hasPrevPage">
+              <button class="page-link shadow-sm" (click)="fetchNews(currentPage() - 1)">
+                <i class="bi bi-chevron-left"></i>
+              </button>
+            </li>
+
+            @for (pageNumber of totalPagesArray; track pageNumber) {
+              <li class="page-item" [class.active]="currentPage() === pageNumber">
+                <button class="page-link shadow-sm" (click)="fetchNews(pageNumber)">
+                  {{ pageNumber }}
+                </button>
+              </li>
+            }
+
+            <li class="page-item" [class.disabled]="!paginationMeta().hasNextPage">
+              <button class="page-link shadow-sm" (click)="fetchNews(currentPage() + 1)">
+                <i class="bi bi-chevron-right"></i>
+              </button>
+            </li>
+
+          </ul>
+        </nav>
+      }
+    }
+  </div>
+</div>

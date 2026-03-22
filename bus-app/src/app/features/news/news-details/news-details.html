@@ -1,0 +1,55 @@
+<div class="container py-5">
+  @if (isLoading()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status"></div>
+      <p class="text-muted mt-2">Зареждане на съдържанието...</p>
+    </div>
+  } @else if (news(); as item) {
+    
+    <nav class="mb-4">
+      <a routerLink="/news" class="btn btn-link text-decoration-none p-0 text-secondary">
+        <i class="bi bi-arrow-left"></i> Обратно към всички новини
+      </a>
+    </nav>
+
+    <article class="news-article mx-auto" style="max-width: 900px;">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <span class="badge bg-primary px-3 py-2 rounded-pill">{{ item.category }}</span>
+        <small class="text-muted">
+          <i class="bi bi-calendar3"></i> {{ item.createdAt | date:'longDate' }}
+        </small>
+      </div>
+
+      <h1 class="display-4 fw-bold mb-4 text-dark">{{ item.title }}</h1>
+
+      @if (item.imageUrl) {
+        <div class="mb-5 shadow-sm rounded-4 overflow-hidden">
+          <img [src]="item.imageUrl" [alt]="item.title" class="img-fluid w-100 object-fit-cover" style="max-height: 500px;">
+        </div>
+      }
+
+      <div class="news-content fs-5 text-secondary lh-lg mb-5">
+        {{ item.content }}
+      </div>
+
+      <hr class="my-5 opacity-10">
+
+      <div class="author-box d-flex align-items-center p-4 bg-light rounded-4">
+        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+          <i class="bi bi-person-fill fs-4"></i>
+        </div>
+        <div>
+          <p class="mb-0 fw-bold">Публикувано от</p>
+          <p class="mb-0 text-muted">{{ item.author.first_name }} {{ item.author.last_name }}</p>
+        </div>
+      </div>
+
+    </article>
+  } @else {
+    <div class="text-center py-5">
+      <i class="bi bi-exclam-triangle display-1 text-warning"></i>
+      <h2 class="mt-4">Новината не е намерена</h2>
+      <button routerLink="/news" class="btn btn-primary mt-3">Виж други новини</button>
+    </div>
+  }
+</div>

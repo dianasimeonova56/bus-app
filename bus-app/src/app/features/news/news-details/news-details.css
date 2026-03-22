@@ -1,0 +1,22 @@
+.news-article {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.news-content {
+  white-space: pre-wrap; /* Запазва новите редове от textarea-та */
+  text-align: justify;
+}
+
+.author-box {
+  border-left: 5px solid #0d6efd;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Стил за иконите (ако не се виждат) */
+i {
+  vertical-align: middle;
+}

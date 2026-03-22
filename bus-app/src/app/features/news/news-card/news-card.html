@@ -1,7 +1,19 @@
-<div class="news-card-wrapper">
-    <div>Title</div>
-    <hr>
-    <div>News Title</div>
-    <hr>
-    <div> Author on 12/12/2012</div>
+<div class="card h-100 border-0 shadow-sm news-hover">
+  <div class="position-relative">
+    <img [src]="newsItem.imageUrl || 'assets/default-news.jpg'" class="card-img-top" alt="news image">
+    <span class="badge position-absolute top-0 end-0 m-3" 
+          [ngClass]="{'bg-danger': newsItem.category === 'Аварии', 'bg-primary': newsItem.category === 'Новини', 'bg-warning text-dark': newsItem.category === 'Промени'}">
+      {{ newsItem.category }}
+    </span>
+  </div>
+  <div class="card-body">
+    <small class="text-muted d-block mb-2">
+        <i class="bi bi-calendar3"></i> {{ newsItem.createdAt | date:'dd.MM.yyyy' }}
+    </small>
+    <h5 class="card-title fw-bold text-dark">{{ newsItem.title }}</h5>
+    <p class="card-text text-secondary text-truncate-2">{{ newsItem.content }}</p>
+    <a [routerLink]="['/news', newsItem._id]" class="btn btn-link p-0 fw-bold text-decoration-none">
+      Прочети още <i class="bi bi-arrow-right"></i>
+    </a>
+  </div>
 </div>
