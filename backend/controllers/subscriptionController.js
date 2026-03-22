@@ -56,4 +56,21 @@ subscriptionController.get('/:id', async (req, res) => {
     }
 });
 
+subscriptionController.get('/user/:userId', async (req, res) => {
+    try {
+       const userId = req.params.userId;
+       console.log(userId);
+       
+
+        const subscription = await subscriptionService.getUserSubscription(userId);
+        console.log(subscription);
+        
+
+        res.status(200).json({ subscription });
+    } catch (err) {
+        console.error(err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
 export default subscriptionController;

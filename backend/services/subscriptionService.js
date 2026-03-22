@@ -12,6 +12,15 @@ export default {
     getSubscription(id) {
         return SubscriptionCard.findById(id).populate("stop");
     },
+    getUserSubscription(userId) {
+        return UserSubscriptionCard.find({ userId: userId }).populate({
+            path: 'planId',
+            populate: {
+                path: 'stop',
+                model: 'Stop'
+            }
+        });
+    },
     async createSubscription(subscriptionData) {
         return await SubscriptionCard.create(subscriptionData);
     },
@@ -87,6 +96,6 @@ export default {
         return parseFloat((basePrice * multiplier).toFixed(2));
     },
     async searchSubscriptions(searchedStop) {
-        return await SubscriptionCard.find({stop: searchedStop}).populate('stop')
+        return await SubscriptionCard.find({ stop: searchedStop }).populate('stop')
     }
 }
