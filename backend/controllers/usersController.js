@@ -1,9 +1,11 @@
 import { Router } from "express";
 import userServices from "../services/usersService.js";
 import { AUTH_COOKIE_NAME } from "../index.js";
-import { isAuth, isGuest } from "../middlewares/authMiddleware.js";
+import { auth, isAuth, isGuest } from "../middlewares/authMiddleware.js";
 
 const userController = Router();
+
+userController.use(auth);
 
 userController.post('/register', isGuest, async (req, res) => {
     try {
