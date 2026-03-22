@@ -117,7 +117,7 @@
                       {{ booking.status }}
                     </span>
                   </td>
-                  <td class="fw-bold text-dark">{{ booking.totalPrice }} лв.</td>
+                  <td class="fw-bold text-dark">{{ booking.totalPrice }} €</td>
                   <td class="pe-4 text-end">
                     <i class="bi" [class]="expandedBookingId() === booking._id ? 'bi-chevron-up text-primary' : 'bi-chevron-down text-muted'"></i>
                   </td>
@@ -132,7 +132,7 @@
                         <div class="p-3 bg-white border rounded shadow-xs">
                           <div class="d-flex justify-content-between">
                             <span class="fw-bold">Място {{ ticket.seatNumber }}</span>
-                            <span class="text-primary small">{{ ticket.price }} лв.</span>
+                            <span class="text-primary small">{{ ticket.price }} €</span>
                           </div>
                         </div>
                       </div>
