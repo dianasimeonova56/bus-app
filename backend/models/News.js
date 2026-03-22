@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
 
-const newsSchema = new mongoose.Schema({
+const newsSchema = new Schema({
     title: {
         type: String,
         required: [true, 'Заглавието е задължително!'],
@@ -20,7 +20,7 @@ const newsSchema = new mongoose.Schema({
         default: 'https://placehold.co/600x400?text=News'
     },
     author: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Types.ObjectId,
         ref: 'User',
         required: true
     },
@@ -38,6 +38,6 @@ const newsSchema = new mongoose.Schema({
 
 newsSchema.index({ createdAt: -1 });
 
-const News = mongoose.model('News', newsSchema);
+const News = model('News', newsSchema);
 
 export default News;
