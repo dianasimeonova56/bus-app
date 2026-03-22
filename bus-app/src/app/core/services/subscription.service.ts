@@ -28,6 +28,13 @@ export class SubscriptionService {
             );
     }
 
+    getUserSubscriptions(userId: String): Observable<any[]> {
+        return this.httpClient.get<any[]>(`${this.apiUrl}/user/${userId}`)
+            .pipe(
+                tap(operators => this.userSubscriptionBehaviourSubject.next(operators))
+            );
+    }
+
     getSubscription(id: string | null): Observable<any> {
         return this.httpClient.get<any>(`${this.apiUrl}/${id}`).pipe(
             tap(sub => this.selectedSubscriptionBehaviourSubject.next(sub))
@@ -39,8 +46,8 @@ export class SubscriptionService {
     }
 
     createUserSubscription(body: any): Observable<{ checkoutUrl: string }> {
-    return this.httpClient.post<{ checkoutUrl: string }>(`${this.apiUrl}/buy-subscription`, body);
-}
+        return this.httpClient.post<{ checkoutUrl: string }>(`${this.apiUrl}/buy-subscription`, body);
+    }
 
     searchSubscriptions(stopId: string): Observable<any> {
         let params = new HttpParams().set('stop', stopId);
