@@ -1,67 +1,79 @@
-<nav class="navbar navbar-expand-lg px-lg-5 px-3 bg-white sticky-top border">
-  <a class="navbar-brand" href="#"><img src="assets/images/logo.png" height="40" alt="BB Logo"></a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarSupportedContent">
-    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-      <li class="nav-item mx-1">
-        <a class="nav-link active" aria-current="page" routerLink="/news" routerLinkActive="active">Новини</a>
-      </li>
-      <li class="nav-item mx-1">
-        <a class="nav-link" href="https://transport.burgasbus.info/">
-          Градски разписания
-        </a>
-      </li>
-      <li class="nav-item mx-1 dropdown">
-        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Автогари
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" routerLink="/bus-stations/west" routerLinkActive="active">Автогара Запад</a></li>
-          <li><a class="dropdown-item" routerLink="/bus-stations/south" routerLinkActive="active">Автогара Юг</a></li>
-        </ul>
-      </li>
-      <li class="nav-item mx-1 dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Превозни документи
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Градски карти</a></li>
-          <li><a class="dropdown-item" routerLink="/bus-subscription-cards" routerLinkActive="active">Междуградски карти</a></li>
-          <li>
-            <hr class="dropdown-divider">
+<header class="site-header fixed-top">
+  <nav class="navbar navbar-expand-lg" aria-label="Главна навигация">
+    <div class="section-wrap site-header-inner">
+      <a class="site-brand navbar-brand" routerLink="/home" aria-label="BurgasBus — начало">
+        <img src="assets/images/logo.png" alt="" class="site-brand-logo">
+      </a>
+
+      <button class="site-toggler navbar-toggler ms-auto"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#mainNav"
+              aria-controls="mainNav"
+              aria-expanded="false"
+              aria-label="Меню">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center site-nav">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/news" routerLinkActive="active">Новини</a>
           </li>
-          <li><a class="dropdown-item" href="#">Цени на билети</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://transport.burgasbus.info/" target="_blank" rel="noopener">Градски разписания</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Автогари
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="/bus-stations/west" routerLinkActive="active">Автогара Запад</a></li>
+              <li><a class="dropdown-item" routerLink="/bus-stations/south" routerLinkActive="active">Автогара Юг</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Превозни документи
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="/bus-subscription-cards" routerLinkActive="active">Междуградски карти</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-divider" aria-hidden="true"></li>
+
+          @if (isLoggedIn()) {
+            @if (role === "admin") {
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/admin" routerLinkActive="active">
+                  <i class="bi bi-shield-lock me-2 me-lg-1"></i>Админ панел
+                </a>
+              </li>
+            }
+            @if (role === "user") {
+              <li class="nav-item">
+                <a class="nav-link nav-icon-link" routerLink="/profile" routerLinkActive="active" title="Профил" aria-label="Профил">
+                  <i class="bi bi-person-circle" aria-hidden="true"></i>
+                  <span class="nav-link-label">Профил</span>
+                </a>
+              </li>
+            }
+            <li class="nav-item">
+              <a class="nav-link nav-icon-link logout-link" routerLink="/logout" (click)="logout()" title="Излизане" aria-label="Излизане">
+                <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                <span class="nav-link-label">Излизане</span>
+              </a>
+            </li>
+          } @else {
+            <li class="nav-item header-cta-wrap">
+              <a class="button button-blue button-sm header-cta" routerLink="/login">
+                <i class="bi bi-person me-1"></i>Вписване
+              </a>
+            </li>
+          }
         </ul>
-      </li>
-      <li class="nav-item mx-1">
-        <a class="nav-link" href="#">За нас</a>
-      </li>
-      <li class="nav-item mx-1">
-        <a class="nav-link" href="#">Контакти</a>
-      </li>
-      @if(isLoggedIn()) {
-      @if(role === "admin") {
-      <li class="nav-item mx-1">
-        <a class="nav-link" routerLink="/admin" routerLinkActive="active">Админ панел</a>
-      </li>}
-      @if(role === "user") {
-      <li class="nav-item mx-1">
-        <a class="nav-link" routerLink="/profile" routerLinkActive="active">Профил</a>
-      </li>}
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/logout" routerLinkActive="active" (click)="logout()">Излизане</a>
-      </li>
-      } @else {
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/login" routerLinkActive="active">Вписване</a>
-      </li>
-      <!-- <li class="nav-item">
-        <a class="nav-link"routerLink="/register" routerLinkActive="active">Регистриране</a>
-      </li> -->
-      }
-    </ul>
-  </div>
-</nav>
+      </div>
+    </div>
+  </nav>
+</header>

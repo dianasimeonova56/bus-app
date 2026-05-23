@@ -1,0 +1,209 @@
+.site-footer {
+    position: relative;
+    overflow: hidden;
+    color: var(--color-on-dark);
+    background: var(--gradient-footer-bg);
+}
+
+/* Subtle top accent — a thin bright line that nods to the brand gradient */
+.site-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--gradient-brand-bar-center);
+    opacity: 0.85;
+}
+
+/* ---------- BUS WATERMARK ---------- */
+.footer-bus-watermark {
+    position: absolute;
+    right: -40px;
+    bottom: -30px;
+    width: 320px;
+    height: auto;
+    opacity: 0.07;
+    transform: rotate(-8deg);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ---------- BRAND BLOCK ---------- */
+.footer-brand-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--color-white);
+    letter-spacing: 0.01em;
+    margin-bottom: 14px;
+}
+
+.footer-brand-title i {
+    font-size: var(--text-3xl);
+    color: var(--color-white);
+}
+
+.footer-tagline {
+    color: var(--color-on-dark-muted);
+    font-size: var(--text-base);
+    line-height: 1.55;
+    margin-bottom: 18px;
+    max-width: 42ch;
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-contact li,
+.footer-contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-on-dark);
+    font-size: var(--text-base);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-contact a:hover,
+.footer-contact a:focus-visible {
+    color: var(--color-white);
+}
+
+.footer-contact i {
+    color: var(--color-on-dark-soft);
+    font-size: var(--text-lg);
+    width: 18px;
+    text-align: center;
+}
+
+/* ---------- LINK COLUMNS ---------- */
+.footer-heading {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-white);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-list a {
+    color: var(--color-on-dark-muted);
+    text-decoration: none;
+    font-size: var(--text-base);
+    line-height: 1.4;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+    display: inline-block;
+}
+
+.footer-list a:hover,
+.footer-list a:focus-visible {
+    color: var(--color-white);
+    padding-left: 4px;
+}
+
+.footer-list a:focus-visible {
+    outline: 2px solid var(--color-footer-focus);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+}
+
+/* ---------- BOTTOM BAR ---------- */
+.footer-bottom {
+    margin-top: 36px;
+    padding-top: 22px;
+    border-top: 1px solid var(--color-on-dark-faint);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+    color: var(--color-on-dark-soft);
+    font-size: var(--text-sm);
+}
+
+.footer-copy {
+    margin: 0;
+}
+
+.footer-socials {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+}
+
+.footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--color-on-dark-chip-bg);
+    color: var(--color-on-dark);
+    text-decoration: none;
+    font-size: var(--text-lg);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-socials a:hover,
+.footer-socials a:focus-visible {
+    background: var(--color-blue-200);
+    color: var(--color-white);
+    transform: translateY(-2px);
+}
+
+.footer-socials a:focus-visible {
+    outline: 2px solid var(--color-footer-focus);
+    outline-offset: 2px;
+}
+
+/* ---------- TABLET ---------- */
+@media (min-width: 768px) {
+    .footer-bus-watermark {
+        right: -60px;
+        bottom: -50px;
+        width: 420px;
+        opacity: 0.08;
+    }
+
+    .footer-brand-title {
+        font-size: var(--text-3xl);
+    }
+}
+
+/* ---------- DESKTOP ---------- */
+@media (min-width: 992px) {
+    .footer-bus-watermark {
+        right: -80px;
+        bottom: -60px;
+        width: 520px;
+        opacity: 0.09;
+    }
+
+    .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

@@ -1,3 +1,306 @@
-.navbar {
-    box-shadow: 0px 8px 24px rgba(149, 149, 149, 0.2);
+.site-header {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 2px 14px rgba(57, 49, 133, 0.08);
+    z-index: 1030;
+}
+
+.site-header .navbar {
+    padding: 10px 0;
+}
+
+/* Section wrapper inside the navbar needs flex-wrap so the collapse panel
+   can drop to its own row on mobile (Bootstrap relies on this). */
+.site-header-inner {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* ---------- BRAND ---------- */
+.site-brand {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+
+.site-brand-logo {
+    height: 36px;
+    width: auto;
+    display: block;
+}
+
+.site-brand:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 4px;
+    border-radius: var(--radius-sm);
+}
+
+/* ---------- TOGGLER (mobile) ---------- */
+.site-toggler.navbar-toggler {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 4px 10px;
+    color: var(--color-blue-100);
+    background: var(--color-white);
+    box-shadow: none;
+}
+
+.site-toggler.navbar-toggler:focus {
+    box-shadow: 0 0 0 3px var(--color-brand-tint-25);
+}
+
+.site-toggler i {
+    font-size: var(--text-3xl);
+    line-height: 1;
+}
+
+/* ---------- NAV LINKS ---------- */
+.site-nav .nav-link {
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: var(--text-base);
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.site-nav .nav-link:hover,
+.site-nav .nav-link:focus-visible {
+    background-color: var(--color-brand-tint-04);
+    color: var(--color-blue-100);
+}
+
+.site-nav .nav-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 2px;
+}
+
+.site-nav .nav-link.active {
+    color: var(--color-blue-100);
+    background-color: var(--color-brand-tint-08);
+}
+
+/* dropdown caret subtler */
+.site-nav .dropdown-toggle::after {
+    margin-left: 6px;
+    opacity: 0.5;
+    vertical-align: 1px;
+}
+
+/* ---------- DROPDOWN MENU ---------- */
+.site-nav .dropdown-menu {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-elevated);
+    padding: 6px;
+    margin-top: 6px;
+    min-width: 220px;
+    background: var(--color-white);
+}
+
+.site-nav .dropdown-item {
+    border-radius: var(--radius-md);
+    padding: 8px 12px;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.site-nav .dropdown-item:hover,
+.site-nav .dropdown-item:focus-visible {
+    background-color: var(--color-brand-tint-04);
+    color: var(--color-blue-100);
+}
+
+.site-nav .dropdown-item.active,
+.site-nav .dropdown-item:active {
+    background-color: var(--color-brand-tint-08);
+    color: var(--color-blue-100);
+}
+
+.site-nav .dropdown-divider {
+    margin: 6px 4px;
+    border-top: 1px solid var(--color-divider);
+}
+
+/* ---------- DIVIDER between main nav and auth section ---------- */
+.nav-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--color-divider);
+    margin: 8px 0;
+    list-style: none;
+}
+
+/* ---------- LOGOUT LINK (subtle danger tint) ---------- */
+.logout-link {
+    color: var(--color-text-muted);
+}
+
+.logout-link:hover,
+.logout-link:focus-visible {
+    color: #b03046;
+    background-color: rgba(217, 70, 107, 0.08);
+}
+
+/* ---------- CTA (login button) ---------- */
+.header-cta {
+    padding: 8px 18px;
+    font-size: var(--text-base);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-button-outline);
+}
+
+.header-cta:hover,
+.header-cta:focus-visible {
+    box-shadow: var(--shadow-button);
+}
+
+/* ---------- DESKTOP ---------- */
+@media (min-width: 992px) {
+    .site-header .navbar {
+        padding: 12px 0;
+    }
+
+    .site-nav {
+        gap: 2px;
+    }
+
+    .site-nav .nav-link {
+        padding: 8px 10px;
+    }
+
+    .nav-divider {
+        width: 1px;
+        height: 22px;
+        margin: 0 8px;
+        background: var(--color-divider);
+    }
+
+    .header-cta {
+        margin-left: 4px;
+    }
+
+    /* ---- Hover-open dropdowns (desktop only) ---- */
+    .site-nav .dropdown-menu {
+        margin-top: 0;
+    }
+
+    .site-nav .nav-item.dropdown:hover > .dropdown-menu,
+    .site-nav .nav-item.dropdown:focus-within > .dropdown-menu {
+        display: block;
+        animation: dropdownFadeIn 0.18s ease-out;
+    }
+
+    .site-nav .dropdown-toggle::after {
+        transition: transform 0.2s ease;
+    }
+
+    .site-nav .nav-item.dropdown:hover > .dropdown-toggle::after,
+    .site-nav .nav-item.dropdown:focus-within > .dropdown-toggle::after {
+        transform: rotate(180deg);
+    }
+
+    @keyframes dropdownFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ---- Icon-only links on desktop (Профил / Излизане) ---- */
+    .nav-icon-link {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border-radius: 50%;
+        justify-content: center;
+    }
+
+    .nav-icon-link .nav-link-label {
+        display: none;
+    }
+
+    .nav-icon-link i {
+        font-size: var(--text-xl);
+        margin: 0;
+    }
+}
+
+/* Compact down to ~1100px to keep all 6 items + auth on one line */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .site-nav .nav-link {
+        padding: 8px 8px;
+        font-size: var(--text-sm);
+    }
+
+    .nav-divider {
+        margin: 0 4px;
+    }
+}
+
+/* ---------- MOBILE MENU PANEL ---------- */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        flex-basis: 100%;
+        width: 100%;
+        background: var(--color-white);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-xl);
+        padding: 10px;
+        margin-top: 12px;
+        box-shadow: var(--shadow-card-md);
+    }
+
+    .site-nav {
+        width: 100%;
+    }
+
+    .site-nav .nav-link {
+        padding: 12px 14px;
+        font-size: var(--text-md);
+        width: 100%;
+    }
+
+    .site-nav .dropdown-menu {
+        position: static;
+        border: none;
+        box-shadow: none;
+        padding: 4px 0 4px 14px;
+        margin: 4px 0 0;
+        background: transparent;
+    }
+
+    .nav-icon-link {
+        display: inline-flex;
+        gap: 10px;
+    }
+
+    .nav-icon-link i {
+        font-size: var(--text-xl);
+    }
+
+    .header-cta-wrap {
+        margin-top: 6px;
+    }
+
+    .header-cta {
+        width: 100%;
+        justify-content: center;
+    }
 }
