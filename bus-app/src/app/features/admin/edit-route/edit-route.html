@@ -151,7 +151,7 @@
             } @else {
             <div class="text-center mt-5 text-muted opacity-50">
                 <i class="bi bi-cursor-fill fs-1"></i>
-                <p>Изберете маршрут от списъка вляво</p>
+                <p>Изберете маршрут от списъка</p>
             </div>
             }
         </div>
@@ -166,16 +166,16 @@
                     </app-map>
                 </div>
 
-                <div class="card mt-3 bg-dark text-white shadow">
+                <div class="card mt-3 bg-primary text-white shadow">
                     <div class="card-body p-3">
                         <div class="row text-center">
-                            <div class="col border-end border-secondary">
-                                <div class="small opacity-50 text-uppercase">Разстояние</div>
-                                <div class="h5 mb-0 text-warning fw-bold">{{ distanceKm | number:'1.1-1' }} км</div>
+                            <div class="col border-end" style="border-color: rgba(255,255,255,0.2) !important;">
+                                <div class="small opacity-75 text-uppercase">Разстояние</div>
+                                <div class="h5 mb-0 fw-bold">{{ distanceKm | number:'1.1-1' }} км</div>
                             </div>
                             <div class="col">
-                                <div class="small opacity-50 text-uppercase">Общо време</div>
-                                <div class="h5 mb-0 text-info fw-bold">{{ formatDuration(totalRouteDuration) }}</div>
+                                <div class="small opacity-75 text-uppercase">Общо време</div>
+                                <div class="h5 mb-0 fw-bold">{{ formatDuration(totalRouteDuration) }}</div>
                             </div>
                         </div>
                     </div>

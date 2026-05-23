@@ -1,9 +1,55 @@
-<section>
-    <app-add-transport-operator></app-add-transport-operator>
-    <app-add-stop></app-add-stop>
-    <app-add-route></app-add-route>
-    <app-edit-route></app-edit-route>
-    <app-add-subscription></app-add-subscription>
-    <app-verifications></app-verifications>
-    <app-add-news></app-add-news>
-</section>
+<div class="section-wrap admin-page">
+  <header class="admin-header">
+    <p class="admin-eyebrow">Администрация</p>
+    <h1 class="admin-title">Админ панел</h1>
+    <p class="admin-subtitle">
+      Управлявайте маршрутите, операторите и съдържанието на платформата.
+    </p>
+  </header>
+
+  <!-- Mobile / tablet picker -->
+  <div class="admin-mobile-picker d-lg-none">
+    <label for="adminSectionSelect" class="admin-mobile-label">Раздел</label>
+    <select id="adminSectionSelect"
+            class="form-select"
+            [ngModel]="selected()"
+            (ngModelChange)="select($event)">
+      @for (section of sections; track section.id) {
+        <option [value]="section.id">{{ section.label }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="admin-layout">
+    <!-- Desktop sidebar -->
+    <nav class="admin-sidebar d-none d-lg-block" aria-label="Админ навигация">
+      <ul class="admin-nav">
+        @for (section of sections; track section.id) {
+          <li>
+            <button type="button"
+                    class="admin-nav-item"
+                    [class.active]="selected() === section.id"
+                    [attr.aria-current]="selected() === section.id ? 'page' : null"
+                    (click)="select(section.id)">
+              <i class="bi {{ section.icon }}" aria-hidden="true"></i>
+              <span>{{ section.label }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </nav>
+
+    <!-- Active admin section -->
+    <section class="admin-content" aria-live="polite" [attr.aria-label]="currentLabel()">
+      @switch (selected()) {
+        @case ('operators')     { <app-add-transport-operator></app-add-transport-operator> }
+        @case ('stops')         { <app-add-stop></app-add-stop> }
+        @case ('add-route')     { <app-add-route></app-add-route> }
+        @case ('edit-route')    { <app-edit-route></app-edit-route> }
+        @case ('subscriptions') { <app-add-subscription></app-add-subscription> }
+        @case ('verifications') { <app-verifications></app-verifications> }
+        @case ('news')          { <app-add-news></app-add-news> }
+      }
+    </section>
+  </div>
+</div>

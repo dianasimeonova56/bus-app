@@ -183,19 +183,19 @@
           </app-map>
         </div>
         
-        <div class="card mt-4 border-0 bg-dark text-white shadow rounded-4">
+        <div class="card mt-4 border-0 bg-primary text-white shadow rounded-4">
           <div class="card-body p-4">
             <div class="row align-items-center text-center">
               <div class="col">
-                <div class="small text-uppercase opacity-50 mb-1">Разстояние</div>
-                <div class="h3 mb-0 fw-bold text-warning">{{ distanceKm | number:'1.1-1' }} <small>км</small></div>
+                <div class="small text-uppercase opacity-75 mb-1">Разстояние</div>
+                <div class="h3 mb-0 fw-bold">{{ distanceKm | number:'1.1-1' }} <small>км</small></div>
               </div>
               <div class="col-auto">
-                <div class="vr h-100" style="width: 1px; background-color: rgba(255,255,255,0.2);"></div>
+                <div class="vr h-100" style="width: 1px; background-color: rgba(255,255,255,0.25);"></div>
               </div>
               <div class="col">
-                <div class="small text-uppercase opacity-50 mb-1">Чисто време</div>
-                <div class="h3 mb-0 fw-bold text-info">{{ formatDuration(duration)[0] }}</div>
+                <div class="small text-uppercase opacity-75 mb-1">Чисто време</div>
+                <div class="h3 mb-0 fw-bold">{{ formatDuration(duration)[0] }}</div>
               </div>
             </div>
           </div>

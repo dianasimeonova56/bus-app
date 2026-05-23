@@ -1,0 +1,190 @@
+.admin-page {
+    padding-top: 32px;
+    padding-bottom: 48px;
+}
+
+.admin-header {
+    margin-bottom: 24px;
+}
+
+.admin-eyebrow {
+    font-family: var(--font-heading);
+    color: var(--color-blue-100);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.admin-title {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: var(--text-5xl);
+    line-height: 1.15;
+    margin: 0 0 6px;
+}
+
+.admin-subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    margin: 0;
+    max-width: 60ch;
+}
+
+/* ---------- Mobile picker ---------- */
+.admin-mobile-picker {
+    margin-bottom: 20px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
+    padding: 14px 16px;
+}
+
+.admin-mobile-label {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin: 0 0 8px;
+}
+
+.admin-mobile-picker .form-select {
+    border-color: var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.admin-mobile-picker .form-select:focus {
+    border-color: var(--color-blue-100);
+    box-shadow: 0 0 0 3px var(--color-brand-tint-25);
+}
+
+/* ---------- Layout (mobile = single column, desktop = sidebar + main) ---------- */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.admin-content {
+    min-width: 0;   /* allow inner forms/tables to shrink */
+}
+
+/* ---------- Sidebar (desktop) ---------- */
+.admin-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
+    padding: 10px;
+    align-self: start;
+}
+
+.admin-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-nav-item {
+    width: 100%;
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--color-text);
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: var(--text-base);
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-nav-item i {
+    flex-shrink: 0;
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    transition: color 0.2s ease;
+    width: 20px;
+    text-align: center;
+}
+
+.admin-nav-item:hover {
+    background: var(--color-brand-tint-04);
+    color: var(--color-blue-100);
+}
+
+.admin-nav-item:hover i {
+    color: var(--color-blue-100);
+}
+
+.admin-nav-item.active {
+    background: var(--color-brand-tint-08);
+    color: var(--color-blue-100);
+    font-weight: 600;
+}
+
+.admin-nav-item.active i {
+    color: var(--color-blue-100);
+}
+
+.admin-nav-item:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 2px;
+}
+
+/* ---------- Tablet ---------- */
+@media (min-width: 768px) {
+    .admin-page {
+        padding-top: 48px;
+        padding-bottom: 64px;
+    }
+
+    .admin-header {
+        margin-bottom: 32px;
+    }
+
+    .admin-title {
+        font-size: var(--text-6xl);
+    }
+
+    .admin-subtitle {
+        font-size: var(--text-lg);
+    }
+}
+
+/* ---------- Desktop ---------- */
+@media (min-width: 992px) {
+    .admin-page {
+        padding-top: 56px;
+    }
+
+    .admin-layout {
+        grid-template-columns: 260px 1fr;
+        gap: 28px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .admin-layout {
+        grid-template-columns: 280px 1fr;
+    }
+}

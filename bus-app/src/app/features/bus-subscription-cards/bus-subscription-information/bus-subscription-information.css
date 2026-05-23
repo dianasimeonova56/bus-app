@@ -1,0 +1,324 @@
+.subscription-info-page {
+    padding-top: 32px;
+    padding-bottom: 48px;
+}
+
+/* ---------- PAGE HEADER ---------- */
+.subscription-header {
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+.subscription-eyebrow {
+    font-family: var(--font-heading);
+    color: var(--color-blue-100);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.subscription-title {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: var(--text-5xl);
+    line-height: 1.15;
+    margin: 0 0 8px;
+}
+
+.subscription-subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    margin: 0;
+    max-width: 62ch;
+}
+
+/* ---------- INFO CARDS (general / 15-day / student) ---------- */
+.subscription-info-cards {
+    margin-bottom: 28px;
+}
+
+.info-card {
+    height: 100%;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.info-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+}
+
+.info-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--gradient-brand-bar);
+    color: var(--color-white);
+}
+
+.info-card-head i {
+    font-size: var(--text-xl);
+    opacity: 0.95;
+}
+
+.info-card-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin: 0;
+    color: var(--color-white);
+}
+
+.info-card-body {
+    padding: 16px 18px 18px;
+    color: var(--color-text);
+    font-size: var(--text-md);
+    line-height: 1.55;
+}
+
+/* ---------- CONTACT BLOCK ---------- */
+.subscription-contact {
+    margin: 0 0 28px;
+    text-align: center;
+}
+
+.subscription-contact-heading {
+    font-family: var(--font-heading);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.subscription-contact-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.contact-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-tint-06);
+    color: var(--color-blue-100);
+    text-decoration: none;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-pill:hover,
+.contact-pill:focus-visible {
+    background: var(--color-blue-100);
+    color: var(--color-white);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button-outline);
+}
+
+.contact-pill i {
+    font-size: var(--text-base);
+    opacity: 0.85;
+}
+
+.contact-tag {
+    font-weight: 500;
+    font-size: var(--text-xs);
+    padding-left: 6px;
+    border-left: 1px solid currentColor;
+    margin-left: 4px;
+    opacity: 0.85;
+}
+
+/* ---------- SEARCH FORM ---------- */
+.subscription-search {
+    margin: 0 0 28px;
+    padding: 16px;
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+}
+
+.subscription-search .form-select {
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.subscription-search .form-select:focus {
+    border-color: var(--color-blue-100);
+    box-shadow: 0 0 0 3px var(--color-brand-tint-25);
+}
+
+/* ---------- SUBSCRIPTION RESULT CARDS ---------- */
+.subscription-results {
+    margin-top: 4px;
+}
+
+.subscription-card {
+    height: 100%;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.subscription-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-3px);
+    border-color: var(--color-brand-tint-25);
+}
+
+.subscription-card-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: var(--color-blue-100);
+    color: var(--color-white);
+}
+
+.subscription-card-head i {
+    font-size: var(--text-xl);
+}
+
+.subscription-card-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    margin: 0;
+    color: var(--color-white);
+}
+
+.subscription-price-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+}
+
+.subscription-price-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 18px;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+}
+
+.subscription-price-list li:nth-child(even) {
+    background: var(--color-bg-soft);
+}
+
+.price-label {
+    font-weight: 500;
+}
+
+.price-value {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-blue-100);
+    font-size: var(--text-base);
+}
+
+.price-value-regular {
+    color: var(--color-text);
+}
+
+.subscription-card-foot {
+    padding: 14px 18px;
+    border-top: 1px solid var(--color-divider);
+    display: flex;
+    justify-content: center;
+}
+
+.subscription-card-foot .btn {
+    border-radius: var(--radius-pill);
+    padding: 8px 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* ---------- EMPTY STATE ---------- */
+.subscription-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 36px 24px;
+    background: var(--color-bg-soft);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-2xl);
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.subscription-empty i {
+    font-size: var(--text-5xl);
+    color: var(--color-blue-100);
+    opacity: 0.5;
+}
+
+.subscription-empty p {
+    margin: 0;
+    font-size: var(--text-md);
+}
+
+/* ---------- TABLET ---------- */
+@media (min-width: 768px) {
+    .subscription-info-page {
+        padding-top: 48px;
+        padding-bottom: 64px;
+    }
+
+    .subscription-header {
+        margin-bottom: 36px;
+    }
+
+    .subscription-title {
+        font-size: var(--text-6xl);
+    }
+
+    .subscription-subtitle {
+        font-size: var(--text-lg);
+    }
+
+    .subscription-info-cards,
+    .subscription-contact,
+    .subscription-search {
+        margin-bottom: 32px;
+    }
+
+    .subscription-search {
+        padding: 20px 24px;
+    }
+}
+
+/* ---------- DESKTOP ---------- */
+@media (min-width: 992px) {
+    .subscription-info-page {
+        padding-top: 56px;
+    }
+
+    .subscription-title {
+        font-size: var(--text-7xl);
+    }
+}

@@ -1,119 +1,125 @@
-<div class="container my-5">
-    <div class="row g-4">
-        <div class="col-12">
-            <h3 class="text-center mb-4">Междуселищни абонаментни карти</h3>
-        </div>
+<div class="section-wrap subscription-info-page">
+    <header class="subscription-header">
+        <p class="subscription-eyebrow">Превозни документи</p>
+        <h1 class="subscription-title">Междуселищни абонаментни карти</h1>
+        <p class="subscription-subtitle">Изберете спирка, за да видите наличните абонаментни карти и техните цени.</p>
+    </header>
 
+    <div class="row g-3 g-md-4 subscription-info-cards">
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow h-100">
-                <h6 class="card-header text-white bg-blue-light">Обща информация</h6>
-                <div class="card-body">
-                    <div class="card-text"><i class="bi bi-bus-front-fill me-2 mb-2 fs-5"></i>
-                        В търсачката може да откриете междуселищните карти за „Бургасбус”. Цените са за <span
-                            class="fw-bold">един месец</span>.
-                    </div>
+            <div class="info-card">
+                <div class="info-card-head">
+                    <i class="bi bi-bus-front-fill" aria-hidden="true"></i>
+                    <h2 class="info-card-title">Обща информация</h2>
+                </div>
+                <div class="info-card-body">
+                    В търсачката може да откриете междуселищните карти за „Бургасбус". Цените са за <span class="fw-bold">един месец</span>.
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow h-100">
-                <h6 class="card-header text-white bg-blue-light">15-дневна карта</h6>
-                <div class="card-body">
-                    <div class="card-text"><i class="bi bi-ticket-detailed me-2 mb-2 fs-5"></i>
-                        Възможност за карта за <span class="fw-bold">15 дни</span> на стойност <span
-                            class="fw-bold">50%</span> от едномесечната.
-                    </div>
+            <div class="info-card">
+                <div class="info-card-head">
+                    <i class="bi bi-ticket-detailed" aria-hidden="true"></i>
+                    <h2 class="info-card-title">15-дневна карта</h2>
+                </div>
+                <div class="info-card-body">
+                    Възможност за карта за <span class="fw-bold">15 дни</span> на стойност <span class="fw-bold">50%</span> от едномесечната.
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow h-100">
-                <h6 class="card-header text-white bg-blue-light">Ученически карти</h6>
-                <div class="card-body">
-                    <div class="card-text"><i class="bi bi-backpack3 me-2 mb-2 fs-5"></i>
-                        Ученическите цени са без общинско намаление (важи за учащи с адрес в Община Бургас).
-                    </div>
+            <div class="info-card">
+                <div class="info-card-head">
+                    <i class="bi bi-backpack3" aria-hidden="true"></i>
+                    <h2 class="info-card-title">Ученически карти</h2>
+                </div>
+                <div class="info-card-body">
+                    Ученическите цени са без общинско намаление (важи за учащи с адрес в Община Бургас).
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="mt-5">
-        <div class="h6 text-center">Телефон за контакти
-            <div class="my-2"><i class="bi bi-telephone"></i> 0885754012 </div>
-            <div class="mb-2"><i class="bi bi-telephone"></i> 056831423 – Транспортна къща</div>
+    <section class="subscription-contact" aria-labelledby="contactHeading">
+        <p id="contactHeading" class="subscription-contact-heading">Телефон за контакти</p>
+        <div class="subscription-contact-list">
+            <a class="contact-pill" href="tel:0885754012">
+                <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                <span class="contact-number">0885 754 012</span>
+            </a>
+            <a class="contact-pill" href="tel:056831423">
+                <i class="bi bi-telephone-fill" aria-hidden="true"></i>
+                <span class="contact-number">056 831 423</span>
+                <span class="contact-tag">Транспортна къща</span>
+            </a>
         </div>
-    </div>
+    </section>
 
-    <form [formGroup]="cardSearch" class="row my-5 d-flex justify-content-between" (ngSubmit)="onSubmit()">
-        <div class="col-9">
-            <select class="form-select" formControlName="stop">
-                <option value="">Изберете спирка</option>
-                @for (stop of allStops$ | async; track stop._id) {
-                <option [value]="stop._id">{{stop.name}}</option>
-                }
-            </select>
-        </div>
+    <form [formGroup]="cardSearch" class="subscription-search" (ngSubmit)="onSubmit()" aria-label="Търсене на абонаментни карти">
+        <div class="row g-2 g-md-3 align-items-end">
+            <div class="col-12 col-md-8 col-lg-9">
+                <label for="stopSelect" class="form-label fw-bold mb-1">Изберете спирка</label>
+                <select id="stopSelect" class="form-select" formControlName="stop">
+                    <option value="">Всички спирки</option>
+                    @for (stop of allStops$ | async; track stop._id) {
+                    <option [value]="stop._id">{{stop.name}}</option>
+                    }
+                </select>
+            </div>
 
-        <div class="col-3">
-            <button type="submit" class="btn btn-primary w-100">Търси</button>
+            <div class="col-12 col-md-4 col-lg-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-search me-2"></i>Търси
+                </button>
+            </div>
         </div>
     </form>
-    <div class="row g-4 justify-content-center">
+
+    <div class="row g-4 justify-content-center subscription-results">
         @for (card of subscriptionCards; track card._id) {
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm border-0">
-                <div class="card-header bg-primary text-white py-3 px-4">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-geo-alt-fill me-2 fs-5"></i>
-                        <h6 class="mb-0 fw-bold">{{ card.stop.name }}</h6>
-                    </div>
-                </div>
+            <article class="subscription-card">
+                <header class="subscription-card-head">
+                    <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                    <h3 class="subscription-card-title">{{ card.stop.name }}</h3>
+                </header>
 
-                <div class="card-body p-0">
-                    <table class="table table-hover mb-0 align-middle">
-                        <tbody>
-                            <tr>
-                                <td class="ps-4 py-2 small text-muted">Редовна</td>
-                                <td class="text-end pe-4 py-2 fw-bold text-dark">{{ card.regularPrice }} € </td>
-                            </tr>
-                            <tr class="bg-light">
-                                <td class="ps-4 py-2 small text-muted">Ученици</td>
-                                <td class="text-end pe-4 py-2 text-primary">{{ card.studentDiscountPrice
-                                    }} € </td>
-                            </tr>
-                            <tr>
-                                <td class="ps-4 py-2 small text-muted">Пенсионери</td>
-                                <td class="text-end pe-4 py-2 text-primary">{{ card.seniorDiscountPrice
-                                    }} €</td>
-                            </tr>
-                            <tr class="bg-light">
-                                <td class="ps-4 py-2 small text-muted">Увреждания</td>
-                                <td class="text-end pe-4 py-2 text-primary">{{
-                                    card.disabilitesDiscountPrice }} €</td>
-                            </tr>
-                            <tr class="bg-light">
-                                <td class="ps-4 py-2 small text-muted"></td>
-                                <td class="text-end pe-4 py-2 text-primary"><a routerLink="/subscription/buy/{{card._id}}" class="btn btn-primary">Купи карта</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <ul class="subscription-price-list">
+                    <li>
+                        <span class="price-label">Редовна</span>
+                        <span class="price-value price-value-regular">{{ card.regularPrice }} €</span>
+                    </li>
+                    <li>
+                        <span class="price-label">Ученици</span>
+                        <span class="price-value">{{ card.studentDiscountPrice }} €</span>
+                    </li>
+                    <li>
+                        <span class="price-label">Пенсионери</span>
+                        <span class="price-value">{{ card.seniorDiscountPrice }} €</span>
+                    </li>
+                    <li>
+                        <span class="price-label">Увреждания</span>
+                        <span class="price-value">{{ card.disabilitesDiscountPrice }} €</span>
+                    </li>
+                </ul>
 
-                <div class="card-footer bg-white border-top-0 py-2 text-center">
-                    <span class="text-muted" style="font-size: 0.65rem;">ID: {{ card._id }}</span>
+                <div class="subscription-card-foot">
+                    <a [routerLink]="['/subscription/buy', card._id]" class="btn btn-primary">
+                        Купи карта <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
                 </div>
-            </div>
+            </article>
         </div>
         } @empty {
-        <div class="col-12 text-center mt-4">
-            <div class="alert alert-info d-inline-block px-5">
-                Няма намерени абонаментни карти за тази спирка.
+        <div class="col-12">
+            <div class="subscription-empty">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <p>Няма намерени абонаментни карти за тази спирка.</p>
             </div>
         </div>
         }
     </div>
-
 </div>
