@@ -1,20 +1,34 @@
 <div class="hero position-relative">
-    <img src="assets/images/burgas-2.jpg" class="img-fluid">
+    <img src="assets/images/burgas-2.jpg" class="img-fluid" alt="Бургас">
+    <div class="hero-overlay"></div>
     <div class="slogan position-absolute d-flex flex-column">
-        <div class="h1">Животът е едно пътуване</div>
-        <div class="d-flex flex-column flex-lg-row mt-2 mt-lg-4 gap-2">
-            <a class="button button-blue">Автогара</a>
-            <a class="button button-white">Новини</a>
+        <h1 class="h1 mb-0">Животът е едно пътуване</h1>
+        <p class="hero-subtitle d-none d-md-block">Намери своя автобус през Бургас и региона — бързо, лесно и удобно.</p>
+        <div class="d-flex flex-column flex-sm-row mt-3 mt-lg-4 gap-2 gap-sm-3 hero-actions">
+            <a routerLink="/bus-stations/south" class="button button-blue">
+                <i class="bi bi-bus-front-fill me-2"></i>Автогара
+            </a>
+            <a routerLink="/news" class="button button-white">
+                <i class="bi bi-newspaper me-2"></i>Новини
+            </a>
         </div>
     </div>
 </div>
 <ngx-fast-marquee speed="slow" [pauseOnHover]="true">
-    <div class="me-4">
-        Пътувай с усмивка
+    <div class="marquee-item">Пътувай с усмивка</div>
+    <div class="marquee-divider" aria-hidden="true">
+        <i class="bi bi-bus-front-fill"></i>
     </div>
-    <!-- <div [style.background-image]="'url(' + busIcon + ')'" class="marquee-icon me-3"></div> -->
-    <div class="me-4">
-        Животът е едно пътуване
+    <div class="marquee-item">Животът е едно пътуване</div>
+    <div class="marquee-divider" aria-hidden="true">
+        <i class="bi bi-bus-front-fill"></i>
     </div>
-    <!-- <div [style.background-image]="'url(' + busIcon + ')'" class="marquee-icon"></div> -->
+    <div class="marquee-item">Свържи се с региона</div>
+    <div class="marquee-divider" aria-hidden="true">
+        <i class="bi bi-bus-front-fill"></i>
+    </div>
+    <div class="marquee-item">Безопасно и навреме</div>
+    <div class="marquee-divider" aria-hidden="true">
+        <i class="bi bi-bus-front-fill"></i>
+    </div>
 </ngx-fast-marquee>
