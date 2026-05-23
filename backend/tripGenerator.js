@@ -2,6 +2,8 @@ import cron from 'node-cron';
 import dayjs from 'dayjs';
 import Route from './models/Route.js';
 import Trip from './models/Trip.js';
+import Booking from './models/Booking.js';
+import Ticket from './models/Ticket.js';
 
 const generateTripsForPeriod = async () => {
     try {
@@ -60,6 +62,19 @@ const updateTripStatuses = async () => {
                 trip.status = 'completed';
                 await trip.save();
                 console.log(`Trip ${trip._id} marked as completed`);
+
+                // Cascade: any non-cancelled bookings/tickets for this trip become 'passed'
+                const bookingResult = await Booking.updateMany(
+                    { trip: trip._id, status: { $in: ['pending', 'reserved', 'active'] } },
+                    { status: 'passed' }
+                );
+                const ticketResult = await Ticket.updateMany(
+                    { trip: trip._id, status: { $in: ['reserved', 'active'] } },
+                    { status: 'passed' }
+                );
+                if (bookingResult.modifiedCount > 0 || ticketResult.modifiedCount > 0) {
+                    console.log(`  → marked ${bookingResult.modifiedCount} bookings + ${ticketResult.modifiedCount} tickets as passed`);
+                }
             } else if (now.isAfter(departureTime) && now.isBefore(arrivalTime)) {
                 if (trip.status !== 'active') {
                     trip.status = 'active';
