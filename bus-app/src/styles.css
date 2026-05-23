@@ -59,7 +59,7 @@
     --focus-ring: 3px solid var(--color-blue-200);
 
     /* ---------- Layout ---------- */
-    --header-height: 64px;
+    --header-height: 57px;
 
     /* ---------- Border radius scale ---------- */
     --radius-sm: 6px;       /* small badges, dropdown items */
@@ -862,4 +862,8 @@ label {
     .h1 {
         font-size: var(--text-5xl);
     }
+}
+/* Lock page scroll while the mobile nav drawer is open */
+body.nav-open {
+    overflow: hidden;
 }
