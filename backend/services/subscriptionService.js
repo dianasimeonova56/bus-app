@@ -64,9 +64,21 @@ export default {
     async handleSubscriptionPayment(metadata) {
         const { userId, planId, selectedType, periodDays, paidPrice } = metadata;
 
-        const startDate = new Date();
-        const expiryDate = new Date();
-        expiryDate.setDate(startDate.getDate() + Number(periodDays));
+        const existing = await UserSubscriptionCard.findOne({ userId, planId });
+
+        const now = new Date();
+        const base = existing && existing.expiryDate > now ? new Date(existing.expiryDate) : now;
+        const expiryDate = new Date(base);
+        expiryDate.setDate(expiryDate.getDate() + Number(periodDays));
+
+        if (existing) {
+            existing.selectedType = selectedType;
+            existing.periodDays = Number(periodDays);
+            existing.paidPrice = Number(paidPrice);
+            existing.startDate = now;
+            existing.expiryDate = expiryDate;
+            return await existing.save();
+        }
 
         return await UserSubscriptionCard.create({
             userId,
@@ -74,7 +86,7 @@ export default {
             selectedType,
             periodDays: Number(periodDays),
             paidPrice: Number(paidPrice),
-            startDate,
+            startDate: now,
             expiryDate
         });
     },

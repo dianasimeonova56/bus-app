@@ -44,9 +44,6 @@ export class BuySubscription implements OnInit {
     const cardId = this.route.snapshot.paramMap.get('id');
     if (cardId) {
       this.subscriptionService.getSubscription(cardId).subscribe(card => {
-        debugger
-        console.log(card.subscription);
-        
         this.buySubscription.patchValue({ destination: card.subscription.stop._id });
         this.chosenSubscription.set(card.subscription)
 
