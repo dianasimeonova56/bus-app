@@ -4,11 +4,12 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { PopulatedBooking, User } from '../../models';
 import { AsyncPipe, DatePipe } from '@angular/common';
 import { map, Observable, of } from 'rxjs';
+import { ProfileSubscriptions } from './profile-subscriptions/profile-subscriptions';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe, AsyncPipe],
+  imports: [ReactiveFormsModule, DatePipe, AsyncPipe, ProfileSubscriptions],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

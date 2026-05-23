@@ -1,0 +1,53 @@
+<section class="subs-card" aria-labelledby="subsHeading">
+  <header class="subs-head">
+    <i class="bi bi-card-checklist" aria-hidden="true"></i>
+    <h2 id="subsHeading" class="subs-title">Абонаментни карти</h2>
+  </header>
+
+  <div class="subs-body">
+    @if (loading()) {
+      <p class="subs-empty">Зареждане…</p>
+    } @else {
+      @for (sub of subscriptions(); track sub._id) {
+        <div class="sub-item" [class.sub-item--expired]="!isActive(sub)">
+          <div class="sub-info">
+            <span class="sub-stop">{{ sub.planId.stop.name }}</span>
+            <span class="sub-meta">{{ typeLabel(sub.selectedType) }} · {{ sub.periodDays }} дни</span>
+            <span class="sub-expiry">
+              @if (isActive(sub)) {
+                Валидна до {{ sub.expiryDate | date:'dd.MM.yyyy' }}
+              } @else {
+                Изтекла на {{ sub.expiryDate | date:'dd.MM.yyyy' }}
+              }
+            </span>
+          </div>
+
+          <div class="sub-side">
+            <span class="sub-badge" [class.sub-badge--active]="isActive(sub)">
+              {{ isActive(sub) ? 'Активна' : 'Изтекла' }}
+            </span>
+
+            <button type="button" class="btn btn-sm"
+                    [class.btn-primary]="canRenew(sub)"
+                    [class.btn-outline-secondary]="!canRenew(sub)"
+                    [disabled]="!canRenew(sub)"
+                    [attr.title]="canRenew(sub) ? null : ('Подновяване от ' + (renewableFrom(sub) | date:'dd.MM.yyyy'))"
+                    (click)="renew(sub)">
+              <i class="bi me-1" [class.bi-arrow-repeat]="canRenew(sub)" [class.bi-lock]="!canRenew(sub)" aria-hidden="true"></i>
+              Поднови
+            </button>
+
+            @if (!canRenew(sub)) {
+              <span class="sub-renew-hint">Достъпно от {{ renewableFrom(sub) | date:'dd.MM.yyyy' }}</span>
+            }
+          </div>
+        </div>
+      } @empty {
+        <p class="subs-empty">
+          <i class="bi bi-card-list me-1" aria-hidden="true"></i>
+          Нямате закупени абонаментни карти.
+        </p>
+      }
+    }
+  </div>
+</section>
