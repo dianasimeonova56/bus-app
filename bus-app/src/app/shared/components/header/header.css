@@ -11,6 +11,20 @@
     padding: 10px 0;
 }
 
+/* Dark overlay behind the open drawer (sits below the header, above page content) */
+.nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 1020;
+    animation: navOverlayFade 0.2s ease-out;
+}
+
+@keyframes navOverlayFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 /* Section wrapper inside the navbar needs flex-wrap so the collapse panel
    can drop to its own row on mobile (Bootstrap relies on this). */
 .site-header-inner {

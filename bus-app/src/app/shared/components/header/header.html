@@ -7,15 +7,14 @@
 
       <button class="site-toggler navbar-toggler ms-auto"
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#mainNav"
+              (click)="toggleMenu()"
               aria-controls="mainNav"
-              aria-expanded="false"
+              [attr.aria-expanded]="menuOpen()"
               aria-label="Меню">
         <i class="bi bi-list" aria-hidden="true"></i>
       </button>
 
-      <div class="collapse navbar-collapse" id="mainNav">
+      <div class="collapse navbar-collapse" [class.show]="menuOpen()" id="mainNav">
         <ul class="navbar-nav ms-auto align-items-lg-center site-nav">
           <li class="nav-item">
             <a class="nav-link" routerLink="/news" routerLinkActive="active">Новини</a>
@@ -44,6 +43,11 @@
           <li class="nav-divider" aria-hidden="true"></li>
 
           @if (isLoggedIn()) {
+            <li class="nav-item header-cta-wrap">
+              <a class="button button-blue button-sm header-cta" routerLink="/booking" routerLinkActive="active">
+                <i class="bi bi-ticket-perforated me-1"></i>Купи билет
+              </a>
+            </li>
             @if (role === "admin") {
               <li class="nav-item">
                 <a class="nav-link" routerLink="/admin" routerLinkActive="active">
@@ -77,3 +81,7 @@
     </div>
   </nav>
 </header>
+
+@if (menuOpen()) {
+  <div class="nav-overlay" (click)="toggleMenu()" aria-hidden="true"></div>
+}
