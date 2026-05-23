@@ -1,31 +1,39 @@
-<section class="py-5 bg-light">
-  <div class="container">
-    <div class="d-flex justify-content-between align-items-end mb-4">
+<section class="news-section">
+  <div class="section-wrap">
+    <header class="news-section-head">
       <div>
-        <h2 class="fw-bold mb-0 text-primary">Последни Новини</h2>
-        <p class="text-muted mb-0">Бъдете информирани за всичко важно около вашите пътувания</p>
+        <p class="news-eyebrow">Информация</p>
+        <h2 class="news-title">Последни новини</h2>
+        <p class="news-subtitle">Бъдете информирани за всичко важно около вашите пътувания</p>
       </div>
-      <a routerLink="/news" class="btn btn-outline-primary px-4 rounded-pill">
-        Виж всички
-      </a>
-    </div>
+    </header>
 
     @if (isLoading()) {
-      <div class="text-center py-5">
-        <div class="spinner-border text-primary" role="status"></div>
+      <div class="news-loading">
+        <div class="spinner-border" role="status" aria-label="Зареждане"></div>
       </div>
     } @else {
       <div class="row g-4">
         @for (news of latestNews(); track news._id) {
-          <div class="col-md-4 animate-fade-in">
+          <div class="col-12 col-sm-6 col-lg-4 animate-fade-in">
             <app-news-card [newsItem]="news"></app-news-card>
           </div>
         } @empty {
-          <div class="col-12 text-center py-5">
-            <p class="text-muted fs-5">В момента няма активни новини.</p>
+          <div class="col-12 news-empty">
+            <i class="bi bi-newspaper" aria-hidden="true"></i>
+            <p>В момента няма активни новини.</p>
           </div>
         }
       </div>
+
+      @if (latestNews().length > 0) {
+        <div class="news-cta">
+          <a routerLink="/news" class="view-all-link">
+            <span>Прочети повече новини</span>
+            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      }
     }
   </div>
 </section>
