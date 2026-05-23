@@ -9,8 +9,8 @@
 
           <form [formGroup]="addStopForm" (ngSubmit)="onSubmit()">
             <div class="mb-4">
-              <label class="form-label fw-bold small">Име на спирката</label>
-              <input type="text" class="form-control form-control-lg shadow-sm" 
+              <label class="form-label fw-bold small" for="stopName">Име на спирката</label>
+              <input id="stopName" type="text" class="form-control form-control-lg shadow-sm"
                      placeholder="Въведи име (напр. Автогара Юг)"
                      formControlName="name">
             </div>
@@ -37,10 +37,10 @@
 
             @if(this.addStopForm.get('type')?.value === "Bus Station") {
               <div class="mb-4 bg-light p-3 rounded border border-primary border-opacity-25 shadow-sm animate__animated animate__fadeIn">
-                <label class="form-label fw-bold small">Брой сектори</label>
+                <label class="form-label fw-bold small" for="stopSectors">Брой сектори</label>
                 <div class="input-group">
-                  <span class="input-group-text bg-white"><i class="bi bi-grid-3x3-gap"></i></span>
-                  <input type="number" min="1" class="form-control" formControlName="sectors" placeholder="Напр. 5">
+                  <span class="input-group-text bg-white"><i class="bi bi-grid-3x3-gap" aria-hidden="true"></i></span>
+                  <input id="stopSectors" type="number" min="1" class="form-control" formControlName="sectors" placeholder="Напр. 5">
                 </div>
                 <div class="form-text mt-1">Въведете броя коловози/сектори на автогарата.</div>
               </div>

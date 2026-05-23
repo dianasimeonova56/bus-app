@@ -9,12 +9,12 @@
 
         <div class="row mb-4 bg-light p-3 rounded mx-0 border">
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold small text-uppercase text-muted">Час на тръгване</label>
-            <input class="form-control shadow-sm" type="time" formControlName="startHour">
+            <label class="form-label fw-bold small text-uppercase text-muted" for="routeStartHour">Час на тръгване</label>
+            <input id="routeStartHour" class="form-control shadow-sm" type="time" formControlName="startHour">
           </div>
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold small text-uppercase text-muted">Транспортен оператор</label>
-            <select class="form-select shadow-sm" formControlName="transportOperator">
+            <label class="form-label fw-bold small text-uppercase text-muted" for="routeOperator">Транспортен оператор</label>
+            <select id="routeOperator" class="form-select shadow-sm" formControlName="transportOperator">
               <option value="" selected disabled>Избери оператор...</option>
               @for (operator of operators$ | async; track operator._id) {
                 <option [value]="operator._id">{{operator.name}}</option>
@@ -27,14 +27,15 @@
           <div class="card-body">
             <h6 class="card-title text-primary fw-bold"><i class="bi bi-geo-alt-fill"></i> Начална Спирка</h6>
             <input class="form-control mb-2 shadow-sm" list="busStations" placeholder="Търси начална автогара..."
+                   aria-label="Начална спирка"
                    (input)="onStopDepartureSelected($event)" formControlName="departureStopId">
             
             @if (selectedDeparture) {
               <div class="d-flex align-items-center gap-2 mb-2">
                 <span class="badge bg-primary px-3 py-2">Избрано: {{selectedDeparture.name}}</span>
               </div>
-              <label class="small fw-bold text-muted mb-1">Сектор на тръгване:</label>
-              <select class="form-select form-select-sm shadow-sm" formControlName="departureSector">
+              <label class="small fw-bold text-muted mb-1" for="routeDepartureSector">Сектор на тръгване:</label>
+              <select id="routeDepartureSector" class="form-select form-select-sm shadow-sm" formControlName="departureSector">
                 <option [value]="null" disabled>Избери сектор...</option>
                 @for (sector of departureSectors; track sector) {
                   <option [value]="sector">Сектор {{ sector }}</option>
@@ -48,8 +49,9 @@
           <label class="form-label fw-bold text-uppercase small text-muted d-block mb-2">Междинни спирки</label>
           <div class="input-group mb-3 shadow-sm">
             <span class="input-group-text bg-success text-white"><i class="bi bi-search"></i></span>
-            <input class="form-control border-success" list="allStops" 
+            <input class="form-control border-success" list="allStops"
                    placeholder="Напиши име на спирка за добавяне..."
+                   aria-label="Добави междинна спирка"
                    (blur)="onStopIntermediateSelected($event)">
           </div>
 
@@ -71,7 +73,8 @@
                   <div class="row g-2">
                     <div class="col-md-4">
                       <label class="small fw-bold text-muted">Престой (мин)</label>
-                      <input type="number" class="form-control form-control-sm shadow-sm" 
+                      <input type="number" class="form-control form-control-sm shadow-sm"
+                             aria-label="Престой в минути"
                              formControlName="intermediateStopDurationMinutes"
                              (input)="updateIntermediateStopDwell(stopCtrl.value.intermediateStopId, $event)">
                     </div>
@@ -79,6 +82,7 @@
                     <div class="col-md-4">
                       <label class="small fw-bold text-muted">Сектор</label>
                       <select class="form-select form-select-sm shadow-sm" formControlName="intermediateSector"
+                              aria-label="Сектор"
                               (input)="updateIntermediateStopSector(stopCtrl.value.intermediateStopId, $event)">
                         <option [value]="null">Няма</option>
                         @for (s of getSectorsArray(stopCtrl.value.sectors); track s) {
@@ -91,7 +95,7 @@
                       <label class="small fw-bold text-muted">Цена (€)</label>
                       <div class="input-group input-group-sm shadow-sm">
                         <span class="input-group-text bg-light text-success">€</span>
-                        <input type="number" class="form-control border-success" formControlName="price">
+                        <input type="number" class="form-control border-success" formControlName="price" aria-label="Цена в евро">
                       </div>
                     </div>
                   </div>
@@ -107,12 +111,13 @@
           <div class="card-body">
             <h6 class="card-title text-danger fw-bold"><i class="bi bi-flag-fill"></i> Крайна Спирка</h6>
             <input class="form-control mb-2 shadow-sm" list="busStations" placeholder="Търси крайна автогара..."
+                   aria-label="Крайна спирка"
                    (input)="onStopArrivalSelected($event)" formControlName="arrivalStopId">
             
             @if (selectedArrival) {
               <div class="badge bg-danger px-3 py-2 mb-2">Избрано: {{selectedArrival.name}}</div>
-              <label class="small fw-bold text-muted d-block mb-1">Сектор на пристигане:</label>
-              <select class="form-select form-select-sm shadow-sm" formControlName="arrivalSector">
+              <label class="small fw-bold text-muted d-block mb-1" for="routeArrivalSector">Сектор на пристигане:</label>
+              <select id="routeArrivalSector" class="form-select form-select-sm shadow-sm" formControlName="arrivalSector">
                 <option [value]="null" disabled>Избери сектор...</option>
                 @for (sector of arrivalSectors; track sector) {
                   <option [value]="sector">Сектор {{ sector }}</option>
@@ -150,17 +155,17 @@
             <h6 class="fw-bold border-bottom pb-2 mb-3 text-uppercase small text-muted">Основни Цени за целия маршрут</h6>
             <div class="row g-3">
               <div class="col-md-6">
-                <label class="small fw-bold text-muted">Еднопосочен билет (€)</label>
+                <label class="small fw-bold text-muted" for="routeOneWayPrice">Еднопосочен билет (€)</label>
                 <div class="input-group shadow-sm">
                   <span class="input-group-text bg-white border-end-0 text-success">€</span>
-                  <input type="number" class="form-control border-start-0" formControlName="oneWayTicketPrice">
+                  <input id="routeOneWayPrice" type="number" class="form-control border-start-0" formControlName="oneWayTicketPrice">
                 </div>
               </div>
               <div class="col-md-6">
-                <label class="small fw-bold text-muted">Двупосочен билет (€)</label>
+                <label class="small fw-bold text-muted" for="routeTwoWayPrice">Двупосочен билет (€)</label>
                 <div class="input-group shadow-sm">
                   <span class="input-group-text bg-white border-end-0 text-success">€</span>
-                  <input type="number" class="form-control border-start-0" formControlName="twoWayTicketPrice">
+                  <input id="routeTwoWayPrice" type="number" class="form-control border-start-0" formControlName="twoWayTicketPrice">
                 </div>
               </div>
             </div>

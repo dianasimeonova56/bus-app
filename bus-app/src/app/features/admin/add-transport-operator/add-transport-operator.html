@@ -14,35 +14,35 @@
             
             <form [formGroup]="transportOperatorForm" (ngSubmit)="onSubmit()">
               <div class="mb-3">
-                <label class="form-label small fw-bold">Име на фирмата</label>
+                <label class="form-label small fw-bold" for="operatorName">Име на фирмата</label>
                 <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
-                  <input type="text" class="form-control shadow-sm" placeholder="Име на фирмата..." formControlName="name">
+                  <span class="input-group-text"><i class="bi bi-briefcase" aria-hidden="true"></i></span>
+                  <input id="operatorName" type="text" class="form-control shadow-sm" placeholder="Име на фирмата..." formControlName="name">
                 </div>
               </div>
 
               <div class="row mb-3">
                 <div class="col-md-6">
-                  <label class="form-label small fw-bold">Имейл адрес</label>
+                  <label class="form-label small fw-bold" for="operatorEmail">Имейл адрес</label>
                   <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                    <input type="email" class="form-control shadow-sm" placeholder="office@company.com" formControlName="email">
+                    <span class="input-group-text"><i class="bi bi-envelope" aria-hidden="true"></i></span>
+                    <input id="operatorEmail" type="email" class="form-control shadow-sm" placeholder="office@company.com" formControlName="email">
                   </div>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label small fw-bold">Телефон</label>
+                  <label class="form-label small fw-bold" for="operatorPhone">Телефон</label>
                   <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                    <input type="tel" class="form-control shadow-sm" placeholder="+359..." formControlName="phone">
+                    <span class="input-group-text"><i class="bi bi-telephone" aria-hidden="true"></i></span>
+                    <input id="operatorPhone" type="tel" class="form-control shadow-sm" placeholder="+359..." formControlName="phone">
                   </div>
                 </div>
               </div>
 
               <div class="mb-4">
-                <label class="form-label small fw-bold">Уебсайт</label>
+                <label class="form-label small fw-bold" for="operatorWebsite">Уебсайт</label>
                 <div class="input-group">
-                  <span class="input-group-text"><i class="bi bi-globe"></i></span>
-                  <input type="url" class="form-control shadow-sm" placeholder="https://www.example.com" formControlName="website">
+                  <span class="input-group-text"><i class="bi bi-globe" aria-hidden="true"></i></span>
+                  <input id="operatorWebsite" type="url" class="form-control shadow-sm" placeholder="https://www.example.com" formControlName="website">
                 </div>
               </div>
 

@@ -9,7 +9,7 @@
                     <form id="subscriptionForm" [formGroup]="buySubscription" (ngSubmit)="onSubmit()">
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold">Изберете спирка</label>
+                            <label class="form-label fw-bold" for="destinationSelect">Изберете спирка</label>
                             <select class="form-select form-select-lg" id="destinationSelect" required
                                 formControlName="destination">
                                 <option value="" selected disabled>Изберете спирка...</option>

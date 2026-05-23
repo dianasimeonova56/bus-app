@@ -3,7 +3,7 @@
     {
     <form [formGroup]="routeFilter" class="row g-3 mb-5 align-items-end" (ngSubmit)="onSubmit()">
         <div class="col-12 col-sm-6 col-lg">
-            <select class="form-select" formControlName="stop">
+            <select class="form-select" formControlName="stop" aria-label="Изберете спирка">
                 <option value="">Изберете спирка</option>
                 @for (stop of allStops$ | async; track stop._id) {
                 <option [value]="stop._id">{{stop.name}}</option>
@@ -12,7 +12,7 @@
         </div>
 
         <div class="col-12 col-sm-6 col-lg">
-            <select class="form-select" formControlName="transportOperator">
+            <select class="form-select" formControlName="transportOperator" aria-label="Оператор">
                 <option value="">Оператор</option>
                 @for (operator of operators$ | async; track operator._id) {
                 <option [value]="operator._id">{{operator.name}}</option>
@@ -21,11 +21,11 @@
         </div>
 
         <div class="col-12 col-sm-6 col-lg">
-            <input type="date" class="form-control" formControlName="date">
+            <input type="date" class="form-control" formControlName="date" aria-label="Дата">
         </div>
 
         <div class="col-12 col-sm-6 col-lg time-picker">
-            <input type="time" class="form-control" formControlName="time">
+            <input type="time" class="form-control" formControlName="time" aria-label="Час">
         </div>
 
         <div class="col-12 col-lg-auto">

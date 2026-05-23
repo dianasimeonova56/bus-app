@@ -45,21 +45,21 @@
 
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Час на тръгване</label>
-                                <input type="time" formControlName="startHour" (change)="buildSchedule()"
+                                <label class="form-label small fw-bold" for="editStartHour">Час на тръгване</label>
+                                <input id="editStartHour" type="time" formControlName="startHour" (change)="buildSchedule()"
                                     class="form-control shadow-sm">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Начална точка</label>
-                                <input type="text" class="form-control shadow-sm bg-light" readonly
+                                <label class="form-label small fw-bold" for="editStartPoint">Начална точка</label>
+                                <input id="editStartPoint" type="text" class="form-control shadow-sm bg-light" readonly
                                     [value]="selectedDeparture?.name">
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label small fw-bold text-success">Добави междинна спирка</label>
-                            <input class="form-control form-control-sm border-success shadow-sm" list="allStopsEdit"
-                                placeholder="Търси спирка..." (blur)="onStopSelectedForEdit($event)">
+                            <label class="form-label small fw-bold text-success" for="editAddStop">Добави междинна спирка</label>
+                            <input id="editAddStop" class="form-control form-control-sm border-success shadow-sm" list="allStopsEdit"
+                                placeholder="Търси спирка..." aria-label="Добави междинна спирка" (blur)="onStopSelectedForEdit($event)">
                         </div>
 
                         <div formArrayName="stops" cdkDropList (cdkDropListDropped)="drop($event)" class="mb-4">
@@ -85,22 +85,23 @@
                                     <div class="row g-2">
                                         <div class="col-3">
                                             <label class="x-small text-muted d-block text-truncate">Пристига</label>
-                                            <input type="time" formControlName="arrivalTime"
+                                            <input type="time" formControlName="arrivalTime" aria-label="Час на пристигане"
                                                 class="form-control form-control-sm bg-light" readonly>
                                         </div>
                                         <div class="col-3">
                                             <label class="x-small text-muted d-block text-truncate">Престой (м)</label>
                                             <input type="number" formControlName="dwell" (change)="buildSchedule()"
+                                                aria-label="Престой в минути"
                                                 class="form-control form-control-sm text-primary fw-bold shadow-sm">
                                         </div>
                                         <div class="col-3">
                                             <label class="x-small text-muted d-block text-truncate">Тръгва</label>
-                                            <input type="time" formControlName="departureTime"
+                                            <input type="time" formControlName="departureTime" aria-label="Час на тръгване"
                                                 class="form-control form-control-sm">
                                         </div>
                                         <div class="col-3">
                                             <label class="x-small text-muted d-block text-truncate">Цена (€)</label>
-                                            <input type="number" formControlName="price"
+                                            <input type="number" formControlName="price" aria-label="Цена в евро"
                                                 class="form-control form-control-sm">
                                         </div>
                                     </div>
@@ -117,13 +118,13 @@
                                     (цял маршрут)</h6>
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="small fw-bold text-muted">Еднопосочен (€)</label>
-                                        <input type="number" class="form-control shadow-sm"
+                                        <label class="small fw-bold text-muted" for="editOneWayPrice">Еднопосочен (€)</label>
+                                        <input id="editOneWayPrice" type="number" class="form-control shadow-sm"
                                             formControlName="oneWayTicketPrice">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="small fw-bold text-muted">Двупосочен (€)</label>
-                                        <input type="number" class="form-control shadow-sm"
+                                        <label class="small fw-bold text-muted" for="editTwoWayPrice">Двупосочен (€)</label>
+                                        <input id="editTwoWayPrice" type="number" class="form-control shadow-sm"
                                             formControlName="twoWayTicketPrice">
                                     </div>
                                 </div>

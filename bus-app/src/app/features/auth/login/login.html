@@ -29,12 +29,14 @@
                     <input id="email"
                            class="form-control"
                            [class.is-invalid]="isEmailValid"
+                           [attr.aria-invalid]="isEmailValid"
+                           aria-describedby="emailError"
                            formControlName="email"
                            type="email"
                            autocomplete="email"
                            placeholder="вашият@email.com" />
                     @if (isEmailValid) {
-                        <p class="auth-error">
+                        <p class="auth-error" id="emailError" role="alert">
                             <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                             {{ emailErrorMessage }}
                         </p>
@@ -46,12 +48,14 @@
                     <input id="password"
                            class="form-control"
                            [class.is-invalid]="isPasswordValid"
+                           [attr.aria-invalid]="isPasswordValid"
+                           aria-describedby="passwordError"
                            formControlName="password"
                            type="password"
                            autocomplete="current-password"
                            placeholder="••••••••" />
                     @if (isPasswordValid) {
-                        <p class="auth-error">
+                        <p class="auth-error" id="passwordError" role="alert">
                             <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                             {{ passwordErrorMessage }}
                         </p>

@@ -36,26 +36,26 @@
       </div>
 
       @if (paginationMeta() && paginationMeta().totalPages > 1) {
-        <nav class="mt-5">
+        <nav class="mt-5" aria-label="Странициране на новините">
           <ul class="pagination justify-content-center">
-            
+
             <li class="page-item" [class.disabled]="!paginationMeta().hasPrevPage">
-              <button class="page-link shadow-sm" (click)="fetchNews(currentPage() - 1)">
-                <i class="bi bi-chevron-left"></i>
+              <button class="page-link shadow-sm" [disabled]="!paginationMeta().hasPrevPage" aria-label="Предишна страница" (click)="fetchNews(currentPage() - 1)">
+                <i class="bi bi-chevron-left" aria-hidden="true"></i>
               </button>
             </li>
 
             @for (pageNumber of totalPagesArray; track pageNumber) {
               <li class="page-item" [class.active]="currentPage() === pageNumber">
-                <button class="page-link shadow-sm" (click)="fetchNews(pageNumber)">
+                <button class="page-link shadow-sm" [attr.aria-label]="'Страница ' + pageNumber" [attr.aria-current]="currentPage() === pageNumber ? 'page' : null" (click)="fetchNews(pageNumber)">
                   {{ pageNumber }}
                 </button>
               </li>
             }
 
             <li class="page-item" [class.disabled]="!paginationMeta().hasNextPage">
-              <button class="page-link shadow-sm" (click)="fetchNews(currentPage() + 1)">
-                <i class="bi bi-chevron-right"></i>
+              <button class="page-link shadow-sm" [disabled]="!paginationMeta().hasNextPage" aria-label="Следваща страница" (click)="fetchNews(currentPage() + 1)">
+                <i class="bi bi-chevron-right" aria-hidden="true"></i>
               </button>
             </li>
 

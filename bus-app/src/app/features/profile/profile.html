@@ -16,31 +16,31 @@
         <div class="profile-card-body">
           <form [formGroup]="editProfileForm" (ngSubmit)="onSave()">
             <div class="mb-3">
-              <label class="form-label small fw-bold">Email</label>
-              <input class="form-control" [class.is-invalid]="isEmailValid" formControlName="email">
+              <label class="form-label small fw-bold" for="profileEmail">Email</label>
+              <input id="profileEmail" class="form-control" [class.is-invalid]="isEmailValid" [attr.aria-invalid]="isEmailValid" formControlName="email">
             </div>
 
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label class="form-label small fw-bold">Име</label>
-                <input class="form-control" [class.is-invalid]="isfirstNameValid" formControlName="first_name">
+                <label class="form-label small fw-bold" for="profileFirstName">Име</label>
+                <input id="profileFirstName" class="form-control" [class.is-invalid]="isfirstNameValid" [attr.aria-invalid]="isfirstNameValid" formControlName="first_name">
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label small fw-bold">Фамилия</label>
-                <input class="form-control" [class.is-invalid]="islastNameValid" formControlName="last_name">
+                <label class="form-label small fw-bold" for="profileLastName">Фамилия</label>
+                <input id="profileLastName" class="form-control" [class.is-invalid]="islastNameValid" [attr.aria-invalid]="islastNameValid" formControlName="last_name">
               </div>
             </div>
 
             <div class="mb-3">
-              <label class="form-label small fw-bold">Телефон</label>
-              <input class="form-control" [class.is-invalid]="isPhoneValid" formControlName="phone_number">
+              <label class="form-label small fw-bold" for="profilePhone">Телефон</label>
+              <input id="profilePhone" class="form-control" [class.is-invalid]="isPhoneValid" [attr.aria-invalid]="isPhoneValid" formControlName="phone_number">
             </div>
 
             <div formGroupName="passwords" class="border-top pt-3 mt-3">
-              <label class="form-label small fw-bold text-muted">Смяна на парола (опционално)</label>
-              <input type="password" class="form-control mb-2" placeholder="Нова парола" formControlName="password">
-              <input type="password" class="form-control" [class.is-invalid]="isPasswordsValid" placeholder="Повтори парола" formControlName="rePassword">
-              @if(isPasswordsValid) { <div class="invalid-feedback small">Паролите не съвпадат!</div> }
+              <label class="form-label small fw-bold text-muted" for="profilePassword">Смяна на парола (опционално)</label>
+              <input id="profilePassword" type="password" class="form-control mb-2" placeholder="Нова парола" formControlName="password">
+              <input id="profileRePassword" type="password" class="form-control" [class.is-invalid]="isPasswordsValid" [attr.aria-invalid]="isPasswordsValid" aria-describedby="profilePasswordError" placeholder="Повтори парола" formControlName="rePassword" aria-label="Повтори парола">
+              @if(isPasswordsValid) { <div class="invalid-feedback small" id="profilePasswordError" role="alert">Паролите не съвпадат!</div> }
             </div>
 
             <button type="submit" class="btn btn-primary w-100 mt-4" [disabled]="editProfileForm.invalid || editProfileForm.pristine">
@@ -68,15 +68,15 @@
           <hr class="profile-hr">
 
           <div class="verification-form">
-            <label class="form-label small fw-bold">Заяви намаление</label>
-            <select class="form-select mb-3" #verifyType>
+            <label class="form-label small fw-bold" for="verifyType">Заяви намаление</label>
+            <select id="verifyType" class="form-select mb-3" #verifyType>
               <option value="student">Студент / Ученик</option>
               <option value="senior">Пенсионер</option>
               <option value="disability">ТЕЛК</option>
             </select>
 
-            <label class="form-label small fw-bold">Документ (Снимка/PDF)</label>
-            <input #fileInput type="file" class="form-control form-control-sm mb-3" (change)="onFileSelected($event)">
+            <label class="form-label small fw-bold" for="verifyFile">Документ (Снимка/PDF)</label>
+            <input id="verifyFile" #fileInput type="file" class="form-control form-control-sm mb-3" (change)="onFileSelected($event)">
 
             <button class="btn btn-outline-primary btn-sm w-100"
                     (click)="submitVerification(verifyType.value)"

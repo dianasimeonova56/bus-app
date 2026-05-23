@@ -78,8 +78,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Дата и Час</label>
-                            <input class="form-control mb-2" type="date" formControlName="date" readonly>
+                            <label class="form-label fw-bold" for="bookingDate">Дата и Час</label>
+                            <input id="bookingDate" class="form-control mb-2" type="date" formControlName="date" readonly aria-label="Дата на пътуване">
                             <div class="p-3 border rounded bg-light text-center">
                                 <span class="d-block fw-bold fs-4">{{currentTrip()?.route?.startHour}}</span>
                                 <small class="text-muted">Пристига: {{ getArrivalTimeForStop(currentTrip()!) }}</small>

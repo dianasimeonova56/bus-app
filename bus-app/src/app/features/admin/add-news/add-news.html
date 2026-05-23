@@ -7,8 +7,8 @@
       <form [formGroup]="newsForm" (ngSubmit)="onSubmit()">
         
         <div class="mb-3">
-          <label class="form-label fw-bold">Заглавие</label>
-          <input type="text" class="form-control" formControlName="title" 
+          <label class="form-label fw-bold" for="newsTitle">Заглавие</label>
+          <input id="newsTitle" type="text" class="form-control" formControlName="title"
                  [class.is-invalid]="newsForm.get('title')?.touched && newsForm.get('title')?.invalid"
                  placeholder="Въведете заглавие на новината...">
           @if(newsForm.get('title')?.touched && newsForm.get('title')?.invalid) {
@@ -18,8 +18,8 @@
 
         <div class="row">
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Категория</label>
-            <select class="form-select" formControlName="category">
+            <label class="form-label fw-bold" for="newsCategory">Категория</label>
+            <select id="newsCategory" class="form-select" formControlName="category">
               @for (cat of categories; track cat) {
                 <option [value]="cat">{{cat}}</option>
               }
@@ -27,15 +27,15 @@
           </div>
 
           <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Изображение (URL)</label>
-            <input type="text" class="form-control" formControlName="imageUrl" 
+            <label class="form-label fw-bold" for="newsImageUrl">Изображение (URL)</label>
+            <input id="newsImageUrl" type="text" class="form-control" formControlName="imageUrl"
                    placeholder="https://example.com/image.jpg">
           </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label fw-bold">Съдържание</label>
-          <textarea class="form-control" formControlName="content" rows="6"
+          <label class="form-label fw-bold" for="newsContent">Съдържание</label>
+          <textarea id="newsContent" class="form-control" formControlName="content" rows="6"
                     [class.is-invalid]="newsForm.get('content')?.touched && newsForm.get('content')?.invalid"
                     placeholder="Напишете детайли тук..."></textarea>
           @if(newsForm.get('content')?.touched && newsForm.get('content')?.invalid) {

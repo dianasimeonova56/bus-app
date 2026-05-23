@@ -30,7 +30,7 @@
                 r.transportOperator }}
                 <div class="action">
                     @if(r.transportOperator?.name === "БургасБус") {
-                    <div class="button button-sm button-blue" routerLink="/booking/{{item._id}}" routerLinkActive="active">Резервирай</div>
+                    <a class="button button-sm button-blue" routerLink="/booking/{{item._id}}" routerLinkActive="active">Резервирай</a>
                     } @else {
                     @if(r.transportOperator?.phoneNumber) {
                     <span><i class="bi bi-info-circle-fill"></i> {{r.transportOperator?.phoneNumber}}</span>
@@ -43,7 +43,10 @@
             </div>
 
             <div class="route-action">
-                <button class="button button-sm button-blue">Спирки и цени</button>
+                <button type="button" class="button button-sm button-blue"
+                        [attr.aria-expanded]="expandedRouteId === item._id"
+                        [attr.aria-controls]="'route-details-' + item._id"
+                        (click)="toggle(item._id); $event.stopPropagation()">Спирки и цени</button>
             </div>
         </div>
 
@@ -58,7 +61,7 @@
         </div>
 
         @if (expandedRouteId === item._id) {
-        <div class="route-details">
+        <div class="route-details" [id]="'route-details-' + item._id">
             <div class="stops-horizontal">
 
                 <div class="times text-blue">

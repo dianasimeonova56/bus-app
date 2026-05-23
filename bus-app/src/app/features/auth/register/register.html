@@ -29,12 +29,14 @@
                     <input id="email"
                            class="form-control"
                            [class.is-invalid]="isEmailValid"
+                           [attr.aria-invalid]="isEmailValid"
+                           aria-describedby="emailError"
                            type="email"
                            autocomplete="email"
                            formControlName="email"
                            placeholder="вашият@gmail.com" />
                     @if (isEmailValid) {
-                        <p class="auth-error">
+                        <p class="auth-error" id="emailError" role="alert">
                             <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                             {{ emailErrorMessage }}
                         </p>
@@ -47,12 +49,14 @@
                         <input id="first_name"
                                class="form-control"
                                [class.is-invalid]="isfirstNameValid"
+                               [attr.aria-invalid]="isfirstNameValid"
+                               aria-describedby="firstNameError"
                                type="text"
                                autocomplete="given-name"
                                formControlName="first_name"
                                placeholder="Иван" />
                         @if (isfirstNameValid) {
-                            <p class="auth-error">
+                            <p class="auth-error" id="firstNameError" role="alert">
                                 <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                                 {{ firstNameErrorMessage }}
                             </p>
@@ -64,12 +68,14 @@
                         <input id="last_name"
                                class="form-control"
                                [class.is-invalid]="islastNameValid"
+                               [attr.aria-invalid]="islastNameValid"
+                               aria-describedby="lastNameError"
                                type="text"
                                autocomplete="family-name"
                                formControlName="last_name"
                                placeholder="Иванов" />
                         @if (islastNameValid) {
-                            <p class="auth-error">
+                            <p class="auth-error" id="lastNameError" role="alert">
                                 <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                                 {{ lastNameErrorMessage }}
                             </p>
@@ -82,12 +88,14 @@
                     <input id="phone_number"
                            class="form-control"
                            [class.is-invalid]="isPhoneValid"
+                           [attr.aria-invalid]="isPhoneValid"
+                           aria-describedby="phoneError"
                            type="tel"
                            autocomplete="tel"
                            formControlName="phone_number"
                            placeholder="+359 88 123 4567" />
                     @if (isPhoneValid) {
-                        <p class="auth-error">
+                        <p class="auth-error" id="phoneError" role="alert">
                             <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                             {{ phoneErrorMessage }}
                         </p>
@@ -100,12 +108,14 @@
                         <input id="password"
                                class="form-control"
                                [class.is-invalid]="isPasswordsValid"
+                               [attr.aria-invalid]="isPasswordsValid"
+                               aria-describedby="regPasswordError"
                                type="password"
                                autocomplete="new-password"
                                formControlName="password"
                                placeholder="Минимум 5 символа" />
                         @if (isPasswordsValid) {
-                            <p class="auth-error">
+                            <p class="auth-error" id="regPasswordError" role="alert">
                                 <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                                 {{ passwordErrorMessage }}
                             </p>
@@ -117,12 +127,14 @@
                         <input id="rePassword"
                                class="form-control"
                                [class.is-invalid]="isPasswordsValid"
+                               [attr.aria-invalid]="isPasswordsValid"
+                               aria-describedby="rePasswordError"
                                type="password"
                                autocomplete="new-password"
                                formControlName="rePassword"
                                placeholder="Повторете паролата" />
                         @if (isPasswordsValid) {
-                            <p class="auth-error">
+                            <p class="auth-error" id="rePasswordError" role="alert">
                                 <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
                                 {{ rePasswordErrorMessage }}
                             </p>
