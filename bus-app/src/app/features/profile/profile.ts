@@ -2,13 +2,13 @@ import { ChangeDetectorRef, Component, ElementRef, inject, OnInit, signal, ViewC
 import { AuthService, BookingsService, VerificationsService } from '../../core/services';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { PopulatedBooking, User } from '../../models';
-import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe } from '@angular/common';
 import { map, Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, DatePipe, AsyncPipe, NgClass],
+  imports: [ReactiveFormsModule, DatePipe, AsyncPipe],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -124,6 +124,36 @@ export class Profile implements OnInit {
         this.cdr.detectChanges();
       });
     }
+  }
+
+  // ----- Booking status helpers -----
+  // The backend may not have run its `passed` cron yet, so derive the effective
+  // status client-side using the trip date. Cancelled always wins.
+  effectiveStatus(booking: PopulatedBooking): 'active' | 'pending' | 'passed' | 'cancelled' {
+    if (booking.status === 'cancelled') return 'cancelled';
+    if (booking.status === 'passed') return 'passed';
+
+    const tripDate = booking.trip?.date ? new Date(booking.trip.date) : null;
+    if (tripDate && tripDate.getTime() < Date.now() - 24 * 60 * 60 * 1000) {
+      return 'passed';
+    }
+
+    if (booking.status === 'pending') return 'pending';
+    return 'active';
+  }
+
+  statusLabel(booking: PopulatedBooking): string {
+    switch (this.effectiveStatus(booking)) {
+      case 'active':    return 'Активна';
+      case 'pending':   return 'Изчаква плащане';
+      case 'passed':    return 'Преминала';
+      case 'cancelled': return 'Отказана';
+    }
+  }
+
+  isPast(booking: PopulatedBooking): boolean {
+    const s = this.effectiveStatus(booking);
+    return s === 'passed' || s === 'cancelled';
   }
 
   private passwordMatchValidator(g: AbstractControl): ValidationErrors | null {

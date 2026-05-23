@@ -1,11 +1,19 @@
-<div class="container my-5">
+<div class="section-wrap profile-page">
+  <header class="profile-header">
+    <p class="profile-eyebrow">Моят профил</p>
+    <h1 class="profile-title">Здравейте, {{ currentUser()?.first_name }}</h1>
+    <p class="profile-subtitle">Управлявайте личните си данни и проследявайте резервациите си.</p>
+  </header>
+
   <div class="row g-4">
+    <!-- LEFT COLUMN: Profile + verification -->
     <div class="col-lg-4">
-      <div class="card shadow-sm border-0 mb-4">
-        <div class="card-header bg-primary text-white py-3">
-          <h5 class="mb-0"><i class="bi bi-person-circle me-2"></i>Лични данни</h5>
-        </div>
-        <div class="card-body">
+      <section class="profile-card mb-4" aria-labelledby="profileFormHeading">
+        <header class="profile-card-head profile-card-head--brand">
+          <i class="bi bi-person-circle" aria-hidden="true"></i>
+          <h2 id="profileFormHeading" class="profile-card-title">Лични данни</h2>
+        </header>
+        <div class="profile-card-body">
           <form [formGroup]="editProfileForm" (ngSubmit)="onSave()">
             <div class="mb-3">
               <label class="form-label small fw-bold">Email</label>
@@ -40,21 +48,24 @@
             </button>
           </form>
         </div>
-      </div>
+      </section>
 
-      <div class="card shadow-sm border-0">
-        <div class="card-header bg-dark text-white py-3">
-          <h5 class="mb-0"><i class="bi bi-patch-check me-2"></i>Удостоверяване</h5>
-        </div>
-        <div class="card-body">
+      <section class="profile-card" aria-labelledby="verificationHeading">
+        <header class="profile-card-head profile-card-head--muted">
+          <i class="bi bi-patch-check" aria-hidden="true"></i>
+          <h2 id="verificationHeading" class="profile-card-title">Удостоверяване</h2>
+        </header>
+        <div class="profile-card-body">
           <div class="mb-3">
-            <label class="small text-muted d-block">Текущ статус:</label>
-            <span class="badge rounded-pill" [ngClass]="currentUser()?.isVerifiedAs !== 'none' ? 'bg-success' : 'bg-secondary'">
+            <p class="profile-label">Текущ статус</p>
+            <span class="verify-badge"
+                  [class.verify-badge--verified]="currentUser()?.isVerifiedAs !== 'none'">
+              <i class="bi" [class.bi-check-circle-fill]="currentUser()?.isVerifiedAs !== 'none'" [class.bi-circle]="currentUser()?.isVerifiedAs === 'none'" aria-hidden="true"></i>
               {{ currentUser()?.isVerifiedAs === 'none' ? 'Стандартен' : (currentUser()?.isVerifiedAs) }}
             </span>
           </div>
 
-          <hr>
+          <hr class="profile-hr">
 
           <div class="verification-form">
             <label class="form-label small fw-bold">Заяви намаление</label>
@@ -63,104 +74,97 @@
               <option value="senior">Пенсионер</option>
               <option value="disability">ТЕЛК</option>
             </select>
-            
+
             <label class="form-label small fw-bold">Документ (Снимка/PDF)</label>
             <input #fileInput type="file" class="form-control form-control-sm mb-3" (change)="onFileSelected($event)">
-            
-            <button class="btn btn-outline-dark btn-sm w-100" 
+
+            <button class="btn btn-outline-primary btn-sm w-100"
                     (click)="submitVerification(verifyType.value)"
                     [disabled]="!selectedFile">
-              Изпрати за преглед
+              <i class="bi bi-upload me-1"></i> Изпрати за преглед
             </button>
           </div>
         </div>
-      </div>
+      </section>
     </div>
 
+    <!-- RIGHT COLUMN: Booking history -->
     <div class="col-lg-8">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-          <h5 class="mb-0 text-primary">История на резервациите</h5>
-          <span class="badge bg-light text-dark border">Общо: {{ (bookings$ | async)?.length || 0 }}</span>
-        </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-              <thead class="table-light text-muted small uppercase">
-                <tr>
-                  <th class="ps-4">Дата & Час</th>
-                  <th>Маршрут</th>
-                  <th>Статус</th>
-                  <th>Цена</th>
-                  <th class="pe-4 text-end">Детайли</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (booking of bookings$ | async; track booking._id) {
-                <tr (click)="toggle(booking._id)" style="cursor: pointer;">
-                  <td class="ps-4">
-                    <div class="fw-bold">{{ booking.trip.date | date:'dd.MM.yyyy' }}</div>
-                    <div class="text-muted small">{{ booking.trip.route.startHour }}</div>
-                  </td>
-                  <td>
-                    <div class="d-flex align-items-center small">
-                      <span class="text-truncate" style="max-width: 100px;">{{ booking.departureStopId.name }}</span>
-                      <i class="bi bi-arrow-right mx-2 text-primary"></i>
-                      <span class="text-truncate" style="max-width: 100px;">{{ booking.destinationStopId.name }}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span class="badge rounded-pill" 
-                          [ngClass]="{'bg-success-subtle text-success border border-success': booking.status === 'confirmed', 
-                                      'bg-danger-subtle text-danger border border-danger': booking.status === 'cancelled', 
-                                      'bg-warning-subtle text-warning-emphasis border border-warning': booking.status === 'pending'}">
-                      {{ booking.status }}
-                    </span>
-                  </td>
-                  <td class="fw-bold text-dark">{{ booking.totalPrice }} €</td>
-                  <td class="pe-4 text-end">
-                    <i class="bi" [class]="expandedBookingId() === booking._id ? 'bi-chevron-up text-primary' : 'bi-chevron-down text-muted'"></i>
-                  </td>
-                </tr>
-                
-                @if (expandedBookingId() === booking._id) {
-                <tr class="table-light">
-                  <td colspan="5" class="p-4 border-start border-primary border-4">
-                    <div class="row g-3">
-                      @for (ticket of booking.tickets; track ticket._id) {
-                      <div class="col-sm-6 col-md-4">
-                        <div class="p-3 bg-white border rounded shadow-xs">
-                          <div class="d-flex justify-content-between">
-                            <span class="fw-bold">Място {{ ticket.seatNumber }}</span>
-                            <span class="text-primary small">{{ ticket.price }} €</span>
-                          </div>
-                        </div>
-                      </div>
-                      }
-                    </div>
-                    @if (booking.status !== 'cancelled') {
-                      <div class="text-end mt-4">
-                        <button class="btn btn-sm btn-outline-danger px-4" (click)="cancelBooking(booking._id); $event.stopPropagation()">
-                          <i class="bi bi-x-circle me-1"></i> Откажи резервация
-                        </button>
-                      </div>
-                    }
-                  </td>
-                </tr>
-                }
-                } @empty {
-                <tr>
-                  <td colspan="5" class="text-center py-5">
-                    <i class="bi bi-calendar-x display-4 text-light d-block mb-3"></i>
-                    <span class="text-muted">Все още нямате направени резервации.</span>
-                  </td>
-                </tr>
-                }
-              </tbody>
-            </table>
+      <section class="profile-card bookings-card" aria-labelledby="bookingsHeading">
+        <header class="profile-card-head profile-card-head--bookings">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-ticket-perforated" aria-hidden="true"></i>
+            <h2 id="bookingsHeading" class="profile-card-title">История на резервациите</h2>
           </div>
-        </div>
-      </div>
+          <span class="bookings-count">Общо: {{ (bookings$ | async)?.length || 0 }}</span>
+        </header>
+
+        <ul class="bookings-list">
+          @for (booking of bookings$ | async; track booking._id) {
+          <li class="booking-item" [class.booking-item--past]="isPast(booking)">
+            <div class="booking-summary"
+                 role="button"
+                 tabindex="0"
+                 [attr.aria-expanded]="expandedBookingId() === booking._id"
+                 (click)="toggle(booking._id!)"
+                 (keydown.enter)="toggle(booking._id!)"
+                 (keydown.space)="toggle(booking._id!); $event.preventDefault()">
+              <div class="booking-date">
+                <span class="booking-date-day">{{ booking.trip.date | date:'dd.MM.yyyy' }}</span>
+                <span class="booking-date-time"><i class="bi bi-clock"></i> {{ booking.trip.route.startHour }}</span>
+              </div>
+
+              <div class="booking-route">
+                <span class="booking-stop">{{ booking.departureStopId.name }}</span>
+                <i class="bi bi-arrow-right booking-arrow" aria-hidden="true"></i>
+                <span class="booking-stop">{{ booking.destinationStopId.name }}</span>
+              </div>
+
+              <span class="booking-status" [attr.data-status]="effectiveStatus(booking)">
+                {{ statusLabel(booking) }}
+              </span>
+
+              <div class="booking-price">{{ booking.totalPrice }} €</div>
+
+              <i class="bi booking-chevron"
+                 [class.bi-chevron-up]="expandedBookingId() === booking._id"
+                 [class.bi-chevron-down]="expandedBookingId() !== booking._id"
+                 aria-hidden="true"></i>
+            </div>
+
+            @if (expandedBookingId() === booking._id) {
+            <div class="booking-detail">
+              <h3 class="booking-detail-heading">Билети</h3>
+              <ul class="tickets-grid">
+                @for (ticket of booking.tickets; track ticket._id) {
+                <li class="ticket-card">
+                  <div class="ticket-card-row">
+                    <span class="ticket-seat">Място {{ ticket.seatNumber }}</span>
+                    <span class="ticket-price">{{ ticket.price }} €</span>
+                  </div>
+                </li>
+                }
+              </ul>
+              @if (!isPast(booking)) {
+              <div class="booking-actions">
+                <button class="btn-cancel-booking"
+                        type="button"
+                        (click)="cancelBooking(booking._id!); $event.stopPropagation()">
+                  <i class="bi bi-x-circle" aria-hidden="true"></i> Откажи резервация
+                </button>
+              </div>
+              }
+            </div>
+            }
+          </li>
+          } @empty {
+          <li class="bookings-empty">
+            <i class="bi bi-calendar-x" aria-hidden="true"></i>
+            <p>Все още нямате направени резервации.</p>
+          </li>
+          }
+        </ul>
+      </section>
     </div>
   </div>
 </div>
