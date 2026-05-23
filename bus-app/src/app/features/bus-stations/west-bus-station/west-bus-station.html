@@ -1,20 +1,27 @@
-<div class="container">
-    <div class="row">
-        <h2>Автогара Запад</h2>
-        <div ngTabs>
-            <div ngTabList selectionMode="follow" selectedTab="movie">
-                <div ngTab value="west-departures">Заминаващи</div>
-                <div ngTab value="west-arrivals">Пристигащи</div>
+<div class="section-wrap bus-station-page">
+    <header class="bus-station-header">
+        <p class="bus-station-eyebrow">Автогара</p>
+        <h1 class="bus-station-title">Запад</h1>
+        <p class="bus-station-subtitle">Линии и разписания за пътувания от автогара Запад — Бургас.</p>
+    </header>
+
+    <div ngTabs class="tabs-card">
+        <div ngTabList selectionMode="follow" selectedTab="west-departures" class="tabs-list" aria-label="Посока на пътуване">
+            <div ngTab value="west-departures" class="tab-item">
+                <i class="bi bi-box-arrow-up-right tab-item-icon" aria-hidden="true"></i>
+                <span>Заминаващи</span>
             </div>
-            <div class="sliding-window">
-                <div ngTabPanel value="west-departures">
-                    <ng-template ngTabContent><app-route-data [stationPosition]="'west'"
-                            [routeType]="'departures'"></app-route-data></ng-template>
-                </div>
-                <div ngTabPanel value="west-arrivals">
-                    <ng-template ngTabContent><app-route-data [stationPosition]="'west'"
-                            [routeType]="'arrivals'"></app-route-data></ng-template>
-                </div>
+            <div ngTab value="west-arrivals" class="tab-item">
+                <i class="bi bi-box-arrow-in-down-left tab-item-icon" aria-hidden="true"></i>
+                <span>Пристигащи</span>
+            </div>
+        </div>
+        <div class="tabs-sliding-window">
+            <div ngTabPanel value="west-departures">
+                <ng-template ngTabContent><app-route-data [stationPosition]="'west'" [routeType]="'departures'"></app-route-data></ng-template>
+            </div>
+            <div ngTabPanel value="west-arrivals">
+                <ng-template ngTabContent><app-route-data [stationPosition]="'west'" [routeType]="'arrivals'"></app-route-data></ng-template>
             </div>
         </div>
     </div>

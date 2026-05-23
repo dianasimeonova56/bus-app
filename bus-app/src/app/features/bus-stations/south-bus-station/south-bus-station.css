@@ -1,0 +1,63 @@
+.bus-station-page {
+    padding-top: 32px;
+    padding-bottom: 48px;
+}
+
+.bus-station-header {
+    margin-bottom: 24px;
+}
+
+.bus-station-eyebrow {
+    font-family: var(--font-heading);
+    color: var(--color-blue-100);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.bus-station-title {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: var(--text-5xl);
+    margin: 0 0 8px;
+    line-height: 1.1;
+}
+
+.bus-station-subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    margin: 0;
+    max-width: 60ch;
+}
+
+@media (min-width: 768px) {
+    .bus-station-page {
+        padding-top: 48px;
+        padding-bottom: 64px;
+    }
+
+    .bus-station-header {
+        margin-bottom: 32px;
+    }
+
+    .bus-station-title {
+        font-size: var(--text-6xl);
+    }
+
+    .bus-station-subtitle {
+        font-size: var(--text-lg);
+    }
+}
+
+@media (min-width: 992px) {
+    .bus-station-page {
+        padding-top: 56px;
+    }
+
+    .bus-station-title {
+        font-size: var(--text-7xl);
+    }
+}
