@@ -1,22 +1,43 @@
-<div ngTabs>
-  <div ngTabList selectionMode="follow" selectedTab="south-departures">
-    <div ngTab value="south-departures">Автогара Юг - Заминаващи</div>
-    <div ngTab value="south-arrivals">Автогара Юг - Пристигащи</div>
-    <div ngTab value="west-departures">Автогара Запад - Заминаващи</div>
-    <div ngTab value="west-arrivals">Автогара Запад - Пристигащи</div>
+<div class="section-wrap routes-tabs-wrapper">
+  <div class="station-picker" role="radiogroup" aria-label="Изберете автогара">
+    <button type="button"
+            role="radio"
+            class="station-pill"
+            [class.active]="station() === 'south'"
+            [attr.aria-checked]="station() === 'south'"
+            (click)="setStation('south')">
+      <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+      <span>Автогара Юг</span>
+    </button>
+    <button type="button"
+            role="radio"
+            class="station-pill"
+            [class.active]="station() === 'west'"
+            [attr.aria-checked]="station() === 'west'"
+            (click)="setStation('west')">
+      <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+      <span>Автогара Запад</span>
+    </button>
   </div>
-  <div class="sliding-window">
-    <div ngTabPanel value="south-departures">
-      <ng-template ngTabContent><app-route-data [stationPosition]="'south'" [routeType]="'departures'"></app-route-data></ng-template>
+
+  <div ngTabs class="tabs-card">
+    <div ngTabList selectionMode="follow" selectedTab="departures" class="tabs-list" aria-label="Посока на пътуване">
+      <div ngTab value="departures" class="tab-item">
+        <i class="bi bi-box-arrow-up-right tab-item-icon" aria-hidden="true"></i>
+        <span>Заминаващи</span>
+      </div>
+      <div ngTab value="arrivals" class="tab-item">
+        <i class="bi bi-box-arrow-in-down-left tab-item-icon" aria-hidden="true"></i>
+        <span>Пристигащи</span>
+      </div>
     </div>
-    <div ngTabPanel value="south-arrivals">
-      <ng-template ngTabContent><app-route-data [stationPosition]="'south'" [routeType]="'arrivals'"></app-route-data></ng-template>
-    </div>
-    <div ngTabPanel value="west-departures">
-      <ng-template ngTabContent><app-route-data [stationPosition]="'west'" [routeType]="'departures'"></app-route-data></ng-template>
-    </div>
-    <div ngTabPanel value="west-arrivals">
-      <ng-template ngTabContent><app-route-data [stationPosition]="'west'" [routeType]="'arrivals'"></app-route-data></ng-template>
+    <div class="tabs-sliding-window">
+      <div ngTabPanel value="departures">
+        <ng-template ngTabContent><app-route-data [stationPosition]="station()" [routeType]="'departures'"></app-route-data></ng-template>
+      </div>
+      <div ngTabPanel value="arrivals">
+        <ng-template ngTabContent><app-route-data [stationPosition]="station()" [routeType]="'arrivals'"></app-route-data></ng-template>
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,19 @@
+.route-data-wrap {
+    padding: 20px 16px 8px;
+}
+
+.view-all-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0 4px;
+}
+
+@media (min-width: 768px) {
+    .route-data-wrap {
+        padding: 28px 24px 12px;
+    }
+
+    .view-all-wrap {
+        padding: 32px 0 8px;
+    }
+}

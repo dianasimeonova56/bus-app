@@ -1,62 +1,96 @@
 :host {
-  display: flex;
-  justify-content: center;
-}
-[ngTabs] {
-  overflow: hidden;
-  border-radius: 0.5rem;
-}
-[ngTabList] {
-  padding: 0;
-  display: flex;
-  list-style: none;
-  position: relative;
-}
-[ngTab] {
-  flex: 1;
-  outline: none;
-  padding: 30px;
-  cursor: pointer;
-  text-align: center;
-}
-[ngTab][aria-selected='false']:focus {
-  outline-offset: -8px;
-  border-radius: 0.7rem;
-  outline: 2px solid var(--bright-blue);
-}
-[ngTab][aria-selected='true'] {
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-}
-.sliding-window {
-  width: 400%;
-  display: flex;
-  transition: all 0.2s ease-in-out;
+  display: block;
+  width: 100%;
 }
 
-[ngTabList]:has([ngTab]:nth-child(1)[aria-selected='true']) ~ .sliding-window {
-  transform: translateX(0%);
+.routes-tabs-wrapper {
+  /* width/max-width/horizontal padding come from .section-wrap */
+  margin-top: 32px;
 }
-[ngTabList]:has([ngTab]:nth-child(2)[aria-selected='true']) ~ .sliding-window {
-  transform: translateX(-25%);
-}
-[ngTabList]:has([ngTab]:nth-child(3)[aria-selected='true']) ~ .sliding-window {
-  transform: translateX(-50%);
-}
-[ngTabList]:has([ngTab]:nth-child(4)[aria-selected='true']) ~ .sliding-window {
-  transform: translateX(-75%);
-}
-[ngTabPanel] {
+
+/* ---------- STATION PICKER (segmented pill toggle) ---------- */
+.station-picker {
   display: grid;
-  place-items: center;
-  min-height: 100px;
-  border-bottom-right-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
-  width: 25%;
-  place-items: center;
-  min-height: 100px;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 6px;
+  background: var(--color-brand-tint-06);
+  border-radius: var(--radius-2xl);
+  margin-bottom: 16px;
+  box-shadow: inset 0 1px 2px var(--color-brand-tint-06);
 }
-[ngTabPanel]:focus {
-  outline-offset: -4px;
-  border-radius: 0.5rem;
+
+.station-pill {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--color-blue-100);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: var(--text-base);
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.station-pill i {
+  font-size: var(--text-lg);
+  opacity: 0.75;
+}
+
+.station-pill:hover:not(.active) {
+  background-color: var(--color-brand-tint-06);
+}
+
+.station-pill:active {
+  transform: scale(0.98);
+}
+
+.station-pill.active {
+  background-color: var(--color-blue-100);
+  color: var(--color-white);
+  box-shadow: var(--shadow-pill-active);
+}
+
+.station-pill.active i {
+  opacity: 1;
+}
+
+.station-pill:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---------- TABLET ---------- */
+@media (min-width: 768px) {
+  .station-picker {
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+  }
+
+  .station-pill {
+    font-size: var(--text-md);
+    padding: 14px 18px;
+  }
+}
+
+/* ---------- DESKTOP ---------- */
+@media (min-width: 992px) {
+  .station-picker {
+    max-width: 560px;
+    margin-bottom: 24px;
+  }
+
+  .station-pill {
+    padding: 14px 22px;
+  }
 }

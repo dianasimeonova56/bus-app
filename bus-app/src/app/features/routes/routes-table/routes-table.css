@@ -1,163 +1,515 @@
 .routes-list {
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid #eee;
+    background: transparent;
+    border-radius: var(--radius-xl);
+    overflow: visible;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
-/* SUMMARY ROW */
+/* ---------- MOBILE-FIRST: each route is a card ---------- */
 .route-row {
     display: grid;
-    grid-template-columns: 140px 1fr 80px 200px 120px;
-    align-items: center;
-    padding: 14px 18px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+        "time"
+        "path"
+        "operator"
+        "action";
+    row-gap: 15px;
+    align-items: stretch;
+    padding: 14px 16px 16px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-bottom: none;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    box-shadow: var(--shadow-card);
     cursor: pointer;
-    transition: background 0.2s;
-}
-
-.route-row:first-of-type {
-    border-bottom: 1px solid #eee;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    min-height: 44px;
 }
 
 .route-row:hover {
-    background: #f8f9fa;
+    border-color: var(--color-brand-tint-25);
+}
+
+.route-row:active {
+    transform: scale(0.99);
+}
+
+/* Hide the column-header row on mobile */
+.route-row.header {
+    display: none;
 }
 
 .route-time {
+    grid-area: time;
+    font-family: var(--font-heading);
     font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--color-blue-100);
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-divider);
+}
+
+.route-time i {
+    font-size: var(--text-base);
+    opacity: 0.55;
 }
 
 .route-path {
-    font-weight: 500;
+    grid-area: path;
+    font-weight: 600;
+    font-size: var(--text-md);
+    color: var(--color-text);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.route-path i {
+    font-size: var(--text-sm);
+    opacity: 0.55;
+    color: var(--color-blue-100);
 }
 
 .route-sector {
-    text-align: center;
-    font-size: 14px;
+    /* Hidden on mobile; visible in card-footer area instead */
+    display: none;
+    grid-area: sector;
 }
 
 .route-operator {
-    font-size: 14px;
-    color: #555;
+    grid-area: operator;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 8px;
+    border-top: 1px dashed var(--color-divider);
+}
+
+.route-operator > i {
+    color: var(--color-blue-100);
+    font-size: var(--text-lg);
+}
+
+.route-operator .action {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .route-action {
-    text-align: right;
+    grid-area: action;
+    text-align: left;
+    margin-top: 2px;
 }
 
-/* DETAILS */
+.route-action .button {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ---------- DETAILS ---------- */
 .route-details {
-    padding: 20px 32px;
-    background: #fafafa;
-    border-bottom: 1px solid #eee;
+    padding: 14px 16px 16px;
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-border);
+    border-top: none;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-card);
 }
 
 .stops-horizontal {
     display: flex;
-    align-items: center;
-    gap: 100px;
+    flex-direction: column;
+    gap: 0;
     position: relative;
 }
 
 .stops {
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    gap: 14px;
+    order: 2;
+    position: relative;
+    padding-left: 24px;
+    font-size: var(--text-sm);
+}
+
+/* Vertical timeline backbone */
+.stops::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 7px;
+    width: 2px;
+    background: var(--color-blue-100);
+    opacity: 0.22;
+    border-radius: var(--radius-sm);
 }
 
 .stop {
     display: flex;
     flex-direction: column;
-    min-width: 120px;
+    min-width: 0;
+    position: relative;
+    font-size: var(--text-sm);
+    line-height: 1.35;
+}
+
+/* Dot per stop, sitting on the timeline */
+.stop::before {
+    content: "";
+    position: absolute;
+    left: -22px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-white);
+    border: 2px solid var(--color-blue-100);
+    box-shadow: 0 0 0 3px var(--color-brand-tint-08);
+}
+
+/* Stronger dots for start/end (first and last .stop) */
+.stops > .stop:first-child::before,
+.stops > .stop:last-child::before {
+    background: var(--color-blue-100);
+    width: 14px;
+    height: 14px;
+    left: -23px;
+    top: 3px;
+}
+
+.stop .name {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--color-text);
 }
 
 .stop .time {
     font-weight: 600;
+    font-size: var(--text-xs);
+    color: var(--color-blue-100);
 }
 
 .stop .sector {
-    font-size: 12px;
-    color: #666;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: 2px;
+}
+
+.stop.intermediate {
+    align-items: flex-start;
+}
+
+.stop.intermediate .data {
+    gap: 2px;
 }
 
 .times {
-    display: flex;
-    flex-direction: column;
-    gap: 36px;
+    display: none; /* hidden on mobile — times not surfaced in compact view */
 }
 
 .buy-button {
     display: inline-flex;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(-20px);
-    transition: all 0.4s ease-out;
+    margin-top: 6px;
     max-height: fit-content;
+    align-self: flex-start;
 }
 
-.intermediate:hover .buy-button {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
-
+/* The legacy in-HTML connecting-line dots/lines — hidden in favor of pseudo timeline */
 .connecting-line {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 120px;
-    width: 20px;
+    display: none;
 }
 
-.connecting-line .point.departure {
-    position: absolute;
-    top: 0;
-    width: 20px;
-    height: 20px;
-}
-
-.connecting-line .point.arrival {
-    position: absolute;
-    bottom: 0;
-    width: 20px;
-    height: 20px;
-}
-
-.connecting-line .line {
-    position: absolute;
-    top: 19px;
-    bottom: 16px;
-    width: 1px;
-    background-color: var(--color-blue-100);
-    left: 7px;
-}
-
-.connecting-line .line::first-of-type {
-    top: 13px;
-}
-
-/* META */
-.route-meta {
-    margin-top: 16px;
-    display: flex;
-    gap: 24px;
-    font-size: 13px;
-}
-
+/* ---------- META ROW ---------- */
 .route-meta-inline {
     display: flex;
-    align-items: flex-end;
-    gap: 24px;
-    padding: 0 18px 12px 18px;
-    font-size: 13px;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 16px 12px;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-top: 1px dashed var(--color-divider);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    margin-top: 0;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-card);
 }
 
-.route-meta-inline:not(:last-of-type) {
-    border-bottom: 1px solid #eee;
+.route-meta-inline .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+/* If a details panel follows, drop the rounded bottom and let details finish the card */
+.route-meta-inline:has(+ .route-details) {
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: none;
 }
 
 .route-meta-inline i {
-    margin-right: 6px;
-    font-size: 14px;
+    font-size: var(--text-sm);
+    color: var(--color-blue-100);
+}
+
+/* ---------- TABLET ---------- */
+@media (min-width: 768px) {
+    .route-row {
+        grid-template-columns: auto 1fr auto auto;
+        grid-template-areas: "time path operator action";
+        column-gap: 18px;
+        row-gap: 0;
+        padding: 18px 22px;
+        align-items: center;
+    }
+
+    .route-time {
+        padding-bottom: 0;
+        border-bottom: none;
+        font-size: var(--text-lg);
+    }
+
+    .route-action {
+        margin-top: 0;
+        text-align: right;
+    }
+
+    .route-action .button {
+        width: auto;
+    }
+
+    .route-operator {
+        font-size: var(--text-base);
+        justify-content: flex-end;
+        text-align: right;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .route-operator .action {
+        margin-left: 8px;
+    }
+}
+
+/* ---------- DESKTOP: original grid table layout ---------- */
+@media (min-width: 992px) {
+    .routes-list {
+        background: var(--color-white);
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        border: 1px solid var(--color-border);
+        gap: 0;
+        box-shadow: var(--shadow-card-md);
+    }
+
+    .route-row {
+        display: grid;
+        grid-template-columns: 140px 1fr 80px 200px 120px;
+        grid-template-areas: "time path sector operator action";
+        align-items: center;
+        padding: 16px 20px;
+        background: var(--color-white);
+        border: none;
+        border-bottom: 1px solid var(--color-divider);
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .route-row.header {
+        display: grid;
+        grid-template-areas: none;
+        background: var(--color-brand-tint-04);
+        color: var(--color-blue-100);
+        font-family: var(--font-heading);
+        font-weight: 600;
+        font-size: var(--text-sm);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: default;
+    }
+
+    .route-row.header > div {
+        padding: 0;
+    }
+
+    .route-row:not(.header):hover {
+        background: var(--color-brand-tint-03);
+        border-color: var(--color-divider);
+        transform: none;
+        box-shadow: none;
+    }
+
+    .route-time {
+        border-right: none;
+        border-bottom: none;
+        padding: 0;
+        font-size: var(--text-md);
+    }
+
+    .route-path {
+        font-size: var(--text-base);
+        font-weight: 500;
+    }
+
+    .route-path i {
+        color: var(--color-text-muted);
+    }
+
+    .route-sector {
+        display: block;
+        grid-area: sector;
+        text-align: center;
+        font-size: var(--text-base);
+        color: var(--color-text-muted);
+    }
+
+    .route-operator {
+        font-size: var(--text-base);
+        color: var(--color-text-muted);
+        justify-content: flex-start;
+        text-align: left;
+        flex-wrap: nowrap;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .route-operator > i {
+        font-size: var(--text-base);
+    }
+
+    .route-operator .action {
+        margin-left: 8px;
+    }
+
+    .route-action {
+        text-align: right;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+    }
+
+    .route-action .button {
+        width: auto;
+    }
+
+    /* expanded details — restore horizontal stops layout */
+    .route-details {
+        padding: 20px 32px;
+        background: var(--color-bg-soft);
+        border: none;
+        border-bottom: 1px solid var(--color-divider);
+        border-radius: 0;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .stops-horizontal {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 100px;
+    }
+
+    .stops {
+        gap: 36px;
+        order: 0;
+        padding-left: 28px;
+        font-size: var(--text-base);
+    }
+
+    /* pseudo timeline stays on desktop too — line + dots per stop */
+    .stops::before {
+        top: 8px;
+        bottom: 8px;
+        left: 9px;
+        width: 2px;
+    }
+
+    .stop::before {
+        top: 6px;
+        left: -25px;
+        width: 14px;
+        height: 14px;
+    }
+
+    .stops > .stop:first-child::before,
+    .stops > .stop:last-child::before {
+        width: 16px;
+        height: 16px;
+        left: -26px;
+        top: 5px;
+    }
+
+    .stop .name {
+        font-size: var(--text-base);
+    }
+
+    .stop .time {
+        font-size: var(--text-base);
+        color: inherit;
+    }
+
+    .times {
+        display: flex;
+        flex-direction: column;
+        gap: 36px;
+    }
+
+    .buy-button {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-20px);
+        transition: all 0.4s ease-out;
+        margin-top: 0;
+    }
+
+    .intermediate:hover .buy-button {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
+
+    /* legacy in-HTML connecting-line stays hidden; pseudo timeline above handles it */
+
+    .route-meta-inline {
+        padding: 14px 20px;
+        font-size: var(--text-sm);
+        margin: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .route-meta-inline:not(:last-of-type) {
+        border-bottom: 1px solid var(--color-divider);
+    }
+
+    .route-meta-inline:has(+ .route-details) {
+        border-radius: 0;
+        margin: 0;
+        box-shadow: none;
+        border-bottom: none;
+    }
 }

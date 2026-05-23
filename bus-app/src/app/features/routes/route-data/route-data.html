@@ -1,12 +1,8 @@
-<div class="container">
-    <h2 class="text-center my-5">
-        {{ routeType === 'departures' ? 'Заминаващи' : 'Пристигащи' }}
-    </h2>
-
+<div class="route-data-wrap">
     @if(!onHomePage)
     {
-    <form [formGroup]="routeFilter" class="row mb-5 d-flex justify-content-between" (ngSubmit)="onSubmit()">
-        <div class="col-2">
+    <form [formGroup]="routeFilter" class="row g-3 mb-5 align-items-end" (ngSubmit)="onSubmit()">
+        <div class="col-12 col-sm-6 col-lg">
             <select class="form-select" formControlName="stop">
                 <option value="">Изберете спирка</option>
                 @for (stop of allStops$ | async; track stop._id) {
@@ -15,7 +11,7 @@
             </select>
         </div>
 
-        <div class="col-2">
+        <div class="col-12 col-sm-6 col-lg">
             <select class="form-select" formControlName="transportOperator">
                 <option value="">Оператор</option>
                 @for (operator of operators$ | async; track operator._id) {
@@ -24,15 +20,15 @@
             </select>
         </div>
 
-        <div class="col-2 align-self-center">
+        <div class="col-12 col-sm-6 col-lg">
             <input type="date" class="form-control" formControlName="date">
         </div>
 
-        <div class="col-2 align-self-center time-picker">
+        <div class="col-12 col-sm-6 col-lg time-picker">
             <input type="time" class="form-control" formControlName="time">
         </div>
 
-        <div class="col-2">
+        <div class="col-12 col-lg-auto">
             <button type="submit" class="btn btn-primary w-100">Търси</button>
         </div>
     </form>
@@ -40,25 +36,38 @@
 
     <app-routes-table [data]="results" [searchedStopId]="stopId"></app-routes-table>
     @if (onHomePage) {
-    <div class="text-center mt-3">
-        <a [routerLink]="['/bus-stations', stationPosition]" class="btn btn-link">Виж пълното разписание</a>
+    <div class="view-all-wrap">
+        <a [routerLink]="['/bus-stations', stationPosition]" class="view-all-link">
+            <span>Виж пълното разписание</span>
+            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
     </div>
     }
     @if (!onHomePage && paginationMeta && paginationMeta.totalPages > 1) {
-    <div class="d-flex justify-content-center align-items-center gap-3 my-4">
-        <button class="btn btn-outline-primary" [disabled]="!paginationMeta.hasPrevPage"
-            (click)="onPageChange(currentPage - 1)">
-            <i class="bi bi-chevron-left"></i> Предишна
+    <nav class="pagination-wrap" aria-label="Пагинация">
+        <button class="pagination-btn prev"
+                type="button"
+                [disabled]="!paginationMeta.hasPrevPage"
+                (click)="onPageChange(currentPage - 1)"
+                aria-label="Предишна страница">
+            <i class="bi bi-chevron-left" aria-hidden="true"></i>
+            <span>Предишна</span>
         </button>
 
-        <span class="fw-bold">
-            Страница {{ currentPage }} от {{ paginationMeta.totalPages }}
+        <span class="pagination-info" aria-live="polite">
+            <span class="pagination-current">{{ currentPage }}</span>
+            <span class="pagination-sep">/</span>
+            <span class="pagination-total">{{ paginationMeta.totalPages }}</span>
         </span>
 
-        <button class="btn btn-outline-primary" [disabled]="!paginationMeta.hasNextPage"
-            (click)="onPageChange(currentPage + 1)">
-            Следваща <i class="bi bi-chevron-right"></i>
+        <button class="pagination-btn next"
+                type="button"
+                [disabled]="!paginationMeta.hasNextPage"
+                (click)="onPageChange(currentPage + 1)"
+                aria-label="Следваща страница">
+            <span>Следваща</span>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
         </button>
-    </div>
+    </nav>
     }
 </div>

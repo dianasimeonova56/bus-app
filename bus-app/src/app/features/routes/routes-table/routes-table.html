@@ -47,14 +47,14 @@
             </div>
         </div>
 
-        <div class="route-meta-inline mt-2 text-blue">
+        <div class="route-meta-inline">
             @if (isTrip(item)) {
-            <div class="me-3 fw-bold">
+            <div class="meta-item fw-bold">
                 <i class="bi bi-calendar-event"></i> {{ item.date | date:'dd.MM.yyyy' }}
             </div>
             }
-            <div><i class="bi bi-clock"></i> {{ r.duration }}</div>
-            <div><i class="bi bi-geo-alt"></i> {{ r.distance }} км</div>
+            <div class="meta-item"><i class="bi bi-clock"></i> {{ r.duration }}</div>
+            <div class="meta-item"><i class="bi bi-geo-alt"></i> {{ r.distance }} км</div>
         </div>
 
         @if (expandedRouteId === item._id) {
