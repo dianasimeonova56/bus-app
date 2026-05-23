@@ -40,11 +40,11 @@ export class Login {
 
   get emailErrorMessage(): string {
     if (this.email?.errors?.['required']) {
-      return 'Email is required!';
+      return 'Имейлът е задължителен.';
     }
 
     if (this.email?.errors?.['pattern']) {
-      return 'Email is not valid!';
+      return 'Невалиден имейл адрес.';
     }
 
     return '';
@@ -52,11 +52,11 @@ export class Login {
 
   get passwordErrorMessage(): string {
     if (this.password?.errors?.['required']) {
-      return 'Password is required!';
+      return 'Паролата е задължителна.';
     }
 
     if (this.password?.errors?.['minlength']) {
-      return 'Password must be at least 5 characters!';
+      return 'Паролата трябва да е поне 5 символа.';
     }
 
     return '';

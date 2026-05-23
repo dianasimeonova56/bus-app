@@ -79,11 +79,11 @@ export class Register {
 
   get emailErrorMessage(): string {
     if (this.email?.errors?.['required']) {
-      return 'Email is required!';
+      return 'Имейлът е задължителен.';
     }
 
     if (this.email?.errors?.['pattern']) {
-      return 'Email is not valid!';
+      return 'Невалиден имейл адрес.';
     }
 
     return '';
@@ -91,11 +91,11 @@ export class Register {
 
   get firstNameErrorMessage(): string {
     if (this.first_name?.errors?.['required']) {
-      return 'First name is required!';
+      return 'Името е задължително.';
     }
 
     if (this.first_name?.errors?.['minlength']) {
-      return 'First name must be at least 3 chars!';
+      return 'Името трябва да е поне 3 символа.';
     }
 
     return '';
@@ -103,11 +103,11 @@ export class Register {
 
   get lastNameErrorMessage(): string {
     if (this.last_name?.errors?.['required']) {
-      return 'Last name is required!';
+      return 'Фамилията е задължителна.';
     }
 
     if (this.last_name?.errors?.['minlength']) {
-      return 'Last name must be at least 3 chars!';
+      return 'Фамилията трябва да е поне 3 символа.';
     }
 
     return '';
@@ -115,11 +115,11 @@ export class Register {
 
   get phoneErrorMessage(): string {
     if (this.phone_number?.errors?.['required']) {
-      return 'Phone is required!';
+      return 'Телефонът е задължителен.';
     }
 
     if (this.phone_number?.errors?.['pattern']) {
-      return 'Phone is not valid!';
+      return 'Невалиден телефонен номер.';
     }
 
     return '';
@@ -127,35 +127,31 @@ export class Register {
 
   get passwordErrorMessage(): string {
     if (this.password?.errors?.['required']) {
-      return 'Password is required!';
+      return 'Паролата е задължителна.';
     }
 
     if (this.password?.errors?.['minlength']) {
-      return 'Password must be at least 5 characters!';
+      return 'Паролата трябва да е поне 5 символа.';
     }
 
     if (this.password?.errors?.['pattern']) {
-      return 'Password is not valid!';
+      return 'Паролата може да съдържа само латински букви и цифри.';
     }
 
-    if (this.password?.errors?.['passwordMismatch']) {
-      return 'Passwords do not match!';
+    if (this.passwords?.errors?.['passwordMismatch']) {
+      return 'Паролите не съвпадат.';
     }
 
     return '';
   }
 
   get rePasswordErrorMessage(): string {
-    if (this.password?.errors?.['required']) {
-      return 'Password is required!';
+    if (this.rePassword?.errors?.['required']) {
+      return 'Повторете паролата.';
     }
 
-    if (this.password?.errors?.['minlength']) {
-      return 'Password must be at least 5 characters!';
-    }
-
-    if (this.password?.errors?.['passwordMismatch']) {
-      return 'Passwords do not match!';
+    if (this.passwords?.errors?.['passwordMismatch']) {
+      return 'Паролите не съвпадат.';
     }
 
     return '';
