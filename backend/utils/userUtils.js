@@ -1,5 +1,4 @@
 import { JWT_SECRET } from '../index.js';
-import util from 'util';
 import jsonwebtoken from '../lib/jsonwebtoken.js';
 
 export async function generateAuthToken(user) {

@@ -1,3 +1,4 @@
 node_modules/
 .env
 stripe_1.37.1_windows_i386
+.claude
