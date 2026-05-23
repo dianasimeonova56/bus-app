@@ -1,10 +1,157 @@
 /* You can add global styles to this file, and also import other style files */
 :root {
+    /* ---------- Brand palette ---------- */
     --color-blue-100: #393185;
     --color-blue-200: #414bd4;
+    --color-blue-900: #2a2360;
+    --color-blue-950: #1b1645;
     --color-white: #FFFFFF;
+
+    /* ---------- Neutrals ---------- */
+    --color-text: #2a2a3a;
+    --color-text-muted: #5a5a72;
+    --color-text-soft: #4a4a66;
+    --color-bg-soft: #fafbfd;
+    --color-border: #e9eaf2;
+    --color-divider: #eef0f7;
+
+    /* ---------- Brand tints (rgba so they composite over light surfaces) ---------- */
+    --color-brand-tint-03: rgba(57, 49, 133, 0.03);
+    --color-brand-tint-04: rgba(57, 49, 133, 0.04);
+    --color-brand-tint-06: rgba(57, 49, 133, 0.06);
+    --color-brand-tint-08: rgba(57, 49, 133, 0.08);
+    --color-brand-tint-25: rgba(57, 49, 133, 0.25);
+
+    /* ---------- Atmospheric / glow stops ---------- */
+    --color-blue-glow: rgba(65, 75, 212, 0.35);
+    --color-overlay-dark: rgba(0, 0, 0, 0.25);
+    --color-overlay-dark-strong: rgba(0, 0, 0, 0.45);
+
+    /* ---------- On-dark surfaces (footer, hero text) ---------- */
+    --color-on-dark: rgba(255, 255, 255, 0.78);
+    --color-on-dark-muted: rgba(255, 255, 255, 0.65);
+    --color-on-dark-soft: rgba(255, 255, 255, 0.55);
+    --color-on-dark-faint: rgba(255, 255, 255, 0.10);
+    --color-on-dark-chip-bg: rgba(255, 255, 255, 0.08);
+    --color-footer-focus: rgba(255, 255, 255, 0.5);
+
+    /* ---------- Shadows ---------- */
+    --shadow-card: 0 2px 8px rgba(57, 49, 133, 0.04);
+    --shadow-card-md: 0 4px 16px rgba(57, 49, 133, 0.05);
+    --shadow-card-hover: 0 6px 18px rgba(57, 49, 133, 0.12);
+    --shadow-elevated: 0 10px 30px rgba(57, 49, 133, 0.08);
+    --shadow-button: 0 6px 14px rgba(57, 49, 133, 0.28);
+    --shadow-button-outline: 0 4px 12px rgba(57, 49, 133, 0.10);
+    --shadow-button-hover: 0 10px 22px rgba(57, 49, 133, 0.32);
+    --shadow-button-press: 0 3px 8px rgba(57, 49, 133, 0.25);
+    --shadow-pill-active: 0 4px 12px rgba(57, 49, 133, 0.25);
+    --shadow-marquee-inset: inset 0 2px 6px rgba(0, 0, 0, 0.18);
+
+    /* ---------- Gradients ---------- */
+    --gradient-brand-bar: linear-gradient(90deg, var(--color-blue-100) 0%, var(--color-blue-200) 100%);
+    --gradient-brand-bar-center: linear-gradient(90deg, var(--color-blue-100) 0%, var(--color-blue-200) 50%, var(--color-blue-100) 100%);
+    --gradient-tab-bg: linear-gradient(180deg, var(--color-brand-tint-04) 0%, rgba(57, 49, 133, 0) 100%);
+    --gradient-hero-overlay: linear-gradient(135deg, rgba(57, 49, 133, 0.75) 0%, rgba(57, 49, 133, 0.35) 45%, var(--color-overlay-dark) 100%);
+    --gradient-hero-glow: radial-gradient(ellipse at 20% 80%, var(--color-blue-glow) 0%, transparent 55%), linear-gradient(180deg, transparent 60%, var(--color-overlay-dark-strong) 100%);
+    --gradient-footer-bg: radial-gradient(ellipse at 0% 0%, var(--color-blue-glow) 0%, transparent 55%), linear-gradient(180deg, var(--color-blue-900) 0%, var(--color-blue-950) 100%);
+
+    /* ---------- Focus ring ---------- */
+    --focus-ring: 3px solid var(--color-blue-200);
+
+    /* ---------- Layout ---------- */
+    --header-height: 64px;
+
+    /* ---------- Border radius scale ---------- */
+    --radius-sm: 6px;       /* small badges, dropdown items */
+    --radius-md: 8px;       /* nav links, dropdown menus inside cards */
+    --radius-lg: 10px;      /* toggler, small pills */
+    --radius-xl: 12px;      /* default card radius */
+    --radius-2xl: 14px;     /* large cards (news, station-picker) */
+    --radius-3xl: 16px;     /* feature cards (tabs-card) */
+    --radius-pill: 999px;   /* pills, pagination, view-all */
+
+    /* ---------- Type scale ---------- */
+    --text-xs: 12px;        /* eyebrow, badge, copyright */
+    --text-sm: 13px;        /* small muted, meta */
+    --text-base: 14px;      /* body text, links */
+    --text-md: 15px;        /* body large, card body */
+    --text-lg: 16px;        /* card title small, larger links */
+    --text-xl: 18px;        /* brand name, accent number */
+    --text-2xl: 20px;       /* route-time, tab icon */
+    --text-3xl: 24px;       /* h3 / section subhead */
+    --text-4xl: 28px;       /* h2 mobile, news section title */
+    --text-5xl: 32px;       /* h2 desktop, bus-station mobile */
+    --text-6xl: 40px;       /* large headings tablet */
+    --text-7xl: 48px;       /* hero-style heading desktop */
+
+    /* ---------- Fonts ---------- */
     --font-heading: "Exo 2", sans-serif;
     --font-body: "Inter", sans-serif;
+
+    /* ---------- Bootstrap CSS-var overrides ----------
+       Bootstrap 5 reads these at runtime, so utilities like .text-primary,
+       .btn-primary, .border-primary, .bg-primary etc. become brand-purple
+       and inherit our radius / fonts without an SCSS rebuild. */
+    --bs-primary: var(--color-blue-100);
+    --bs-primary-rgb: 57, 49, 133;
+    --bs-link-color: var(--color-blue-100);
+    --bs-link-color-rgb: 57, 49, 133;
+    --bs-link-hover-color: var(--color-blue-200);
+    --bs-body-color: var(--color-text);
+    --bs-body-color-rgb: 42, 42, 58;
+    --bs-body-font-family: var(--font-body);
+    /* Intentionally NOT overriding --bs-heading-color so headings stay
+       `color: inherit` — needed for the hero h1 to read white on the image. */
+    --bs-border-color: var(--color-border);
+    --bs-border-radius: var(--radius-xl);
+    --bs-border-radius-sm: var(--radius-md);
+    --bs-border-radius-lg: var(--radius-2xl);
+    --bs-focus-ring-color: var(--color-brand-tint-25);
+}
+
+/* ---------- Bootstrap .btn-primary remapped to brand purple ----------
+   Bootstrap's button colors live on button-scoped CSS vars (--bs-btn-bg etc.),
+   not on --bs-primary, so they need a separate override. */
+.btn-primary {
+    --bs-btn-color: var(--color-white);
+    --bs-btn-bg: var(--color-blue-100);
+    --bs-btn-border-color: var(--color-blue-100);
+    --bs-btn-hover-color: var(--color-white);
+    --bs-btn-hover-bg: var(--color-blue-200);
+    --bs-btn-hover-border-color: var(--color-blue-200);
+    --bs-btn-focus-shadow-rgb: 57, 49, 133;
+    --bs-btn-active-color: var(--color-white);
+    --bs-btn-active-bg: var(--color-blue-100);
+    --bs-btn-active-border-color: var(--color-blue-100);
+    --bs-btn-disabled-color: var(--color-white);
+    --bs-btn-disabled-bg: var(--color-blue-100);
+    --bs-btn-disabled-border-color: var(--color-blue-100);
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--color-blue-100);
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: var(--color-blue-100);
+    --bs-btn-hover-color: var(--color-white);
+    --bs-btn-hover-bg: var(--color-blue-100);
+    --bs-btn-hover-border-color: var(--color-blue-100);
+    --bs-btn-focus-shadow-rgb: 57, 49, 133;
+    --bs-btn-active-color: var(--color-white);
+    --bs-btn-active-bg: var(--color-blue-100);
+    --bs-btn-active-border-color: var(--color-blue-100);
+    --bs-btn-disabled-color: var(--color-blue-100);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--color-blue-100);
+}
+
+/* Push page content below the fixed header. The home page (which contains
+   <section id="hero">) opts out so the hero stays flush with the header. */
+main {
+    padding-top: var(--header-height);
+}
+
+main:has(> #hero) {
+    padding-top: 0;
 }
 
 html,
@@ -31,7 +178,7 @@ button {
 
 h1,
 .h1 {
-    font-size: 56px;
+    font-size: var(--text-7xl);
 }
 
 body,
@@ -57,50 +204,662 @@ label {
 }
 
 .button {
-    padding: 15px 30px;
-    border-radius: 12px;
+    padding: 14px 26px;
+    border-radius: var(--radius-xl);
     display: inline-flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
     flex-wrap: nowrap;
-    border-color: transparent;
+    border: 1px solid transparent;
     width: fit-content;
     text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    will-change: transform;
+}
+
+.button:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 3px;
 }
 
 .button-sm {
-    padding: 2px 10px;
-    font-size: 13px;
-    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: var(--text-sm);
+    border-radius: var(--radius-sm);
+    font-weight: 500;
 }
 
 .button-blue {
     background-color: var(--color-blue-100);
     color: var(--color-white);
-    transition: all 0.4s ease;
+    box-shadow: var(--shadow-button);
 }
 
 .button-white {
     background-color: var(--color-white);
     color: var(--color-blue-100);
-    transition: all 0.4s ease;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
 .button-blue:hover {
     background-color: var(--color-white);
     color: var(--color-blue-100);
-    border: 1px solid var(--color-blue-100);
+    border-color: var(--color-blue-100);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
 }
 
 .button-white:hover {
     background-color: var(--color-blue-100);
     color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-button-press);
+}
+
+/* Slightly compact small-button hover so it doesn't jump too much */
+.button-sm:hover {
+    transform: translateY(-1px);
+}
+
+/* ---------- Reusable tab card (home routes-tabs, bus-stations) ---------- */
+.tabs-card {
+    background: var(--color-white);
+    border-radius: var(--radius-3xl);
+    box-shadow: var(--shadow-elevated);
+    overflow: hidden;
+}
+
+.tabs-list {
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    list-style: none;
+    position: relative;
+    background: var(--gradient-tab-bg);
+    border-bottom: 1px solid var(--color-divider);
+}
+
+.tab-item {
+    outline: none;
+    padding: 16px 18px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--color-text-soft);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-md);
+    min-height: 56px;
+    border-bottom: 3px solid transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.tab-item:hover {
+    background-color: var(--color-brand-tint-04);
+    color: var(--color-blue-100);
+}
+
+.tab-item[aria-selected='true'] {
+    color: var(--color-blue-100);
+    background-color: var(--color-brand-tint-08);
+    border-bottom-color: var(--color-blue-100);
+}
+
+.tab-item:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: -3px;
+    border-radius: var(--radius-md);
+}
+
+.tab-item-icon {
+    font-size: var(--text-2xl);
+    color: var(--color-blue-100);
+    opacity: 0.7;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tab-item[aria-selected='true'] .tab-item-icon {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.tabs-sliding-window {
+    width: 200%;
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.tabs-list:has([ngTab]:nth-child(1)[aria-selected='true']) ~ .tabs-sliding-window {
+    transform: translateX(0%);
+}
+
+.tabs-list:has([ngTab]:nth-child(2)[aria-selected='true']) ~ .tabs-sliding-window {
+    transform: translateX(-50%);
+}
+
+.tabs-card [ngTabPanel] {
+    width: 50%;
+    min-height: 100px;
+}
+
+.tabs-card [ngTabPanel]:focus-visible {
+    outline: 2px solid var(--color-blue-200);
+    outline-offset: -4px;
+    border-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+    .tab-item {
+        font-size: var(--text-lg);
+        padding: 18px 22px;
+    }
+}
+
+@media (min-width: 992px) {
+    .tab-item {
+        padding: 20px 24px;
+    }
+}
+
+/* ---------- Pagination pill controls ---------- */
+.pagination-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 28px 0 8px;
+    flex-wrap: wrap;
+}
+
+.pagination-btn {
+    appearance: none;
+    border: 1.5px solid var(--color-blue-100);
+    background: var(--color-white);
+    color: var(--color-blue-100);
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    cursor: pointer;
+    box-shadow: var(--shadow-button-outline);
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pagination-btn i {
+    font-size: var(--text-lg);
+    transition: transform 0.25s ease;
+}
+
+.pagination-btn:hover:not(:disabled),
+.pagination-btn:focus-visible:not(:disabled) {
+    background-color: var(--color-blue-100);
+    color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.pagination-btn:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 3px;
+}
+
+.pagination-btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: var(--shadow-button-press);
+}
+
+.pagination-btn.prev:hover:not(:disabled) i {
+    transform: translateX(-3px);
+}
+
+.pagination-btn.next:hover:not(:disabled) i {
+    transform: translateX(3px);
+}
+
+.pagination-btn:disabled {
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.pagination-info {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-tint-08);
+    color: var(--color-blue-100);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    min-height: 40px;
+}
+
+.pagination-current {
+    font-size: var(--text-xl);
+    color: var(--color-blue-100);
+}
+
+.pagination-sep {
+    opacity: 0.45;
+}
+
+.pagination-total {
+    opacity: 0.7;
+}
+
+/* ---------- Admin shared bits (used by sub-components) ----------
+   Strip the sub-components' own `.container my-5` framing when they're rendered
+   inside the admin shell — they should sit flush at the top of .admin-content. */
+.admin-content > * > .container {
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+}
+
+
+.admin-section-title {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-size: var(--text-3xl);
+    font-weight: 700;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.admin-section-title i {
+    color: var(--color-blue-100);
+    font-size: var(--text-2xl);
+}
+
+.admin-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-card);
+}
+
+.admin-table-head {
+    background: var(--color-brand-tint-08);
+    color: var(--color-blue-100);
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.admin-table-head th {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--color-divider);
+    border-top: none;
+}
+
+.brand-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-tint-08);
+    color: var(--color-blue-100);
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.02em;
+}
+
+/* ---------- Auth shell (login + register) ---------- */
+.auth-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: calc(100vh - var(--header-height));
+    background: var(--color-bg-soft);
+}
+
+.auth-aside {
+    display: none;
+    position: relative;
+    overflow: hidden;
+    background: var(--gradient-footer-bg);
+    color: var(--color-white);
+    padding: 48px;
+}
+
+.auth-aside-watermark {
+    position: absolute;
+    right: -60px;
+    bottom: -40px;
+    width: 420px;
+    opacity: 0.08;
+    transform: rotate(-8deg);
+    pointer-events: none;
+    user-select: none;
+}
+
+.auth-aside-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    max-width: 460px;
+}
+
+.auth-aside-eyebrow {
+    font-family: var(--font-heading);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.75;
+    margin: 0 0 12px;
+}
+
+.auth-aside-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-6xl);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 16px;
+    color: var(--color-white);
+}
+
+.auth-aside-subtitle {
+    font-size: var(--text-lg);
+    line-height: 1.55;
+    color: var(--color-on-dark);
+    margin: 0 0 32px;
+    max-width: 36ch;
+}
+
+.auth-aside-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.auth-aside-features li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-on-dark);
+    font-size: var(--text-base);
+}
+
+.auth-aside-features i {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-pill);
+    background: var(--color-on-dark-chip-bg);
+    color: var(--color-white);
+    font-size: var(--text-base);
+    flex-shrink: 0;
+}
+
+.auth-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px 48px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 460px;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-elevated);
+    padding: 28px 24px;
+}
+
+.auth-eyebrow {
+    font-family: var(--font-heading);
+    color: var(--color-blue-100);
+    font-size: var(--text-xs);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 6px;
+}
+
+.auth-title {
+    font-family: var(--font-heading);
+    color: var(--color-text);
+    font-size: var(--text-4xl);
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0 0 6px;
+}
+
+.auth-subtitle {
+    color: var(--color-text-muted);
+    font-size: var(--text-md);
+    margin: 0 0 24px;
+}
+
+/* ---------- Form fields inside auth (branded focus) ---------- */
+.auth-card .form-label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 6px;
+}
+
+.auth-card .form-control {
+    border-color: var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    font-size: var(--text-md);
+    color: var(--color-text);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-card .form-control::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.auth-card .form-control:focus {
+    border-color: var(--color-blue-100);
+    box-shadow: 0 0 0 3px var(--color-brand-tint-25);
+}
+
+.auth-card .form-control.is-invalid,
+.auth-card .form-control.is-invalid:focus {
+    border-color: #d9466b;
+    box-shadow: 0 0 0 3px rgba(217, 70, 107, 0.18);
+}
+
+.auth-field {
+    margin-bottom: 16px;
+}
+
+.auth-error {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0 0;
+    color: #b03046;
+    font-size: var(--text-xs);
+    font-weight: 500;
+}
+
+.auth-error i {
+    font-size: var(--text-sm);
+}
+
+.auth-submit {
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px 18px;
+    font-size: var(--text-md);
+    border-radius: var(--radius-pill);
+}
+
+.auth-meta {
+    text-align: center;
+    margin: 20px 0 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+}
+
+.auth-meta a {
+    color: var(--color-blue-100);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-meta a:hover,
+.auth-meta a:focus-visible {
+    text-decoration: underline;
+}
+
+.auth-divider {
+    border: 0;
+    border-top: 1px solid var(--color-divider);
+    margin: 18px 0;
+}
+
+/* ---------- Auth: tablet ---------- */
+@media (min-width: 768px) {
+    .auth-card {
+        padding: 36px 36px 32px;
+    }
+
+    .auth-main {
+        padding: 48px 24px 64px;
+    }
+}
+
+/* ---------- Auth: desktop split layout ---------- */
+@media (min-width: 992px) {
+    .auth-shell {
+        grid-template-columns: minmax(360px, 1fr) minmax(420px, 560px);
+    }
+
+    .auth-aside {
+        display: block;
+    }
+}
+
+/* ---------- Shared section wrapper ---------- */
+.section-wrap {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+@media (min-width: 768px) {
+    .section-wrap {
+        padding: 0 24px;
+    }
+}
+
+/* ---------- Outline pill link (e.g. "Виж пълното разписание", "Прочети повече новини") ---------- */
+.view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-white);
+    color: var(--color-blue-100);
+    border: 1.5px solid var(--color-blue-100);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--text-base);
+    text-decoration: none;
+    box-shadow: var(--shadow-button-outline);
+    transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    min-height: 44px;
+}
+
+.view-all-link i {
+    font-size: var(--text-lg);
+    transition: transform 0.25s ease;
+}
+
+.view-all-link:hover,
+.view-all-link:focus-visible {
+    background-color: var(--color-blue-100);
+    color: var(--color-white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+    text-decoration: none;
+}
+
+.view-all-link:hover i,
+.view-all-link:focus-visible i {
+    transform: translateX(4px);
+}
+
+.view-all-link:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: 3px;
+}
+
+.view-all-link:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-button-press);
+}
+
+@media (min-width: 768px) {
+    .view-all-link {
+        font-size: var(--text-md);
+        padding: 14px 28px;
+    }
+}
+
+/* Mobile-first: full-width CTAs on small screens by default in stacks */
+@media (max-width: 575.98px) {
+    .hero-actions .button {
+        width: 100%;
+    }
 }
 
 @media (max-width: 989px) {
     h1,
     .h1 {
-        font-size: 36px;
+        font-size: var(--text-6xl);
+    }
+}
+
+@media (max-width: 575.98px) {
+    h1,
+    .h1 {
+        font-size: var(--text-5xl);
     }
 }
