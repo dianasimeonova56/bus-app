@@ -1,9 +1,9 @@
 import { Component, computed, inject, signal, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { startWith, map, filter } from 'rxjs';
-import { TripsService, BookingsService, StopsService, AuthService, SubscriptionService } from '../../core/services'; // Добавен SubscriptionService
+import { startWith } from 'rxjs';
+import { TripsService, BookingsService, StopsService, AuthService, SubscriptionService } from '../../core/services';
 import { Trip, User } from '../../models';
 import { CommonModule } from '@angular/common';
 import { MapComponent } from '../../shared/components/map/map';
@@ -65,7 +65,6 @@ export class Booking implements OnInit {
           console.log('Данни от сървъра:', res);
 
           const subsArray = res && Array.isArray(res.subscription) ? res.subscription : [];
-
           const now = new Date();
 
           const active = subsArray.filter((s: any) => {
@@ -159,17 +158,22 @@ export class Booking implements OnInit {
     return (start === -1 || end === -1 || start >= end) ? [] : stops.slice(start, end + 1);
   });
 
-  totalPrice = computed(() => {
+  // Изчислява редовната цена на билета спрямо бройката и типа му
+  originalPrice = computed(() => {
     const values = this.formValues();
     if (!values || !this.currentTrip()) return 0;
-
-    if (this.useSubscription()) return 0;
 
     let price = this.basePrice();
     if (values.ticketType === 'twoWayTicket' && this.currentTrip()?.route.twoWayTicketPrice) {
       price = this.currentTrip()!.route.twoWayTicketPrice;
     }
     return Math.round(price * (values.ticket_num || 0) * 100) / 100;
+  });
+
+  // Крайна сума за плащане (става 0, ако се ползва валиден абонамент)
+  totalPrice = computed(() => {
+    if (this.useSubscription()) return 0;
+    return this.originalPrice();
   });
 
   availableTimesForRoute = computed(() => {
